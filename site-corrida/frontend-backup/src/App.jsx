@@ -3,7 +3,6 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
-import AdminSettings from './pages/AdminSettings';
 
 function App() {
   return (
@@ -16,14 +15,6 @@ function App() {
           element={
             <ProtectedRoute>
               <Admin />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/settings"
-          element={
-            <ProtectedRoute>
-              <AdminSettings />
             </ProtectedRoute>
           }
         />

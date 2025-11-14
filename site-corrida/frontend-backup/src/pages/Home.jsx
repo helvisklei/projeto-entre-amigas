@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import Footer from '../components/Footer';
 
 export default function Home() {
   const [form, setForm] = useState({ nome: '', telefone: '', email: '', autorizado: false });
@@ -234,7 +233,7 @@ export default function Home() {
           <ul className="space-y-3 text-lg text-gray-700">
             <li><strong>📋 Pipoca não vai para os pódios</strong></li>
             <li><strong>🎽 Não levamos kits para retirar no dia da corrida</strong> - Retirada uma semana antes</li>
-            <li><strong>⏰ Chegue com antecedência</strong></li>
+            <li><strong>⏰ Chegue com antecedência</strong> para realização de check-in</li>
           </ul>
         </section>
 
