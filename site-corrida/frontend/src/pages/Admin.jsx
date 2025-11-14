@@ -32,6 +32,18 @@ export default function Admin() {
     }
   };
 
+  const togglePago = async (id, currentPago) => {
+    try {
+      // chamada para marcar/desmarcar pagamento
+      await axios.post(`${process.env.REACT_APP_API_URL}/admin/pagamento`, { id, pago: !currentPago });
+      // atualizar estado localmente
+      setInscritos(prev => prev.map(i => (i.id === id ? { ...i, pago: !currentPago } : i)));
+    } catch (err) {
+      console.error('Erro ao atualizar pagamento:', err);
+      alert('Erro ao atualizar pagamento. Veja o console para detalhes.');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('admin_user');
@@ -103,13 +115,22 @@ export default function Admin() {
                         <td className="px-6 py-4 text-gray-700">{inscrito.telefone}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.email}</td>
                         <td className="px-6 py-4 text-center">
-                          <span className={`px-3 py-1 rounded-full font-semibold ${
-                            inscrito.pago 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {inscrito.pago ? '✅ Pago' : '⏳ Pendente'}
-                          </span>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className={`px-3 py-1 rounded-full font-semibold ${
+                              inscrito.pago 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}>
+                              {inscrito.pago ? '✅ Pago' : '⏳ Pendente'}
+                            </span>
+                            <button
+                              onClick={() => togglePago(inscrito.id, inscrito.pago)}
+                              className="text-sm bg-white border px-2 py-1 rounded hover:bg-gray-50"
+                              title={inscrito.pago ? 'Desmarcar como pago' : 'Marcar como pago'}
+                            >
+                              {inscrito.pago ? 'Desmarcar' : 'Marcar'}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
