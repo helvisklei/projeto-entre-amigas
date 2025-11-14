@@ -7,7 +7,16 @@ const PDFDocument = require('pdfkit');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ strict: true }));
+app.use(express.urlencoded({ extended: true }));
+
+// Middleware para log de requisições
+app.use((req, res, next) => {
+  if (req.method === 'POST' || req.method === 'PUT') {
+    console.log(`${req.method} ${req.path} - Body:`, req.body);
+  }
+  next();
+});
 
 let db;
 let usingMockDb = false;
@@ -68,31 +77,41 @@ if (process.env.DATABASE_URL) {
 
 // Rota de login simples (usa credenciais do .env)
 app.post('/login', async (req, res) => {
-  const { usuario, senha } = req.body;
-  if (!usuario || !senha) return res.status(400).json({ message: 'Usuário e senha são obrigatórios' });
+  try {
+    if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
+    const { usuario, senha } = req.body;
+    if (!usuario || !senha) return res.status(400).json({ message: 'Usuário e senha são obrigatórios' });
 
-  const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-  const ADMIN_PASS = process.env.ADMIN_PASS || 'senha123';
+    const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+    const ADMIN_PASS = process.env.ADMIN_PASS || 'senha123';
 
-  if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
-    // Em produção, gere JWT; aqui usamos token simples
-    const token = `token_${Date.now()}`;
-    return res.json({ token, usuario });
+    if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
+      // Em produção, gere JWT; aqui usamos token simples
+      const token = `token_${Date.now()}`;
+      return res.json({ token, usuario });
+    }
+
+    return res.status(401).json({ message: 'Credenciais inválidas' });
+  } catch (err) {
+    console.error('Erro em POST /login:', err.message, err.stack);
+    res.status(500).json({ message: 'Erro ao processar login' });
   }
-
-  return res.status(401).json({ message: 'Credenciais inválidas' });
 });
 
 app.post('/inscricao', async (req, res) => {
-  const { nome, telefone, email, autorizado } = req.body;
   try {
+    if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
+    const { nome, telefone, email, autorizado } = req.body;
+    if (!nome || !telefone || !email) {
+      return res.status(400).json({ message: 'nome, telefone e email são obrigatórios' });
+    }
     await db.query(
       'INSERT INTO inscricoes (nome, telefone, email, autorizado, pago) VALUES ($1,$2,$3,$4,false)',
       [nome, telefone, email, autorizado]
     );
     res.sendStatus(200);
   } catch (err) {
-    console.error(err);
+    console.error('Erro em POST /inscricao:', err.message, err.stack);
     res.status(500).json({ message: 'Erro ao salvar inscrição' });
   }
 });
