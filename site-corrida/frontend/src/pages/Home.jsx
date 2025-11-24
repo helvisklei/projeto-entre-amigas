@@ -194,6 +194,7 @@ export default function Home() {
                   <option value="M">M</option>
                   <option value="G">G</option>
                   <option value="GG">GG</option>
+                  <option value="XGG">XGG</option>
                 </select>
 
                 <input

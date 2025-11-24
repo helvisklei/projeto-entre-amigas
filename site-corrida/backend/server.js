@@ -31,6 +31,9 @@ if (process.env.DATABASE_URL) {
         nome TEXT,
         telefone TEXT,
         email TEXT,
+        cpf TEXT,
+        cidade TEXT,
+        tamanho_camisa TEXT,
         autorizado BOOLEAN,
         pago BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT NOW()
@@ -86,8 +89,11 @@ if (process.env.DATABASE_URL) {
         const nome = params[0];
         const telefone = params[1];
         const email = params[2];
-        const autorizado = params[3];
-        const row = { id: mock.nextId++, nome, telefone, email, autorizado: !!autorizado, pago: false, created_at: new Date() };
+        const cpf = params[3];
+        const cidade = params[4];
+        const tamanho_camisa = params[5];
+        const autorizado = params[6];
+        const row = { id: mock.nextId++, nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado: !!autorizado, pago: false, created_at: new Date() };
         mock.rows.unshift(row);
         return { rows: [], rowCount: 1 };
       }
@@ -172,10 +178,10 @@ app.post('/inscricao', async (req, res) => {
     if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
     const { nome, telefone, email, autorizado } = req.body;
     if (!nome || !telefone || !email) {
-      return res.status(400).json({ message: 'nome, telefone e email são obrigatórios' });
+      return res.status(400).json({ message: 'nome, telefone, cpf, tamanho da camisa e email são obrigatórios' });
     }
     await db.query(
-      'INSERT INTO inscricoes (nome, telefone, email, autorizado, pago) VALUES ($1,$2,$3,$4,false)',
+      'INSERT INTO inscricoes (nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado, pago) VALUES ($1,$2,$3,$4,false)',
       [nome, telefone, email, autorizado]
     );
     res.sendStatus(200);
@@ -200,7 +206,7 @@ app.get('/relatorio/excel', async (req, res) => {
     const { rows } = await db.query('SELECT * FROM inscricoes ORDER BY created_at DESC');
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet('Inscrições');
-    sheet.addRow(['Nome', 'Telefone', 'Email', 'Pago', 'Data']);
+    sheet.addRow(['Nome', 'Telefone', 'Email', 'CPF', 'Cidade', 'Tamanho_camisa','Pago', 'Data']);
     rows.forEach(r => sheet.addRow([r.nome, r.telefone, r.email, r.pago ? 'Sim' : 'Não', r.created_at]));
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename="relatorio_inscricoes.xlsx"');
