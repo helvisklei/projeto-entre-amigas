@@ -162,6 +162,41 @@ export default function Home() {
                 />
 
                 <input
+                  type="text"
+                  placeholder="CPF"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
+                  value={form.cpf}
+                  onChange={e => setForm({...form, cpf: e.target.value})}
+                  required
+                  disabled={loading}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Cidade"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
+                  value={form.cidade}
+                  onChange={e => setForm({...form, cidade: e.target.value})}
+                  required
+                  disabled={loading}
+                />
+
+                <select
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
+                  value={form.tamanho_camisa}
+                  onChange={e => setForm({...form, tamanho_camisa: e.target.value})}
+                  required
+                  disabled={loading}
+                >
+                  <option value="">Tamanho da camisa</option>
+                  <option value="PP">PP</option>
+                  <option value="P">P</option>
+                  <option value="M">M</option>
+                  <option value="G">G</option>
+                  <option value="GG">GG</option>
+                </select>
+
+                <input
                   type="tel"
                   placeholder="Telefone (WhatsApp)"
                   className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
@@ -179,7 +214,7 @@ export default function Home() {
                   onChange={e => setForm({...form, email: e.target.value})}
                   required
                   disabled={loading}
-                />
+                />               
 
                 <label className="flex items-start space-x-3 p-3 bg-pink-50 rounded-lg">
                   <input
@@ -208,7 +243,7 @@ export default function Home() {
                 </div>
 
                 <a
-                  href="https://link.mercadopago.com.br/suacorrida"
+                  href="https://mpago.li/17yVTQM"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition"
