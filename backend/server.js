@@ -176,13 +176,13 @@ app.post('/login', async (req, res) => {
 app.post('/inscricao', async (req, res) => {
   try {
     if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
-    const { nome, telefone, email, autorizado } = req.body;
-    if (!nome || !telefone || !email) {
+    const { nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado } = req.body;
+    if (!nome || !telefone || !email || !cpf) {
       return res.status(400).json({ message: 'nome, telefone, cpf, tamanho_camisa e email são obrigatórios' });
     }
     await db.query(
       'INSERT INTO inscricoes (nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado, pago) VALUES ($1,$2,$3,$4,$5,$6,$7,false)',
-      [nome, telefone, email,cpf,cidade,tamanho_camisa, autorizado]
+      [nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado]
     );
     res.sendStatus(200);
   } catch (err) {
@@ -228,7 +228,7 @@ app.get('/relatorio/pdf', async (req, res) => {
     doc.fontSize(18).text('Relatório de Inscrições', { align: 'center' });
     doc.moveDown();
     rows.forEach(r => {
-      doc.fontSize(12).text(`${r.nome} — ${r.email} — ${r.telefone} — Pago: ${r.pago ? 'Sim' : 'Não'}`);
+      doc.fontSize(12).text(`${r.nome} — ${r.email} — ${r.telefone} — ${r.cpf} — ${r.cidade} — ${r.tamanho_camisa} — Pago: ${r.pago ? 'Sim' : 'Não'}`);
     });
     doc.end();
   } catch (err) {
@@ -283,15 +283,15 @@ app.get('/relatorio/pdf', async (req, res) => {
     
     // Table Header
     doc.fontSize(11).font('Helvetica-Bold');
-    const colX = { nome: doc.page.margins.left, telefone: 180, email: 290, pago: 450, data: 530 };
+    const colX = { nome: doc.page.margins.left, telefone: 120, email: 200, cpf: 300, cidade: 370, tamanho_camisa: 430, pago: 480, data: 530 };
     const rowHeight = 20;
     
     doc.text('Nome', colX.nome, doc.y);
     doc.text('Telefone', colX.telefone, doc.y);
     doc.text('Email', colX.email, doc.y);
-    doc.text('CPF', colX.email, doc.y);
-    doc.text('Cidade', colX.email, doc.y);
-    doc.text('Tamanho_camisa', colX.email, doc.y);
+    doc.text('CPF', colX.cpf, doc.y);
+    doc.text('Cidade', colX.cidade, doc.y);
+    doc.text('Tamanho_camisa', colX.tamanho_camisa, doc.y);
     doc.text('Pago', colX.pago, doc.y);
     doc.text('Data', colX.data, doc.y);
     doc.moveDown(0.7);
@@ -307,6 +307,9 @@ app.get('/relatorio/pdf', async (req, res) => {
       doc.text(r.nome.substring(0, 25), colX.nome, doc.y, { width: 100 });
       doc.text(r.telefone, colX.telefone, doc.y - doc.heightOfString(r.nome));
       doc.text(r.email.substring(0, 28), colX.email, doc.y - doc.heightOfString(r.nome), { width: 150 });
+      doc.text(r.cpf, colX.cpf, doc.y - doc.heightOfString(r.nome));
+      doc.text(r.cidade, colX.cidade, doc.y - doc.heightOfString(r.nome));
+      doc.text(r.tamanho_camisa, colX.tamanho_camisa, doc.y - doc.heightOfString(r.nome));
       doc.text(r.pago ? '✓ Sim' : '✗ Não', colX.pago, doc.y - doc.heightOfString(r.nome));
       doc.text(dataFormatada, colX.data, doc.y - doc.heightOfString(r.nome));
       doc.moveDown(1);
