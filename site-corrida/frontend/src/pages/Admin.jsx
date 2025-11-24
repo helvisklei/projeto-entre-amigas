@@ -133,9 +133,9 @@ export default function Admin() {
                           index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                         } hover:bg-purple-50 transition`}
                       >
-                        <td className="px-6 py-4 font-semibold text-gray-800 truncate">{inscrito.nome}</td>
+                        <td className="px-6 py-4 font-semibold text-gray-800 truncate" title={inscrito.nome}>{inscrito.nome}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.telefone}</td>
-                        <td className="px-6 py-4 text-gray-700 truncate">{inscrito.email}</td>
+                        <td className="px-6 py-4 text-gray-700 truncate" title={inscrito.email}>{inscrito.email}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.cpf}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.cidade}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.tamanho_camisa}</td>
