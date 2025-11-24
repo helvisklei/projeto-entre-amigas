@@ -23,9 +23,9 @@ export default function Admin() {
     } catch (err) {
       console.error(err);
       setInscritos([
-        { id: 1, nome: 'Maria Silva', telefone: '61999999999', email: 'maria@email.com', pago: true },
-        { id: 2, nome: 'Ana Costa', telefone: '61998888888', email: 'ana@email.com', pago: false },
-        { id: 3, nome: 'João Santos', telefone: '61997777777', email: 'joao@email.com', pago: true },
+        { id: 1, nome: 'Maria Silva', telefone: '61999999999', email: 'maria@email.com',cpf: '01234567809', cidade: 'Recife', tamanho_camisa: 'P', pago: true },
+        { id: 2, nome: 'Ana Costa', telefone: '61998888888', email: 'ana@email.com', cpf: '01234567809', cidade: 'Recife', tamanho_camisa: 'P', pago: false },
+        { id: 3, nome: 'João Santos', telefone: '61997777777', email: 'joao@email.com', cpf: '01234567809', cidade: 'Recife', tamanho_camisa: 'P', pago: true },
       ]);
       setError('⚠️ Usando dados de demonstração (API não conectada)');
     } finally {
@@ -119,6 +119,9 @@ export default function Admin() {
                       <th className="px-6 py-3 text-left font-semibold text-gray-700">Nome</th>
                       <th className="px-6 py-3 text-left font-semibold text-gray-700">Telefone</th>
                       <th className="px-6 py-3 text-left font-semibold text-gray-700">Email</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700">CPF</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Cidade</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Tamanho_camisa</th>
                       <th className="px-6 py-3 text-center font-semibold text-gray-700">Pagamento</th>
                     </tr>
                   </thead>
@@ -133,6 +136,9 @@ export default function Admin() {
                         <td className="px-6 py-4 font-semibold text-gray-800">{inscrito.nome}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.telefone}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.email}</td>
+                        <td className="px-6 py-4 text-gray-700">{inscrito.cpf}</td>
+                        <td className="px-6 py-4 text-gray-700">{inscrito.cidade}</td>
+                        <td className="px-6 py-4 text-gray-700">{inscrito.tamanho_camisa}</td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <span className={`px-3 py-1 rounded-full font-semibold ${
