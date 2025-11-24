@@ -116,13 +116,13 @@ export default function Admin() {
                 <table className="w-full">
                   <thead className="bg-gray-100 border-b-2 border-gray-300">
                     <tr>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Nome</th>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Telefone</th>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Email</th>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">CPF</th>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Cidade</th>
-                      <th className="px-6 py-3 text-left font-semibold text-gray-700">Tamanho_camisa</th>
-                      <th className="px-6 py-3 text-center font-semibold text-gray-700">Pagamento</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700 w-1/6">Nome</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700 w-1/6">Telefone</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700 w-1/6">Email</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700 w-1/6">CPF</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700 w-1/6">Cidade</th>
+                      <th className="px-6 py-3 text-left font-semibold text-gray-700 w-1/6">Tamanho_camisa</th>
+                      <th className="px-6 py-3 text-center font-semibold text-gray-700 w-1/6">Pagamento</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -133,9 +133,9 @@ export default function Admin() {
                           index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                         } hover:bg-purple-50 transition`}
                       >
-                        <td className="px-6 py-4 font-semibold text-gray-800">{inscrito.nome}</td>
+                        <td className="px-6 py-4 font-semibold text-gray-800 truncate">{inscrito.nome}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.telefone}</td>
-                        <td className="px-6 py-4 text-gray-700">{inscrito.email}</td>
+                        <td className="px-6 py-4 text-gray-700 truncate">{inscrito.email}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.cpf}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.cidade}</td>
                         <td className="px-6 py-4 text-gray-700">{inscrito.tamanho_camisa}</td>
