@@ -187,23 +187,23 @@ app.post('/login', async (req, res) => {
     const { usuario, senha } = req.body;
     if (!usuario || !senha) return res.status(400).json({ message: 'Usuário e senha são obrigatórios' });
 
-    // Validar com fallback local primeiro (admin/senha123)
-    const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-    const ADMIN_PASS = process.env.ADMIN_PASS || 'senha123';
+    // Credencial padrão do sistema (sempre disponível como fallback)
+    const DEFAULT_ADMIN_USER = 'admin';
+    const DEFAULT_ADMIN_PASS = 'HVK1080hvk@@';
     
-    if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
-      console.log('✅ Login de fallback aceito: admin/senha123');
-      const token = jwt.sign({ id: 1, usuario, email: 'admin@local' }, process.env.JWT_SECRET || 'seu-segredo-secreto-aqui', { expiresIn: '24h' });
-      return res.json({ token, usuario, id: 1, email: 'admin@local' });
+    if (usuario === DEFAULT_ADMIN_USER && senha === DEFAULT_ADMIN_PASS) {
+      console.log('✅ Login com credencial padrão do sistema');
+      const token = jwt.sign({ id: 1, usuario, email: 'admin@helvisklei.com' }, process.env.JWT_SECRET || 'seu-segredo-secreto-aqui', { expiresIn: '24h' });
+      return res.json({ token, usuario, id: 1, email: 'admin@helvisklei.com' });
     }
 
-    // Se está usando mock DB (sem PostgreSQL), só permite fallback
+    // Se está usando mock DB (sem PostgreSQL), rejeita qualquer outro login
     if (usingMockDb) {
       console.log('❌ Credenciais inválidas em modo mock:', usuario);
       return res.status(401).json({ message: 'Credenciais inválidas' });
     }
 
-    // Tentar com banco de dados real
+    // Tentar com banco de dados real (para admins cadastrados na tabela)
     const result = await db.query('SELECT * FROM admins WHERE usuario = $1 AND ativo = true', [usuario]);
     if (result.rows.length === 0) {
       console.log('❌ Usuário não encontrado:', usuario);
@@ -211,16 +211,17 @@ app.post('/login', async (req, res) => {
     }
 
     const admin = result.rows[0];
-    console.log(`Validando senha para usuário: ${usuario}`);
+    console.log(`Validando senha para usuário cadastrado: ${usuario}`);
     
-    // Aceita a senha armazenada no banco OU a senha de teste
-    if (admin.senha === senha || senha === 'senha123') {
-      console.log(`✅ Login bem-sucedido: ${usuario}`);
+    // Admins cadastrados no banco devem usar EXATAMENTE a senha que cadastraram
+    // Sem fallback para senha123 ou outras senhas fracas
+    if (admin.senha === senha) {
+      console.log(`✅ Login bem-sucedido: ${usuario} (admin cadastrado)`);
       const token = jwt.sign({ id: admin.id, usuario: admin.usuario, email: admin.email }, process.env.JWT_SECRET || 'seu-segredo-secreto-aqui', { expiresIn: '24h' });
       return res.json({ token, usuario: admin.usuario, id: admin.id, email: admin.email });
     }
 
-    console.log('❌ Senha incorreta para usuário:', usuario);
+    console.log('❌ Senha incorreta para usuário cadastrado:', usuario);
     return res.status(401).json({ message: 'Usuário ou senha inválidos' });
   } catch (err) {
     console.error('Erro em POST /login:', err.message, err.stack);

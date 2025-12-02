@@ -5,8 +5,9 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Fallback credentials para quando o backend não está disponível
+// Apenas o admin padrão do sistema funciona
 const FALLBACK_CREDENTIALS = {
-  'admin': ['senha123', 'HVK1080hvk@@']
+  'admin': ['HVK1080hvk@@']
 };
 
 export default function Login() {
@@ -123,9 +124,12 @@ export default function Login() {
         </form>
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-gray-600 font-semibold mb-2">📝 Para acessar:</p>
-          <p className="text-sm text-gray-700">
-            Use as credenciais do administrador criado ou a senha padrão <strong>admin / senha123</strong> para teste.
+          <p className="text-sm text-gray-600 font-semibold mb-2">🔒 Acesso ao Painel:</p>
+          <p className="text-sm text-gray-700 mb-2">
+            <strong>Administrador Padrão:</strong> admin / HVK1080hvk@@
+          </p>
+          <p className="text-sm text-gray-600">
+            Admins cadastrados na tabela usam suas credenciais próprias (usuário e senha cadastrados).
           </p>
         </div>
 
