@@ -9,9 +9,11 @@ services:
     envVars:
       - key: DATABASE_URL
         sync: false
-      - key: ADMIN_USER
+      - key: JWT_SECRET
         sync: false
-      - key: ADMIN_PASS
+      - key: DEFAULT_ADMIN_USER
+        sync: false
+      - key: DEFAULT_ADMIN_PASS
         sync: false
       - key: PORT
-        value: "3001"
+        value: "5000"
