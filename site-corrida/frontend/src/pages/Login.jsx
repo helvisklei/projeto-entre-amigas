@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 export default function Login() {
   const [credentials, setCredentials] = useState({ usuario: '', senha: '' });
@@ -7,27 +10,32 @@ export default function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Credenciais de demo para teste
-  // Em produção, isso seria validado no backend
-  const ADMIN_USER = 'admin';
-  const ADMIN_PASS = 'senha123';
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    // Simular delay de requisição
-    setTimeout(() => {
-      if (credentials.usuario === ADMIN_USER && credentials.senha === ADMIN_PASS) {
-        localStorage.setItem('auth_token', 'admin_token_' + Date.now());
-        localStorage.setItem('admin_user', credentials.usuario);
+    try {
+      const response = await axios.post(`${API_URL}/login`, {
+        usuario: credentials.usuario,
+        senha: credentials.senha
+      });
+
+      if (response.data.token) {
+        localStorage.setItem('auth_token', response.data.token);
+        localStorage.setItem('admin_user', response.data.usuario);
+        localStorage.setItem('admin_id', response.data.id);
+        localStorage.setItem('admin_email', response.data.email);
         navigate('/admin');
-      } else {
-        setError('Usuário ou senha incorretos');
       }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || 'Erro ao conectar com o servidor. Verifique se o backend está ativo.'
+      );
+      console.error('Erro de login:', err);
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
@@ -83,9 +91,10 @@ export default function Login() {
         </form>
 
         <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-gray-600 font-semibold mb-2">📝 Credenciais de Teste:</p>
-          <p className="text-sm text-gray-700"><strong>Usuário:</strong> admin</p>
-          <p className="text-sm text-gray-700"><strong>Senha:</strong> senha123</p>
+          <p className="text-sm text-gray-600 font-semibold mb-2">📝 Para acessar:</p>
+          <p className="text-sm text-gray-700">
+            Use as credenciais do administrador criado ou a senha padrão <strong>admin / senha123</strong> para teste.
+          </p>
         </div>
 
         <div className="mt-4 text-center">
