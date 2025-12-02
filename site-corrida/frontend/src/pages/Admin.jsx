@@ -71,9 +71,9 @@ export default function Admin() {
 
       {/* Navigation Tabs */}
       <div className="bg-purple-100 border-b border-purple-300">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex gap-4">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex gap-4 flex-wrap">
           <button
-            onClick={() => window.location.reload()}
+            onClick={fetchInscritos}
             className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded transition"
           >
             📋 Inscrições
@@ -83,6 +83,12 @@ export default function Admin() {
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition"
           >
             ⚙️ Gerenciar Admins
+          </button>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded transition ml-auto"
+          >
+            🏠 Voltar para Home
           </button>
         </div>
       </div>
@@ -208,6 +214,7 @@ export default function Admin() {
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

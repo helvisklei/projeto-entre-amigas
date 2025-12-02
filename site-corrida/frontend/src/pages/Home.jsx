@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Footer from '../components/Footer';
+import EventsSection from '../components/EventsSection';
+import TestimonialsSection from '../components/TestimonialsSection';
 
 export default function Home() {
   const [form, setForm] = useState({ nome: '', telefone: '', email: '', autorizado: false });
@@ -264,6 +266,12 @@ export default function Home() {
           )}
         </section>
 
+        {/* Events Section */}
+        <EventsSection />
+
+        {/* Testimonials Section */}
+        <TestimonialsSection />
+
         {/* Regras */}
         <section className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">🏆 Regras Importantes</h2>
@@ -285,6 +293,7 @@ export default function Home() {
         </div>
 
       </div>
+      <Footer />
     </div>
   );
 }

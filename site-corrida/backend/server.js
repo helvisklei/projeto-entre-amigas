@@ -4,6 +4,7 @@ const cors = require('cors');
 const { Pool } = require('pg');
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(cors());
@@ -64,7 +65,6 @@ if (process.env.DATABASE_URL) {
         await db.query(createAdmins);
         console.log('Tabela admins verificada/criada');
       
-        // Inserir admin padrão se não existir nenhum
         const check = await db.query('SELECT COUNT(*) FROM admins');
         if (check.rows[0].count === 0) {
           await db.query(
@@ -75,6 +75,60 @@ if (process.env.DATABASE_URL) {
         }
       } catch (err) {
         console.error('Erro criando tabela admins:', err);
+      }
+    })();
+
+    // Cria tabela de eventos
+    (async () => {
+      const createEvents = `
+        CREATE TABLE IF NOT EXISTS events (
+          id SERIAL PRIMARY KEY,
+          titulo TEXT NOT NULL,
+          data_evento DATE NOT NULL,
+          descricao TEXT,
+          local TEXT,
+          ativo BOOLEAN DEFAULT true,
+          created_at TIMESTAMP DEFAULT NOW()
+        );
+      `;
+      try {
+        await db.query(createEvents);
+        console.log('Tabela events verificada/criada');
+
+        const check = await db.query('SELECT COUNT(*) FROM events');
+        if (check.rows[0].count === 0) {
+          await db.query(
+            'INSERT INTO events (titulo, data_evento, descricao, local, ativo) VALUES ($1, $2, $3, $4, $5)',
+            ['Corrida Entre Amigas 2024', '2024-12-15', 'Corrida beneficente para as amigas', 'Recife - PE', true]
+          );
+          console.log('Evento padrão criado');
+        }
+      } catch (err) {
+        console.error('Erro criando tabela events:', err);
+      }
+    })();
+
+    // Cria tabela de testimonios
+    (async () => {
+      const createTestimonials = `
+        CREATE TABLE IF NOT EXISTS testimonials (
+          id SERIAL PRIMARY KEY,
+          event_id INT NOT NULL,
+          nome TEXT NOT NULL,
+          categoria TEXT,
+          depoimento TEXT,
+          posicao INT,
+          genero TEXT,
+          foto_url TEXT,
+          created_at TIMESTAMP DEFAULT NOW(),
+          FOREIGN KEY (event_id) REFERENCES events(id)
+        );
+      `;
+      try {
+        await db.query(createTestimonials);
+        console.log('Tabela testimonials verificada/criada');
+      } catch (err) {
+        console.error('Erro criando tabela testimonials:', err);
       }
     })();
 } else {
@@ -112,30 +166,21 @@ if (process.env.DATABASE_URL) {
   };
 }
 
-// Rota de login simples (usa credenciais do .env)
-app.post('/login', async (req, res) => {
+// Middleware para verificar JWT
+const verifyJWT = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Token ausente' });
+  
   try {
-    if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
-    const { usuario, senha } = req.body;
-    if (!usuario || !senha) return res.status(400).json({ message: 'Usuário e senha são obrigatórios' });
-
-    const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-    const ADMIN_PASS = process.env.ADMIN_PASS || 'senha123';
-
-    if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
-      // Em produção, gere JWT; aqui usamos token simples
-      const token = `token_${Date.now()}`;
-      return res.json({ token, usuario });
-    }
-
-    return res.status(401).json({ message: 'Credenciais inválidas' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'seu-segredo-secreto-aqui');
+    req.admin = decoded;
+    next();
   } catch (err) {
-    console.error('Erro em POST /login:', err.message, err.stack);
-    res.status(500).json({ message: 'Erro ao processar login' });
+    res.status(401).json({ message: 'Token inválido ou expirado' });
   }
-});
+};
 
-// Rota de login usando tabela admins
+// Rota de login com JWT
 app.post('/login', async (req, res) => {
   try {
     if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
@@ -143,26 +188,23 @@ app.post('/login', async (req, res) => {
     if (!usuario || !senha) return res.status(400).json({ message: 'Usuário e senha são obrigatórios' });
 
     if (usingMockDb) {
-      // Em modo mock, usa credenciais do .env
       const ADMIN_USER = process.env.ADMIN_USER || 'admin';
       const ADMIN_PASS = process.env.ADMIN_PASS || 'senha123';
       if (usuario === ADMIN_USER && senha === ADMIN_PASS) {
-        const token = `token_${Date.now()}`;
+        const token = jwt.sign({ id: 1, usuario, email: 'admin@local' }, process.env.JWT_SECRET || 'seu-segredo-secreto-aqui', { expiresIn: '24h' });
         return res.json({ token, usuario, id: 1, email: 'admin@local' });
       }
       return res.status(401).json({ message: 'Credenciais inválidas' });
     }
 
-    // Buscar admin no banco de dados
     const result = await db.query('SELECT * FROM admins WHERE usuario = $1 AND ativo = true', [usuario]);
     if (result.rows.length === 0) {
       return res.status(401).json({ message: 'Usuário ou senha inválidos' });
     }
 
     const admin = result.rows[0];
-    // Comparação simples (em produção, usar bcrypt)
     if (admin.senha === senha) {
-      const token = `token_${Date.now()}_${admin.id}`;
+      const token = jwt.sign({ id: admin.id, usuario: admin.usuario, email: admin.email }, process.env.JWT_SECRET || 'seu-segredo-secreto-aqui', { expiresIn: '24h' });
       return res.json({ token, usuario: admin.usuario, id: admin.id, email: admin.email });
     }
 
@@ -176,13 +218,24 @@ app.post('/login', async (req, res) => {
 app.post('/inscricao', async (req, res) => {
   try {
     if (!req.body) return res.status(400).json({ message: 'Corpo da requisição vazio' });
-    const { nome, telefone, email, autorizado } = req.body;
+    const { nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado } = req.body;
     if (!nome || !telefone || !email) {
-      return res.status(400).json({ message: 'nome, telefone, cpf, tamanho da camisa e email são obrigatórios' });
+      return res.status(400).json({ message: 'nome, telefone, email são obrigatórios' });
     }
+
+    // Verificar limite de 100 inscrições
+    const countResult = await db.query('SELECT COUNT(*) as total FROM inscricoes');
+    const total = parseInt(countResult.rows[0].total);
+    if (total >= 100) {
+      return res.status(400).json({ 
+        message: 'Limite de 100 inscrições atingido. Próximo evento: Setembro 2025',
+        eventoProximo: 'Setembro 2025'
+      });
+    }
+
     await db.query(
       'INSERT INTO inscricoes (nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado, pago) VALUES ($1,$2,$3,$4,$5,$6,$7,false)',
-      [nome, telefone, email, autorizado]
+      [nome, telefone, email, cpf || null, cidade || null, tamanho_camisa || null, autorizado ? true : false]
     );
     res.sendStatus(200);
   } catch (err) {
@@ -248,7 +301,7 @@ app.get('/relatorio/pdf', async (req, res) => {
 
     // Header
     doc.fontSize(24).font('Helvetica-Bold').text('🏃 CORRIDA ENTRE AMIGAS', { align: 'center' });
-    doc.fontSize(12).font('Helvetica').text('Relatório de Inscrições', { align: 'center' });
+    doc.fontSize(14).font('Helvetica').text('Relatório de Inscrições 2024', { align: 'center' });
     doc.moveDown(0.5);
     
     // Data
@@ -282,18 +335,15 @@ app.get('/relatorio/pdf', async (req, res) => {
     doc.moveDown(0.5);
     
     // Table Header
-    doc.fontSize(11).font('Helvetica-Bold');
-    const colX = { nome: doc.page.margins.left, telefone: 120, email: 200, cpf: 300, cidade:370, tamanho_camisa: 430, pago: 480, data: 530 };
-    const rowHeight = 20;
+    doc.fontSize(10).font('Helvetica-Bold');
+    const colX = { nome: doc.page.margins.left, telefone: 150, email: 240, cidade: 330, pago: 420, data: 500 };
     
-    doc.text('Nome', colX.nome, doc.y);
-    doc.text('Telefone', colX.telefone, doc.y);
-    doc.text('Email', colX.email, doc.y);
-    doc.text('Cpf', colX.cpf, doc.y);
-    doc.text('Cidade', colX.cidade, doc.y);
-    doc.text('Tamanho_camisa', colX.tamanho_camisa, doc.y);
-    doc.text('Pago', colX.pago, doc.y);
-    doc.text('Data', colX.data, doc.y);
+    doc.text('Nome', colX.nome, doc.y, { width: 140 });
+    doc.text('Telefone', colX.telefone, doc.y - doc.heightOfString('Nome'), { width: 80 });
+    doc.text('Email', colX.email, doc.y - doc.heightOfString('Nome'), { width: 80 });
+    doc.text('Cidade', colX.cidade, doc.y - doc.heightOfString('Nome'), { width: 80 });
+    doc.text('Pago', colX.pago, doc.y - doc.heightOfString('Nome'), { width: 60 });
+    doc.text('Data', colX.data, doc.y - doc.heightOfString('Nome'), { width: 60 });
     doc.moveDown(0.7);
     
     // Line separator
@@ -302,29 +352,26 @@ app.get('/relatorio/pdf', async (req, res) => {
     
     // Table Rows
     doc.fontSize(9).font('Helvetica');
-    rows.forEach((r, idx) => {
+    rows.forEach((r) => {
       const dataFormatada = new Date(r.created_at).toLocaleDateString('pt-BR');
-      doc.text(r.nome.substring(0, 25), colX.nome, doc.y, { width: 100 });
-      doc.text(r.telefone, colX.telefone, doc.y - doc.heightOfString(r.nome));
-      doc.text(r.email.substring(0, 28), colX.email, doc.y - doc.heightOfString(r.nome), { width: 150 });
-      doc.text(r.pago ? '✓ Sim' : '✗ Não', colX.pago, doc.y - doc.heightOfString(r.nome));
-      doc.text(dataFormatada, colX.data, doc.y - doc.heightOfString(r.nome));
-      doc.moveDown(1);
+      doc.text(r.nome.substring(0, 20), colX.nome, doc.y, { width: 140 });
+      doc.text(r.telefone, colX.telefone, doc.y - doc.heightOfString(r.nome.substring(0, 20)), { width: 80 });
+      doc.text(r.email.substring(0, 20), colX.email, doc.y - doc.heightOfString(r.nome.substring(0, 20)), { width: 80 });
+      doc.text(r.cidade || '-', colX.cidade, doc.y - doc.heightOfString(r.nome.substring(0, 20)), { width: 80 });
+      doc.text(r.pago ? '✓ Sim' : '✗ Não', colX.pago, doc.y - doc.heightOfString(r.nome.substring(0, 20)), { width: 60 });
+      doc.text(dataFormatada, colX.data, doc.y - doc.heightOfString(r.nome.substring(0, 20)), { width: 60 });
+      doc.moveDown(0.6);
     });
     
     doc.moveDown(1);
     
     // Footer
-    const pageCount = doc.bufferedPageRange().count;
-    for (let i = 1; i <= pageCount; i++) {
-      doc.switchToPage(i - 1);
-      doc.fontSize(8).font('Helvetica').text(
-        `© 2025 HVK Produção - Helvisklei. Página ${i} de ${pageCount}`,
-        doc.page.margins.left,
-        doc.page.height - doc.page.margins.bottom + 10,
-        { align: 'center' }
-      );
-    }
+    doc.fontSize(8).font('Helvetica').text(
+      `© 2025 HVK Produção - Helvisklei. Todos os direitos reservados.`,
+      doc.page.margins.left,
+      doc.page.height - doc.page.margins.bottom + 10,
+      { align: 'center' }
+    );
     
     doc.end();
   } catch (err) {
@@ -442,6 +489,97 @@ app.delete('/admins/:id', async (req, res) => {
   } catch (err) {
     console.error('Erro em DELETE /admins/:id:', err.message, err.stack);
     res.status(500).json({ message: 'Erro ao deletar admin' });
+  }
+});
+
+// ===== ENDPOINTS DE EVENTOS =====
+
+// GET /events - Listar eventos ativos
+app.get('/events', async (req, res) => {
+  try {
+    if (usingMockDb) {
+      return res.json([
+        { id: 1, titulo: 'Corrida Entre Amigas 2024', data_evento: '2024-12-15', descricao: 'Corrida beneficente', local: 'Recife - PE', ativo: true }
+      ]);
+    }
+    const { rows } = await db.query('SELECT * FROM events WHERE ativo = true ORDER BY data_evento DESC');
+    res.json(rows);
+  } catch (err) {
+    console.error('Erro em GET /events:', err.message, err.stack);
+    res.status(500).json({ message: 'Erro ao buscar eventos' });
+  }
+});
+
+// GET /events/:id - Obter evento específico
+app.get('/events/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (usingMockDb) {
+      return res.json({ id: 1, titulo: 'Corrida Entre Amigas 2024', data_evento: '2024-12-15', descricao: 'Corrida beneficente', local: 'Recife - PE', ativo: true });
+    }
+    const { rows } = await db.query('SELECT * FROM events WHERE id = $1', [id]);
+    if (rows.length === 0) return res.status(404).json({ message: 'Evento não encontrado' });
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Erro em GET /events/:id:', err.message, err.stack);
+    res.status(500).json({ message: 'Erro ao buscar evento' });
+  }
+});
+
+// POST /events - Criar evento (protegido)
+app.post('/events', verifyJWT, async (req, res) => {
+  try {
+    const { titulo, data_evento, descricao, local } = req.body;
+    if (!titulo || !data_evento) return res.status(400).json({ message: 'Título e data são obrigatórios' });
+    
+    if (usingMockDb) return res.status(400).json({ message: 'Não suportado em modo mock' });
+    
+    await db.query(
+      'INSERT INTO events (titulo, data_evento, descricao, local, ativo) VALUES ($1, $2, $3, $4, true)',
+      [titulo, data_evento, descricao || null, local || null]
+    );
+    res.json({ ok: true, message: 'Evento criado com sucesso' });
+  } catch (err) {
+    console.error('Erro em POST /events:', err.message, err.stack);
+    res.status(500).json({ message: 'Erro ao criar evento' });
+  }
+});
+
+// ===== ENDPOINTS DE TESTIMONIOS =====
+
+// GET /testimonials/:eventId - Obter depoimentos do evento
+app.get('/testimonials/:eventId', async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    if (usingMockDb) {
+      return res.json([
+        { id: 1, event_id: 1, nome: 'Ana Silva', categoria: '1º lugar feminino', depoimento: 'Que privilégio correr entre amigas!', posicao: 1, genero: 'F' }
+      ]);
+    }
+    const { rows } = await db.query('SELECT * FROM testimonials WHERE event_id = $1 ORDER BY posicao ASC', [eventId]);
+    res.json(rows);
+  } catch (err) {
+    console.error('Erro em GET /testimonials/:eventId:', err.message, err.stack);
+    res.status(500).json({ message: 'Erro ao buscar depoimentos' });
+  }
+});
+
+// POST /testimonials - Criar depoimento (protegido)
+app.post('/testimonials', verifyJWT, async (req, res) => {
+  try {
+    const { event_id, nome, categoria, depoimento, posicao, genero } = req.body;
+    if (!event_id || !nome || !depoimento) return res.status(400).json({ message: 'Campos obrigatórios: event_id, nome, depoimento' });
+    
+    if (usingMockDb) return res.status(400).json({ message: 'Não suportado em modo mock' });
+    
+    await db.query(
+      'INSERT INTO testimonials (event_id, nome, categoria, depoimento, posicao, genero) VALUES ($1, $2, $3, $4, $5, $6)',
+      [event_id, nome, categoria || null, depoimento, posicao || null, genero || null]
+    );
+    res.json({ ok: true, message: 'Depoimento criado com sucesso' });
+  } catch (err) {
+    console.error('Erro em POST /testimonials:', err.message, err.stack);
+    res.status(500).json({ message: 'Erro ao criar depoimento' });
   }
 });
 
