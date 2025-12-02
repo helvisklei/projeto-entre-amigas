@@ -188,8 +188,9 @@ app.post('/login', async (req, res) => {
     if (!usuario || !senha) return res.status(400).json({ message: 'Usuário e senha são obrigatórios' });
 
     // Credencial padrão do sistema (sempre disponível como fallback)
-    const DEFAULT_ADMIN_USER = 'admin';
-    const DEFAULT_ADMIN_PASS = 'HVK1080hvk@@';
+    // Lê do .env para não ficar hardcoded
+    const DEFAULT_ADMIN_USER = process.env.DEFAULT_ADMIN_USER || 'admin';
+    const DEFAULT_ADMIN_PASS = process.env.DEFAULT_ADMIN_PASS || 'HVK1080hvk@@';
     
     if (usuario === DEFAULT_ADMIN_USER && senha === DEFAULT_ADMIN_PASS) {
       console.log('✅ Login com credencial padrão do sistema');
