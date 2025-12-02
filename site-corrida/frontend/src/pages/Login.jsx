@@ -6,7 +6,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Fallback credentials para quando o backend não está disponível
 const FALLBACK_CREDENTIALS = {
-  'admin': 'senha123'
+  'admin': ['senha123', 'HVK1080hvk@@']
 };
 
 export default function Login() {
@@ -44,7 +44,8 @@ export default function Login() {
         console.warn('Backend indisponível, tentando fallback local:', backendErr.message);
         
         // Fallback local quando backend está indisponível
-        if (FALLBACK_CREDENTIALS[credentials.usuario] === credentials.senha) {
+        const validPasswords = FALLBACK_CREDENTIALS[credentials.usuario];
+        if (validPasswords && validPasswords.includes(credentials.senha)) {
           const token = 'fallback_token_' + Date.now();
           localStorage.setItem('auth_token', token);
           localStorage.setItem('admin_user', credentials.usuario);
