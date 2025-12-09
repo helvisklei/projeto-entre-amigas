@@ -5,6 +5,7 @@ const { Pool } = require('pg');
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
 const jwt = require('jsonwebtoken');
+const { submitToGoogleForm, getInscriptionCount } = require('./google-forms-integration');
 
 const app = express();
 app.use(cors());
@@ -238,7 +239,13 @@ app.post('/inscricao', async (req, res) => {
       return res.status(400).json({ message: 'nome, telefone, email são obrigatórios' });
     }
 
-    // Verificar limite de 100 inscrições
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Email inválido' });
+    }
+
+    // Verificar limite de 100 inscrições no banco local
     const countResult = await db.query('SELECT COUNT(*) as total FROM inscricoes');
     const total = parseInt(countResult.rows[0].total);
     if (total >= 100) {
@@ -248,11 +255,32 @@ app.post('/inscricao', async (req, res) => {
       });
     }
 
-    await db.query(
-      'INSERT INTO inscricoes (nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado, pago) VALUES ($1,$2,$3,$4,$5,$6,$7,false)',
+    // Salvar localmente no banco
+    const dbResult = await db.query(
+      'INSERT INTO inscricoes (nome, telefone, email, cpf, cidade, tamanho_camisa, autorizado, pago) VALUES ($1,$2,$3,$4,$5,$6,$7,false) RETURNING id',
       [nome, telefone, email, cpf || null, cidade || null, tamanho_camisa || null, autorizado ? true : false]
     );
-    res.sendStatus(200);
+    
+    const inscricaoId = dbResult.rows[0].id;
+
+    // Enviar para Google Forms (assincronamente, não bloqueia resposta)
+    if (process.env.GOOGLE_FORM_URL) {
+      submitToGoogleForm({
+        nome, telefone, email, cpf: cpf || 'N/A', 
+        cidade: cidade || 'N/A', 
+        tamanho_camisa: tamanho_camisa || 'N/A'
+      }).catch(err => {
+        console.error('Erro ao enviar para Google Forms:', err.message);
+        // Não falha se Google Forms falhar - dado foi salvo localmente
+      });
+    }
+
+    console.log(`✅ Inscrição #${inscricaoId}: ${nome} (${email})`);
+    res.status(200).json({ 
+      success: true, 
+      id: inscricaoId,
+      message: 'Inscrição realizada com sucesso'
+    });
   } catch (err) {
     console.error('Erro em POST /inscricao:', err.message, err.stack);
     res.status(500).json({ message: 'Erro ao salvar inscrição' });
