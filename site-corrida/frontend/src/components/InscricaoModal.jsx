@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  // Monitorar quando o usuário retorna do Google Forms
+  // Monitorar parâmetro de URL para retorno automático do Google Forms
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    
+    // Se o usuário volta via redirect com ?fromForm=true
+    if (params.get('fromForm') === 'true' && isOpen) {
+      setIsLoading(false);
+      setShowConfirmation(true);
+      // Limpa a URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [isOpen]);
+
+  // Monitorar quando o usuário retorna do Google Forms (window focus)
   React.useEffect(() => {
     const handleFocus = () => {
       // Quando a janela recebe foco (usuário voltou da aba do Forms)
@@ -91,7 +104,7 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
 
             <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
               <p className="text-sm text-blue-900">
-                <strong>✓ Formulário para inscrição seguro</strong><br/>
+                <strong>✓ Formulário para inscrição segura</strong><br/>
                 <strong>✓ Enviar comprovante para validar inscrição</strong><br/>
                 <strong>✓ Limite: 100 pessoas</strong>
               </p>
