@@ -32,7 +32,7 @@ $bodyJson = @{
     autorizado = $true
 } | ConvertTo-Json
 
-Write-Host "Enviando inscrição..." -ForegroundColor Blue
+Write-Host "Enviando inscricao..." -ForegroundColor Blue
 Write-Host ""
 
 try {
@@ -43,13 +43,13 @@ try {
         -ErrorAction Stop
 
     Write-Host "================================================" -ForegroundColor Green
-    Write-Host "   SUCESSO! Inscrição enviada" -ForegroundColor Green
+    Write-Host "   SUCESSO! Inscricao enviada" -ForegroundColor Green
     Write-Host "================================================" -ForegroundColor Green
     Write-Host ""
     
     Write-Host "Resposta do Servidor:" -ForegroundColor Green
     Write-Host "  Status: $($response.success)" -ForegroundColor White
-    Write-Host "  ID da Inscrição: $($response.id)" -ForegroundColor Yellow
+    Write-Host "  ID da Inscricao: $($response.id)" -ForegroundColor Yellow
     Write-Host "  Mensagem: $($response.message)" -ForegroundColor White
     Write-Host ""
     
@@ -61,15 +61,15 @@ try {
     Write-Host "   SELECT * FROM inscricoes ORDER BY id DESC LIMIT 1;" -ForegroundColor Yellow
     Write-Host ""
     Write-Host "Dados foram salvos em:" -ForegroundColor Green
-    Write-Host "  ✓ PostgreSQL (local)" -ForegroundColor White
-    Write-Host "  ✓ Google Forms (online)" -ForegroundColor White
-    Write-Host "  ✓ Google Sheet (sincronizado)" -ForegroundColor White
+    Write-Host "  OK PostgreSQL (local)" -ForegroundColor White
+    Write-Host "  OK Google Forms (online)" -ForegroundColor White
+    Write-Host "  OK Google Sheet (sincronizado)" -ForegroundColor White
     Write-Host ""
     
 } catch {
     Write-Host ""
     Write-Host "================================================" -ForegroundColor Red
-    Write-Host "   ERRO ao enviar inscrição" -ForegroundColor Red
+    Write-Host "   ERRO ao enviar inscricao" -ForegroundColor Red
     Write-Host "================================================" -ForegroundColor Red
     Write-Host ""
     
@@ -78,7 +78,7 @@ try {
     Write-Host ""
     
     if ($errorMsg -like "*Connection*") {
-        Write-Host "Possível causa: Backend nao esta rodando" -ForegroundColor Yellow
+        Write-Host "Possivel causa: Backend nao esta rodando" -ForegroundColor Yellow
         Write-Host "Execute primeiro:" -ForegroundColor White
         Write-Host "  cd site-corrida/backend" -ForegroundColor Yellow
         Write-Host "  npm start" -ForegroundColor Yellow
@@ -94,3 +94,4 @@ try {
 
 Write-Host "================================================" -ForegroundColor Cyan
 Write-Host ""
+
