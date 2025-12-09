@@ -3,31 +3,17 @@ import axios from 'axios';
 import Footer from '../components/Footer';
 import EventsSection from '../components/EventsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
+import InscricaoModal from '../components/InscricaoModal';
 
 export default function Home() {
-  const [form, setForm] = useState({ nome: '', telefone: '', email: '', autorizado: false });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [showForm, setShowForm] = useState(false);
+  const [showInscricaoModal, setShowInscricaoModal] = useState(false);
+  
+  // URL do seu Google Form (você vai configurar isso)
+  const GOOGLE_FORM_URL = process.env.REACT_APP_GOOGLE_FORM_URL || 'https://forms.google.com/seu-formulario';
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    if (!form.autorizado) return setError('Você precisa autorizar o uso dos dados.');
-    try {
-      setLoading(true);
-      await axios.post(`${process.env.REACT_APP_API_URL}/inscricao`, form);
-      setSuccess('Inscrição realizada! Verifique seu e-mail para confirmação.');
-      setForm({ nome: '', telefone: '', email: '', autorizado: false });
-      setTimeout(() => setShowForm(false), 2000);
-    } catch (err) {
-      console.error(err);
-      setError(err?.response?.data?.message || 'Erro ao enviar inscrição. Tente novamente.');
-    } finally {
-      setLoading(false);
-    }
+  const handleInscricaoSuccess = () => {
+    // Aqui você pode adicionar lógica adicional após sucesso
+    console.log('Inscrição realizada com sucesso!');
   };
 
   return (
@@ -134,137 +120,26 @@ export default function Home() {
 
         {/* Inscrição CTA */}
         <section className="text-center space-y-6">
-          {!showForm ? (
-            <div>
-              <p className="text-2xl text-gray-700 mb-4">
-                Pronta para fazer parte dessa história?
-              </p>
-              <button
-                onClick={() => setShowForm(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
-              >
-                🏃‍♀️ Se inscreva você também! 💕
-              </button>
-            </div>
-          ) : (
-            <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
-              <h2 className="text-2xl font-bold text-pink-600 mb-6">Formulário de Inscrição</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {error && <div className="bg-red-100 text-red-800 p-3 rounded-lg">{error}</div>}
-                {success && <div className="bg-green-100 text-green-800 p-3 rounded-lg">{success}</div>}
-
-                <input
-                  type="text"
-                  placeholder="Nome completo"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
-                  value={form.nome}
-                  onChange={e => setForm({...form, nome: e.target.value})}
-                  required
-                  disabled={loading}
-                />
-
-                <input
-                  type="text"
-                  placeholder="CPF"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
-                  value={form.cpf}
-                  onChange={e => setForm({...form, cpf: e.target.value})}
-                  required
-                  disabled={loading}
-                />
-
-                <input
-                  type="text"
-                  placeholder="Cidade"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
-                  value={form.cidade}
-                  onChange={e => setForm({...form, cidade: e.target.value})}
-                  required
-                  disabled={loading}
-                />
-
-                <select
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
-                  value={form.tamanho_camisa}
-                  onChange={e => setForm({...form, tamanho_camisa: e.target.value})}
-                  required
-                  disabled={loading}
-                >
-                  <option value="">Tamanho da camisa</option>
-                  <option value="PP">PP</option>
-                  <option value="P">P</option>
-                  <option value="M">M</option>
-                  <option value="G">G</option>
-                  <option value="GG">GG</option>
-                  <option value="XGG">XGG</option>
-                </select>
-
-                <input
-                  type="tel"
-                  placeholder="Telefone (WhatsApp)"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
-                  value={form.telefone}
-                  onChange={e => setForm({...form, telefone: e.target.value})}
-                  required
-                  disabled={loading}
-                />
-
-                <input
-                  type="email"
-                  placeholder="E-mail"
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-pink-500 focus:outline-none"
-                  value={form.email}
-                  onChange={e => setForm({...form, email: e.target.value})}
-                  required
-                  disabled={loading}
-                />               
-
-                <label className="flex items-start space-x-3 p-3 bg-pink-50 rounded-lg">
-                  <input
-                    type="checkbox"
-                    checked={form.autorizado}
-                    onChange={e => setForm({...form, autorizado: e.target.checked})}
-                    disabled={loading}
-                    className="mt-1"
-                  />
-                  <span className="text-sm text-gray-700">
-                    Autorizo o uso dos meus dados para fins de inscrição e participação do evento Entre Amigas
-                  </span>
-                </label>
-
-                <button
-                  type="submit"
-                  className={`w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-3 rounded-lg ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:from-pink-600 hover:to-purple-600'}`}
-                  disabled={loading}
-                >
-                  {loading ? '✨ Enviando...' : '✨ Confirmar Inscrição'}
-                </button>
-
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-300"></div></div>
-                  <div className="relative flex justify-center text-sm"><span className="px-2 bg-white text-gray-500">ou</span></div>
-                </div>
-
-                <a
-                  href="https://mpago.li/17yVTQM"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-center transition"
-                >
-                  💳 Pagar com Mercado Pago
-                </a>
-
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
-                  className="w-full text-gray-600 hover:text-gray-800 font-semibold py-2"
-                >
-                  Voltar
-                </button>
-              </form>
-            </div>
-          )}
+          <div>
+            <p className="text-2xl text-gray-700 mb-4">
+              Pronta para fazer parte dessa história?
+            </p>
+            <button
+              onClick={() => setShowInscricaoModal(true)}
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
+            >
+              🏃‍♀️ Se inscreva você também! 💕
+            </button>
+          </div>
         </section>
+
+        {/* Modal de Inscrição */}
+        <InscricaoModal
+          isOpen={showInscricaoModal}
+          onClose={() => setShowInscricaoModal(false)}
+          googleFormUrl={GOOGLE_FORM_URL}
+          onSuccess={handleInscricaoSuccess}
+        />
 
         {/* Events Section */}
         <EventsSection />
