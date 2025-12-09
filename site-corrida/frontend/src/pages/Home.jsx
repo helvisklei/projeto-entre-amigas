@@ -8,8 +8,8 @@ import InscricaoModal from '../components/InscricaoModal';
 export default function Home() {
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
   
-  // URL do seu Google Form (você vai configurar isso)
-  const GOOGLE_FORM_URL = process.env.REACT_APP_GOOGLE_FORM_URL || 'https://forms.google.com/seu-formulario';
+  // URL do seu Google Form (configurada)
+  const GOOGLE_FORM_URL = process.env.REACT_APP_GOOGLE_FORM_URL || 'https://forms.gle/cK5rsEZ75nbTYgTj9';
 
   const handleInscricaoSuccess = () => {
     // Aqui você pode adicionar lógica adicional após sucesso
