@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
+
 import axios from 'axios';
 import Footer from '../components/Footer';
 import EventsSection from '../components/EventsSection';
@@ -7,6 +9,17 @@ import InscricaoModal from '../components/InscricaoModal';
 
 export default function Home() {
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
+
+  // Abre o modal automaticamente quando vindo do Google Forms
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("fromForm") === "true") {
+        setShowInscricaoModal(true);
+      }
+    }
+  }, []);
+
   
   // URL do Google Form (configurada)
   const GOOGLE_FORM_URL = process.env.REACT_APP_GOOGLE_FORM_URL || 'https://forms.gle/cK5rsEZ75nbTYgTj9';

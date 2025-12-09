@@ -61,7 +61,7 @@ Procure pela opção: **"Depois de enviar o formulário"**
 1️⃣ Usuário preenche o formulário
             ⬇️
 2️⃣ Clica em "Enviar" / "Concluir"
-            ⬇️
+            ⬇️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         + . 
 3️⃣ Google Forms registra a resposta ✓
             ⬇️
 4️⃣ Redireciona para: https://seu-site.vercel.app?fromForm=true
