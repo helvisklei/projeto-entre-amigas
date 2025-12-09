@@ -21,8 +21,8 @@ export default function EventsSection() {
       setEvents([
         {
           id: 1,
-          titulo: 'Corrida Entre Amigas 2024',
-          data_evento: '2024-12-15',
+          titulo: 'Corrida Entre Amigas 2025',
+          data_evento: '2025-05-15',
           descricao: 'Corrida beneficente para as amigas',
           local: 'Recife - PE'
         }

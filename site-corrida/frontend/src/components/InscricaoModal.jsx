@@ -4,17 +4,46 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
+  // Monitorar quando o usuário retorna do Google Forms
+  React.useEffect(() => {
+    const handleFocus = () => {
+      // Quando a janela recebe foco (usuário voltou da aba do Forms)
+      const formSubmitTime = sessionStorage.getItem('formSubmitTime');
+      const currentTime = Date.now();
+      
+      // Se o Google Forms foi aberto há menos de 5 minutos
+      if (formSubmitTime && (currentTime - parseInt(formSubmitTime)) < 300000) {
+        // Mostrar tela de pagamento automaticamente
+        setIsLoading(false);
+        setShowConfirmation(true);
+        sessionStorage.removeItem('formSubmitTime');
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('focus', handleFocus);
+      return () => window.removeEventListener('focus', handleFocus);
+    }
+  }, [isOpen]);
+
   const handleGoogleFormClick = () => {
     setIsLoading(true);
+    // Armazena o tempo de abertura do formulário
+    sessionStorage.setItem('formSubmitTime', Date.now().toString());
+    
     // Abre o Google Forms em nova aba
+    // O Google Forms redireciona automaticamente após submissão
     window.open(googleFormUrl, '_blank');
     
-    // Simula delay para permitir preenchimento
-    // Depois de 3 segundos, mostra opção de confirmar
-    setTimeout(() => {
-      setIsLoading(false);
-      setShowConfirmation(true);
-    }, 3000);
+    // Fallback: se o usuário não voltar em 5 minutos, mostrar opção manual
+    const timeout = setTimeout(() => {
+      if (isLoading) {
+        setIsLoading(false);
+        setShowConfirmation(true);
+      }
+    }, 300000); // 5 minutos
+    
+    return () => clearTimeout(timeout);
   };
 
   const handleConfirmInscription = () => {
@@ -62,8 +91,8 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
 
             <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
               <p className="text-sm text-blue-900">
-                <strong>✓ Formulário seguro</strong><br/>
-                <strong>✓ Sincroniza com Google Sheets</strong><br/>
+                <strong>✓ Formulário para inscrição seguro</strong><br/>
+                <strong>✓ Enviar comprovante para validar inscrição</strong><br/>
                 <strong>✓ Limite: 100 pessoas</strong>
               </p>
             </div>
@@ -76,6 +105,18 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
               >
                 {isLoading ? '⏳ Abrindo formulário...' : '📋 Abrir Google Forms'}
               </button>
+
+              {isLoading && (
+                <button
+                  onClick={() => {
+                    setIsLoading(false);
+                    setShowConfirmation(true);
+                  }}
+                  className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition text-sm"
+                >
+                  ✓ Já Preencheu? Avançar para Pagamento
+                </button>
+              )}
 
               <button
                 onClick={handleCancel}
