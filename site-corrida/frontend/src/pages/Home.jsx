@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-import axios from 'axios';
 import Footer from '../components/Footer';
 import EventsSection from '../components/EventsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
