@@ -57,7 +57,7 @@ export default function Home() {
         </div>
         <div className="relative text-center px-4 z-10 space-y-4">
           <img
-            src="/logoEntreAmigas.webp"
+            src="/logoEntreAmigas.png"
             alt="Entre Amigas Logo"
             className="h-24 w-auto mx-auto drop-shadow-lg"
             title="Entre Amigas - Corrida de Mulheres"

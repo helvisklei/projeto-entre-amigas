@@ -9,7 +9,7 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <img
-            src="/logoEntreAmigas.webp"
+            src="/logoEntreAmigas.png"
             alt="Entre Amigas Logo"
             className="h-12 md:h-14 w-auto"
             title="Entre Amigas - Corrida de Mulheres"
