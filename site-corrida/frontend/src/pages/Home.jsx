@@ -104,21 +104,33 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {/* Lote 1 */}
-            <div className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105">
+            <div className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer" onClick={() => setShowInscricaoModal(true)}>
               <div className="text-4xl font-bold text-white mb-3">1º Lote</div>
               <p className="text-white text-lg mb-4 font-semibold">05/01/26 até 05/02/26</p>
-              <div className="bg-white rounded-lg p-4">
+              <div className="bg-white rounded-lg p-4 mb-6">
                 <p className="text-3xl font-bold text-pink-600">R$ 100,00</p>
               </div>
+              <button 
+                onClick={() => setShowInscricaoModal(true)}
+                className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
+              >
+                🎯 Se Inscrever Agora
+              </button>
             </div>
 
             {/* Lote 2 */}
-            <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105">
+            <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer" onClick={() => setShowInscricaoModal(true)}>
               <div className="text-4xl font-bold text-white mb-3">2º Lote</div>
               <p className="text-white text-lg mb-4 font-semibold">06/02/26 até 30/03/26</p>
-              <div className="bg-white rounded-lg p-4">
+              <div className="bg-white rounded-lg p-4 mb-6">
                 <p className="text-3xl font-bold text-purple-600">R$ 120,00</p>
               </div>
+              <button 
+                onClick={() => setShowInscricaoModal(true)}
+                className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-lg hover:bg-purple-50 transition transform hover:scale-105 shadow-md"
+              >
+                🎯 Se Inscrever Agora
+              </button>
             </div>
           </div>
 
