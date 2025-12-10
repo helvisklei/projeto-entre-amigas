@@ -6,7 +6,7 @@ export default function Footer() {
           {/* Logo e Descrição */}
           <div className="text-center md:text-left">
             <img
-              src="/logoEntreAmigas.png"
+              src="/logoEntreAmigas.webp"
               alt="Entre Amigas Logo"
               className="h-16 w-auto mx-auto md:mx-0 mb-4"
               title="Entre Amigas - Corrida de Mulheres"
