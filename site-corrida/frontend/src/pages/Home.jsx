@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+import Header from '../components/Header';
 import Footer from '../components/Footer';
 import EventsSection from '../components/EventsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
@@ -44,6 +45,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50">
+      {/* Header com Logo */}
+      <Header />
+
       {/* Hero Banner Melhorado */}
       <div className="relative h-96 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-200 overflow-hidden flex items-center justify-center shadow-lg">
         <div className="absolute inset-0 opacity-20">
@@ -51,8 +55,14 @@ export default function Home() {
           <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}>💕</div>
           <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}>🌸</div>
         </div>
-        <div className="relative text-center px-4 z-10">
-          <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg mb-2">
+        <div className="relative text-center px-4 z-10 space-y-4">
+          <img
+            src="/logoEntreAmigas.svg"
+            alt="Entre Amigas Logo"
+            className="h-24 w-auto mx-auto drop-shadow-lg"
+            title="Entre Amigas - Corrida de Mulheres"
+          />
+          <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
             Entre Amigas
           </h1>
           <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold">
