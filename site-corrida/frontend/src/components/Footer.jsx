@@ -8,10 +8,10 @@ export default function Footer() {
             <img
               src="/logoEntreAmigas.webp"
               alt="Entre Amigas Logo"
-              className="h-64 w-auto mx-auto md:mx-0 mb-4 drop-shadow-lg"
+              className="h-32 w-auto mx-auto md:mx-0 mb-6 drop-shadow-lg"
               title="Entre Amigas - Corrida de Mulheres"
             />
-            <h3 className="text-2xl font-bold mb-2 drop-shadow">Entre Amigas</h3>
+            <h3 className="text-2xl font-bold mb-3 drop-shadow">Entre Amigas</h3>
             <p className="text-pink-100 text-sm">
               Celebrando amizade, saúde e superação desde 2022.
             </p>

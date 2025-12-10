@@ -7,11 +7,11 @@ export default function Header() {
     <header className="bg-white shadow-md sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
-            className="h-12 md:h-14 w-auto"
+            className="h-14 md:h-16 w-auto drop-shadow-sm"
             title="Entre Amigas - Corrida de Mulheres"
           />
           <div className="hidden sm:block">
