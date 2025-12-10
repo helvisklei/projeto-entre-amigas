@@ -32,10 +32,10 @@ export default function Home() {
 
   // Benefícios do evento
   const benefits = [
-    { icon: '📸', title: 'Camisa Oficial', desc: 'Design exclusivo do evento' },
-    { icon: '📸', title: 'Número de Peito', desc: 'Identificação única' },
-    { icon: '📸', title: 'Medalha Exclusiva', desc: 'Lembrança especial' },
-    { icon: '📸', title: 'Pódios por Categoria', desc: '3 km e 5 km' },
+    { icon: '👕', title: 'Camisa Oficial', desc: 'Design exclusivo do evento' },
+    { icon: '🔢', title: 'Número de Peito', desc: 'Identificação única' },
+    { icon: '🥇', title: 'Medalha Exclusiva', desc: 'Lembrança especial' },
+    { icon: '🏆', title: 'Pódios por Categoria', desc: '3 km e 5 km' },
     { icon: '💆', title: 'Massagem', desc: 'Para os atletas pós-corrida' },
     { icon: '❄️', title: 'Piscina de Gelo', desc: 'Recuperação profissional' },
     { icon: '🎧', title: 'DJ ao Vivo', desc: 'Animando todo o evento' },
@@ -59,7 +59,7 @@ export default function Home() {
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
-            className="h-24 w-auto mx-auto drop-shadow-lg"
+            className="h-40 w-auto mx-auto drop-shadow-lg"
             title="Entre Amigas - Corrida de Mulheres"
           />
           <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
