@@ -8,7 +8,7 @@ export default function Footer() {
             <img
               src="/logoEntreAmigas.webp"
               alt="Entre Amigas Logo"
-              className="h-24 w-auto mx-auto md:mx-0 mb-4 drop-shadow-lg"
+              className="h-64 w-auto mx-auto md:mx-0 mb-4 drop-shadow-lg"
               title="Entre Amigas - Corrida de Mulheres"
             />
             <h3 className="text-2xl font-bold mb-2 drop-shadow">Entre Amigas</h3>
