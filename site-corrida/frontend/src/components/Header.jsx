@@ -5,13 +5,13 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-40">
-      <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1">
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
-            className="h-80 md:h-72 w-auto drop-shadow-sm"
+            className="h-14 md:h-16 w-auto drop-shadow-sm"
             title="Entre Amigas - Corrida de Mulheres"
           />          
         </div>

@@ -55,17 +55,17 @@ export default function Home() {
           <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}>💕</div>
           <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}>🌸</div>
         </div>
-        <div className="relative text-center px-4 z-10 space-y-2">
+        <div className="relative text-center px-4 z-10 space-y-0">
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
             className="h-80 w-auto mx-auto drop-shadow-xl"
             title="Entre Amigas - Corrida de Mulheres"
           />
-          <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg">
+          <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg -mt-4">
             Entre Amigas
           </h1>
-          <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold">
+          <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold -mt-2">
             5ª Edição • Celebrando Amizade, Saúde e Superação 💖
           </p>
         </div>
@@ -90,6 +90,41 @@ export default function Home() {
           <div className="text-center">
             <p className="text-lg md:text-xl font-semibold drop-shadow">
               🎁 Brindes, sorteios e muito mais te esperando! 🎁
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Lotes de Inscrição */}
+      <div className="relative bg-gradient-to-b from-white to-pink-50 py-12 shadow-lg">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-600 mb-10 drop-shadow">
+            💰 Valores por Lote de Inscrição
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Lote 1 */}
+            <div className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105">
+              <div className="text-4xl font-bold text-white mb-3">1º Lote</div>
+              <p className="text-white text-lg mb-4 font-semibold">05/01/26 até 05/02/26</p>
+              <div className="bg-white rounded-lg p-4">
+                <p className="text-3xl font-bold text-pink-600">R$ 100,00</p>
+              </div>
+            </div>
+
+            {/* Lote 2 */}
+            <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105">
+              <div className="text-4xl font-bold text-white mb-3">2º Lote</div>
+              <p className="text-white text-lg mb-4 font-semibold">06/02/26 até 30/03/26</p>
+              <div className="bg-white rounded-lg p-4">
+                <p className="text-3xl font-bold text-purple-600">R$ 120,00</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300">
+            <p className="text-lg font-semibold text-yellow-800">
+              ⏰ Garanta sua inscrição no primeiro lote e economize! 💪
             </p>
           </div>
         </div>
