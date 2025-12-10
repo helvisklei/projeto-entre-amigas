@@ -11,15 +11,9 @@ export default function Header() {
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
-            className="h-14 md:h-16 w-auto drop-shadow-sm"
+            className="h-80 md:h-72 w-auto drop-shadow-sm"
             title="Entre Amigas - Corrida de Mulheres"
-          />
-          <div className="hidden sm:block">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-              Entre Amigas
-            </h1>
-            <p className="text-xs text-gray-600">5ª Edição 2026</p>
-          </div>
+          />          
         </div>
 
         {/* Navigation (Future) */}
