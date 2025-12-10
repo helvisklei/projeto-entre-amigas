@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import EventsSection from '../components/EventsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import InscricaoModal from '../components/InscricaoModal';
+import '../styles/flip-animation.css';
 
 export default function Home() {
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
@@ -29,14 +30,27 @@ export default function Home() {
     console.log('Inscrição realizada com sucesso!');
   };
 
+  // Benefícios do evento
+  const benefits = [
+    { icon: '📸', title: 'Camisa Oficial', desc: 'Design exclusivo do evento' },
+    { icon: '📸', title: 'Número de Peito', desc: 'Identificação única' },
+    { icon: '📸', title: 'Medalha Exclusiva', desc: 'Lembrança especial' },
+    { icon: '📸', title: 'Pódios por Categoria', desc: '3 km e 5 km' },
+    { icon: '💆', title: 'Massagem', desc: 'Para os atletas pós-corrida' },
+    { icon: '❄️', title: 'Piscina de Gelo', desc: 'Recuperação profissional' },
+    { icon: '🎧', title: 'DJ ao Vivo', desc: 'Animando todo o evento' },
+    { icon: '☕', title: 'Café da Manhã', desc: 'Hidratação + refeição' },
+    { icon: '🎁', title: 'Brindes Especiais', desc: 'Sorteios e prêmios' }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50">
-      {/* Hero Banner */}
+      {/* Hero Banner Melhorado */}
       <div className="relative h-96 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-200 overflow-hidden flex items-center justify-center shadow-lg">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 left-10 text-6xl">🏃‍♀️</div>
-          <div className="absolute top-20 right-20 text-5xl">💕</div>
-          <div className="absolute bottom-10 left-1/4 text-5xl">🌸</div>
+          <div className="absolute top-10 left-10 text-6xl animate-bounce" style={{animationDelay: '0s'}}>🏃‍♀️</div>
+          <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}>💕</div>
+          <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}>🌸</div>
         </div>
         <div className="relative text-center px-4 z-10">
           <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg mb-2">
@@ -45,6 +59,30 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold">
             5ª Edição • Celebrando Amizade, Saúde e Superação 💖
           </p>
+        </div>
+      </div>
+
+      {/* Banner de Divulgação - Prepare-se */}
+      <div className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-12 shadow-lg">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 drop-shadow-lg">
+            ✨ Prepare-se para viver uma experiência incrível! ✨
+          </h2>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            {benefits.map((benefit, idx) => (
+              <div key={idx} className="text-center transform transition hover:scale-110">
+                <div className="text-4xl md:text-5xl mb-2">{benefit.icon}</div>
+                <p className="font-bold text-sm md:text-base drop-shadow">{benefit.title}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <p className="text-lg md:text-xl font-semibold drop-shadow">
+              🎁 Brindes, sorteios e muito mais te esperando! 🎁
+            </p>
+          </div>
         </div>
       </div>
 
@@ -63,45 +101,63 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Event Details Grid */}
-        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Data */}
-          <div className="bg-gradient-to-br from-pink-100 to-pink-50 rounded-lg shadow p-6 border-l-4 border-pink-500">
-            <h3 className="text-2xl font-bold text-pink-600 mb-2">📅 Data</h3>
-            <p className="text-xl font-semibold text-gray-800">17 de Maio de 2026</p>
+        {/* Event Details - Cards Unificados e Responsivos */}
+        <section className="space-y-6">
+          <h2 className="text-3xl font-bold text-center text-purple-600 mb-8">📋 Informações do Evento</h2>
+          
+          {/* Card 1: Data e Local - Lado a Lado em Desktop */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Data Card */}
+            <div className="bg-gradient-to-br from-pink-100 to-pink-50 rounded-lg shadow-lg p-8 border-l-4 border-pink-500 transform transition hover:scale-105">
+              <h3 className="text-3xl font-bold text-pink-600 mb-3">📅 Data</h3>
+              <p className="text-2xl font-semibold text-gray-800">17 de Maio</p>
+              <p className="text-lg text-gray-700">2026</p>
+              <p className="text-sm text-gray-600 mt-2">Dia memorável!</p>
+            </div>
+
+            {/* Local Card */}
+            <div className="bg-gradient-to-br from-purple-100 to-purple-50 rounded-lg shadow-lg p-8 border-l-4 border-purple-500 transform transition hover:scale-105">
+              <h3 className="text-3xl font-bold text-purple-600 mb-3">📍 Local</h3>
+              <p className="text-2xl font-semibold text-gray-800">Orla de Brasília Teimosa</p>
+              <p className="text-lg text-gray-700">(Buraco da Velha)</p>
+              <p className="text-sm text-gray-600 mt-2">Recife - PE</p>
+            </div>
           </div>
 
-          {/* Local */}
-          <div className="bg-gradient-to-br from-purple-100 to-purple-50 rounded-lg shadow p-6 border-l-4 border-purple-500">
-            <h3 className="text-2xl font-bold text-purple-600 mb-2">📍 Local</h3>
-            <p className="text-xl font-semibold text-gray-800">Orla de Brasília Teimosa</p>
-            <p className="text-sm text-gray-600">(Buraco da Velha)</p>
+          {/* Card 2: Largada, Distâncias e Categorias */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Largada Card */}
+            <div className="bg-gradient-to-br from-rose-100 to-rose-50 rounded-lg shadow-lg p-6 border-l-4 border-rose-500 transform transition hover:scale-105">
+              <h3 className="text-2xl font-bold text-rose-600 mb-3">⏰ Largada</h3>
+              <p className="text-3xl font-bold text-gray-800">06:00</p>
+              <p className="text-gray-700">horas (matutino)</p>
+              <p className="text-sm text-gray-600 mt-2">Chegar com antecedência!</p>
+            </div>
+
+            {/* Distâncias Card */}
+            <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg shadow-lg p-6 border-l-4 border-blue-500 transform transition hover:scale-105">
+              <h3 className="text-2xl font-bold text-blue-600 mb-3">🏁 Distâncias</h3>
+              <p className="text-lg font-semibold text-gray-800">📏 <strong>3 km</strong></p>
+              <p className="text-gray-700 text-sm mb-2">Para mulheres</p>
+              <p className="text-lg font-semibold text-gray-800">📏 <strong>5 km</strong></p>
+              <p className="text-gray-700 text-sm">Mulheres e Homens</p>
+            </div>
+
+            {/* Categorias Card */}
+            <div className="bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-lg shadow-lg p-6 border-l-4 border-indigo-500 transform transition hover:scale-105">
+              <h3 className="text-2xl font-bold text-indigo-600 mb-3">🎽 Categorias</h3>
+              <p className="text-lg font-semibold text-gray-800">👩 Feminino</p>
+              <p className="text-gray-700 text-sm mb-2">Todas as idades</p>
+              <p className="text-lg font-semibold text-gray-800">👨 Masculino</p>
+              <p className="text-gray-700 text-sm">Convidados especiais</p>
+            </div>
           </div>
 
-          {/* Horário */}
-          <div className="bg-gradient-to-br from-rose-100 to-rose-50 rounded-lg shadow p-6 border-l-4 border-rose-500">
-            <h3 className="text-2xl font-bold text-rose-600 mb-2">⏰ Largada</h3>
-            <p className="text-xl font-semibold text-gray-800">06:00 horas</p>
-          </div>
-
-          {/* Distâncias */}
-          <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg shadow p-6 border-l-4 border-blue-500">
-            <h3 className="text-2xl font-bold text-blue-600 mb-2">🏁 Distâncias</h3>
-            <p className="text-gray-800"><strong>3 km</strong> - Mulheres</p>
-            <p className="text-gray-800"><strong>5 km</strong> - Mulheres e Homens</p>
-          </div>
-
-          {/* Categorias */}
-          <div className="bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-lg shadow p-6 border-l-4 border-indigo-500">
-            <h3 className="text-2xl font-bold text-indigo-600 mb-2">🎽 Categorias</h3>
-            <p className="text-gray-800"><strong>Feminino</strong></p>
-            <p className="text-gray-800"><strong>Masculino</strong></p>
-          </div>
-
-          {/* Premiação */}
-          <div className="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-lg shadow p-6 border-l-4 border-yellow-500">
-            <h3 className="text-2xl font-bold text-yellow-600 mb-2">💖 Premiação</h3>
-            <p className="text-gray-800">Troféus para os 3 primeiros colocados em cada categoria</p>
+          {/* Card 3: Premiação */}
+          <div className="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-lg shadow-lg p-8 border-l-4 border-yellow-500 transform transition hover:scale-105">
+            <h3 className="text-3xl font-bold text-yellow-600 mb-3">🏆 Premiação</h3>
+            <p className="text-lg text-gray-800 font-semibold">Troféus para os 3 primeiros colocados em cada categoria</p>
+            <p className="text-gray-700 mt-3">Além de brindes especiais para todos os participantes!</p>
           </div>
         </section>
 

@@ -1,0 +1,50 @@
+/* Flip Animation for Event Cards */
+
+.flip-card-container {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Smooth animations */
+@media (prefers-reduced-motion: no-preference) {
+  .flip-card-inner {
+    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+/* Bounce animation for hero section */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
