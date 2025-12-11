@@ -55,11 +55,11 @@ export default function Home() {
           <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}>💕</div>
           <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}>🌸</div>
         </div>
-        <div className="relative text-center px-4 z-10 space-y-0">
+        <div className="relative text-center px-4 z-10">
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
-            className="h-64 md:h80 w-auto mx-auto drop-shadow-xl"
+            className="h-64 md:h80 w-auto mx-auto drop-shadow-2xl"
             title="Entre Amigas - Corrida de Mulheres"
           />          
           <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold -mt-2">
