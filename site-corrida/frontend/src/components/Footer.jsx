@@ -63,7 +63,9 @@ export default function Footer() {
                 👥
               </a>
               <a
-                href="#whatsapp"
+                href="https://wa.me/5581984671327"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-white hover:text-yellow-200 transition text-3xl drop-shadow"
                 title="WhatsApp"
               >
