@@ -23,7 +23,7 @@ export default function EventsSection() {
         {
           id: 1,
           titulo: 'Corrida Entre Amigas 2025',
-          data_evento: '2025-05-15',
+          data_evento: '2025-05-17',
           descricao: 'Corrida beneficente para as amigas',
           local: 'Recife - PE'
         }
@@ -57,8 +57,8 @@ export default function EventsSection() {
   ];
 
   const pastEvents = [
-    { title: '4ª Edição 2024', date: '12 Maio 2024', participants: '450 participantes', highlights: 'Recorde de inscrições!' },
-    { title: '3ª Edição 2023', date: '14 Maio 2023', participants: '380 participantes', highlights: 'Melhor estrutura!' }
+    { title: '4ª Edição 2024', date: '17 Maio 2024', participants: '450 participantes', highlights: 'Recorde de inscrições!' },
+    { title: '3ª Edição 2023', date: '17 Maio 2023', participants: '380 participantes', highlights: 'Melhor estrutura!' }
   ];
 
   if (loading) {
@@ -190,7 +190,7 @@ export default function EventsSection() {
                     >
                       {/* Front - Past Event Info */}
                       <div
-                        className="absolute w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg shadow-lg p-6 border-4 border-gray-400 flex flex-col justify-between"
+                        className="absolute w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg shadow-lg p-6 border-4 border-purple-400 flex flex-col justify-between"
                         style={{ backfaceVisibility: 'hidden' }}
                       >
                         <div>

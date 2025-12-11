@@ -244,7 +244,7 @@ export default function Home() {
         <section className="text-center space-y-6">
           <div>
             <p className="text-2xl text-gray-700 mb-4">
-              Pronta para fazer parte dessa história?
+              Pronto(a) para fazer parte dessa história?
             </p>
             <button
               onClick={() => setShowInscricaoModal(true)}
@@ -266,7 +266,7 @@ export default function Home() {
         {/* Events Section */}
         <EventsSection />
 
-        {/* Testimonials Section */}
+        {/* Testimonials Section Depoimentos*/}
         <TestimonialsSection />
 
         {/* Regras */}
