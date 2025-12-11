@@ -59,12 +59,9 @@ export default function Home() {
           <img
             src="/logoEntreAmigas.webp"
             alt="Entre Amigas Logo"
-            className="h-80 w-auto mx-auto drop-shadow-xl"
+            className="h-64 md:h80 w-auto mx-auto drop-shadow-xl"
             title="Entre Amigas - Corrida de Mulheres"
-          />
-          <h1 className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg -mt-4">
-            Entre Amigas
-          </h1>
+          />          
           <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold -mt-2">
             5ª Edição • Celebrando Amizade, Saúde e Superação 💖
           </p>
