@@ -62,7 +62,7 @@ export default function Home() {
             className="h-64 md:h80 w-auto mx-auto drop-shadow-2xl"
             title="Entre Amigas - Corrida de Mulheres"
           />          
-          <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold -mt-2">
+          <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold -mt-6">
             5ª Edição • Celebrando Amizade, Saúde e Superação 💖
           </p>
         </div>
