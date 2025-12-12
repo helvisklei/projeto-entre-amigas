@@ -18,9 +18,9 @@ export default function TestimonialsSection() {
       setTestimonials([
         {
           id: 1,
-          nome: 'Ana Silva',
+          nome: 'Dayana',
           categoria: '1º lugar feminino',
-          depoimento: 'Que privilégio correr entre amigas! Essa experiência foi marcante.',
+          depoimento: 'Eu conheci a família entre amigas através das redes sociais. Resolvi entrar em contato e obtive um retorno imediato. Denise que é a responsável  me acolheu e explicou tudo direitinho. Através do grupo consegui melhorar minha ansiedade e hoje sou uma pessoa extremamente ativa. Me sinto orgulhosa em saber que agora estou inspirando outras mulheres a correr..',
           genero: 'F',
           posicao: 1
         },
