@@ -104,9 +104,9 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
 
             <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
               <p className="text-sm text-blue-900">
-                <strong>✓ Formulário para inscrição segura</strong><br/>
+                <strong>✓ Formulário enviado com sucesso</strong><br/>
                 <strong>✓ Enviar comprovante para validar inscrição</strong><br/>
-                <strong>✓ Limite: 100 pessoas</strong>
+                <strong>✓ Limite: 200 pessoas</strong>
               </p>
             </div>
 
@@ -148,7 +148,7 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
                 Formulário Preenchido!
               </h2>
               <p className="text-gray-700">
-                Parabéns! Agora você precisa pagar a taxa de R$ 100,00 para confirmar sua inscrição.
+                Parabéns! Agora você precisa pagar a taxa para confirmar sua inscrição.
               </p>
             </div>
 
