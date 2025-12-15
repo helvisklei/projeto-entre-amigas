@@ -49,7 +49,7 @@ export default function Footer() {
             <h4 className="font-bold mb-4 text-white drop-shadow text-lg">Siga-nos</h4>
             <div className="flex justify-center md:justify-end gap-4">
               <a
-                href="#instagram"
+                href="https://www.instagram.com/entreamigasrun2024 "
                 className="text-white hover:text-yellow-200 transition text-3xl drop-shadow"
                 title="Instagram"
               >
