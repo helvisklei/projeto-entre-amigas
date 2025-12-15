@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
-
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import EventsSection from '../components/EventsSection';
-import TestimonialsSection from '../components/TestimonialsSection';
-import InscricaoModal from '../components/InscricaoModal';
 import '../styles/flip-animation.css';
+
+import EventsSection from '../components/EventsSection';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import InscricaoModal from '../components/InscricaoModal';
+import TestimonialsSection from '../components/TestimonialsSection';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 export default function Home() {
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
@@ -234,7 +234,7 @@ export default function Home() {
               <p className="text-lg mb-4">ou</p>
               <p className="text-lg">💰 <strong>Pix Direto:</strong></p>
               <p className="text-sm bg-white text-gray-900 p-3 rounded mt-2 font-mono">
-                51095174-281a-476c-a0ff-b3d9992107cd
+                81984671327
               </p>
             </div>
           </div>
