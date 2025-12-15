@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function EventsSection() {
   const [events, setEvents] = useState([]);
@@ -173,7 +174,7 @@ export default function EventsSection() {
 
             {/* Eventos Passados */}
             <div>
-              <h3 className="text-2xl font-bold text-gray-600 mb-8 text-center">📜 Edições Anteriores</h3>
+              <h3 className="text-2xl font-bold text-purple-700 mb-8 text-center">📜 Edições Anteriores</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 {pastEvents.map((pastEvent, index) => (
                   <div
@@ -190,11 +191,11 @@ export default function EventsSection() {
                     >
                       {/* Front - Past Event Info */}
                       <div
-                        className="absolute w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg shadow-lg p-6 border-4 border-purple-400 flex flex-col justify-between"
+                        className="absolute w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg shadow-lg p-6 border-4 border-purple-600 flex flex-col justify-between"
                         style={{ backfaceVisibility: 'hidden' }}
                       >
                         <div>
-                          <h3 className="text-2xl font-bold text-gray-600 mb-4">
+                          <h3 className="text-2xl font-bold text-purple-800 mb-4">
                             {pastEvent.title}
                           </h3>
                           <div className="space-y-3 text-gray-700">

@@ -83,7 +83,7 @@ export default function Footer() {
             © 2025 <strong className="text-white drop-shadow">Entre Amigas</strong>. Todos os direitos reservados.
           </p>
           <p className="mt-2">
-            Desenvolvido por <strong className="text-yellow-200 drop-shadow">HVK PRODUÇÃO - Helvisklei</strong>
+            Desenvolvido por <strong className="text-yellow-200 drop-shadow">HVK PRODUÇÕES</strong>
           </p>
         </div>
       </div>
