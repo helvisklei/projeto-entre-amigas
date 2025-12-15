@@ -50,6 +50,8 @@ export default function Footer() {
             <div className="flex justify-center md:justify-end gap-4">
               <a
                 href="https://www.instagram.com/entreamigasrun2024 "
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-white hover:text-yellow-200 transition text-3xl drop-shadow"
                 title="Instagram"
               >
