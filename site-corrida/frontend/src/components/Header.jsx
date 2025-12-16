@@ -20,7 +20,7 @@ export default function Header() {
           </a>
           <a href="#eventos" className="hover:text-pink-600 transition">
             Eventos
-          </a>
+          </a>  
           <a href="#depoimentos" className="hover:text-pink-600 transition">
             Depoimentos
           </a>
