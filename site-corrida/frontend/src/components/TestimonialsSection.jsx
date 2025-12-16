@@ -52,7 +52,7 @@ export default function TestimonialsSection() {
   }
 
   return (
-    <section id= "testimonials" className="py-12 bg-gradient-to-b from-purple-50 to-white">
+    <section id= "depoimentos" className="py-12 bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-4 text-purple-600">
           ⭐ Depoimentos dos Vencedores
