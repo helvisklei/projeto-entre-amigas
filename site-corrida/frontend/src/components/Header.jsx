@@ -10,7 +10,7 @@ export default function Header() {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
           Entre Amigas
           </h1>
-          <p className="text-xs text-gray-600">5ª Edição 2026</p>
+          {/* <p className="text-xs text-gray-600">5ª Edição 2026</p> */} {/* Commented out for future use */}
         </div>
 
         {/* Navigation (Future) */}

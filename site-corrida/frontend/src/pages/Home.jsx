@@ -120,7 +120,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-white mb-3">2º Lote</div>
               <p className="text-white text-lg mb-4 font-semibold">06/02/26 até 30/03/26</p>
               <div className="bg-white rounded-lg p-4 mb-6">
-                <p className="text-3xl font-bold text-purple-600">R$ 120,00</p>
+                <p className="text-3xl font-bold text-purple-600">R$ 100,00</p>
               </div>
               <button 
                 onClick={() => setShowInscricaoModal(true)}
@@ -143,7 +143,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
 
         {/* About Section */}
-        <section className="bg-white rounded-lg shadow-md p-8">
+        <section id="sobre" className="bg-white rounded-lg shadow-md p-8">
           <h2 className="text-3xl font-bold text-pink-600 mb-4">O que é Entre Amigas?</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
             🌸 A Corrida Entre Amigas é mais do que um evento esportivo — é um encontro de pessoas que acreditam na força da amizade, na saúde e no poder de se superar.
@@ -155,7 +155,7 @@ export default function Home() {
         </section>
 
         {/* Event Details - Cards Unificados e Responsivos */}
-        <section className="space-y-6">
+        <section id="eventos" className="space-y-6">
           <h2 className="text-3xl font-bold text-center text-purple-600 mb-8">📋 Informações do Evento</h2>
           
           {/* Card 1: Data e Local - Lado a Lado em Desktop */}

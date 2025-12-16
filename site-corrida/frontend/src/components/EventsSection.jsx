@@ -58,7 +58,7 @@ export default function EventsSection() {
   ];
 
   const pastEvents = [
-    { title: '4ª Edição 2025', date: '22 Novembro 2025', participants: '160 participantes', highlights: 'Recorde de inscrições!' },
+    { title: '4ª Edição 2025', date: '19 Outubro 2025', participants: '120 participantes', highlights: 'Melhor equipe!' },
     { title: '3ª Edição 2025', date: '17 Maio 2025', participants: '100 participantes', highlights: 'Melhor estrutura!' }
   ];
 
@@ -71,7 +71,7 @@ export default function EventsSection() {
   }
 
   return (
-    <section className="py-12 bg-gradient-to-b from-white to-purple-50">
+    <section id="eventos" className="py-12 bg-gradient-to-b from-white to-purple-50">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-12 text-purple-600">
           🏃 Nossos Eventos
