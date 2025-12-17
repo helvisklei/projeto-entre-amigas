@@ -143,7 +143,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
 
         {/* About Section */}
-        <section id="#sobre" className="bg-white rounded-lg shadow-md p-8">
+        <section id="sobre" className="bg-white rounded-lg shadow-md p-8">
           <h2 className="text-3xl font-bold text-pink-600 mb-4">O que é Entre Amigas?</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
             🌸 A Corrida Entre Amigas é mais do que um evento esportivo — é um encontro de pessoas que acreditam na força da amizade, na saúde e no poder de se superar.
