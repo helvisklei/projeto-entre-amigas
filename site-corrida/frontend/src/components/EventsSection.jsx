@@ -13,10 +13,24 @@ export default function EventsSection() {
     fetchEvents();
   }, []);
 
+  // parse date string "YYYY-MM-DD" como data local (evita shift para dia anterior por timezone)
+  const parseDateLocal = (isoDate) => {
+    if (!isoDate) return null;
+    const parts = isoDate.split('-');
+    if (parts.length !== 3) return null;
+    const [year, month, day] = parts.map(Number);
+    return new Date(year, month - 1, day);
+  };
+
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/events`);
+      // cache-busting + headers para evitar respostas em cache com data incorreta
+      const url = `${process.env.REACT_APP_API_URL}/events?_ts=${Date.now()}`;
+      const response = await axios.get(url, {
+        headers: { 'Cache-Control': 'no-cache, no-store', Pragma: 'no-cache' }
+      });
+      console.log('API /events response:', response.data);
       setEvents(response.data || []);
     } catch (err) {
       console.error('Erro ao buscar eventos:', err);
@@ -89,7 +103,8 @@ export default function EventsSection() {
               <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                 {events.map((event, index) => {
                   if (index !== 0) return null;
-                  const dataFormatada = new Date(event.data_evento).toLocaleDateString('pt-BR', {
+                  const dateObj = parseDateLocal(event.data_evento) || new Date(event.data_evento);
+                  const dataFormatada = dateObj.toLocaleDateString('pt-BR', {
                     day: '2-digit',
                     month: 'long',
                     year: 'numeric'
@@ -123,7 +138,7 @@ export default function EventsSection() {
                             <div className="space-y-3 text-gray-700">
                               <p className="flex items-center gap-2">
                                 <span className="text-2xl">📅</span>
-                                <span className="font-semibold">{dataFormatada}</span>
+                                <span className="font-semibold">{dataFormatada}</span> {/* a data está errada nessa parte*/}
                               </p>
                               <p className="flex items-center gap-2">
                                 <span className="text-2xl">📍</span>
