@@ -63,7 +63,7 @@ export default function Header() {
           </a>
           <a href="https://wa.me/5581984671327"
           target="_blank"
-          rel="noopener noreferrer"           
+          rel="noopener noreferrer" 
           className="block py-2 text-gray-700 hover:text-pink-600">
             Contato
           </a>
