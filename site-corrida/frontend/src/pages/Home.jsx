@@ -270,7 +270,7 @@ export default function Home() {
         <TestimonialsSection />
 
         {/* Regras */}
-        <section className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400">
+        <section id="regras" className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">🏆 Regras Importantes</h2>
           <ul className="space-y-3 text-lg text-gray-700">
             <li><strong>📋 Pipoca não vai para os pódios</strong></li>

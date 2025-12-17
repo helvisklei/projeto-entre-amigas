@@ -15,7 +15,7 @@ export default function Header() {
 
         {/* Navigation (Future) */}
         <nav className="hidden lg:flex gap-6 text-gray-700">
-          <a href="#about" className="hover:text-pink-600 transition">
+          <a href="#sobre" className="hover:text-pink-600 transition">
             Sobre
           </a>
           <a href="#eventos" className="hover:text-pink-600 transition">
@@ -26,6 +26,9 @@ export default function Header() {
           </a>
           <a href="#contato" className="hover:text-pink-600 transition">
             Contato
+          </a>
+          <a href="#regras" className="hover:text-pink-600 transition">
+            Regras
           </a>
         </nav>
 
@@ -49,7 +52,7 @@ export default function Header() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-gradient-to-b from-pink-50 to-purple-50 px-4 py-4 border-t border-pink-200">
-          <a href="#about" className="block py-2 text-gray-700 hover:text-pink-600">
+          <a href="#sobre" className="block py-2 text-gray-700 hover:text-pink-600">
             Sobre
           </a>
           <a href="#eventos" className="block py-2 text-gray-700 hover:text-pink-600">
@@ -60,6 +63,9 @@ export default function Header() {
           </a>
           <a href="#contato" className="block py-2 text-gray-700 hover:text-pink-600">
             Contato
+          </a>
+          <a href="#regras" className="block py-2 text-gray-700 hover:text-pink-600">
+            Regras
           </a>
         </div>
       )}
