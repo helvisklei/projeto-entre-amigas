@@ -105,7 +105,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-white mb-3">1º Lote</div>
               <p className="text-white text-lg mb-4 font-semibold">05/01/26 até 05/02/26</p>
               <div className="bg-white rounded-lg p-4 mb-6">
-                <p className="text-3xl font-bold text-pink-600">R$ 100,00</p>
+                <p className="text-3xl font-bold text-pink-600">R$ 102,50</p>
               </div>
               <button 
                 onClick={() => setShowInscricaoModal(true)}
@@ -120,7 +120,7 @@ export default function Home() {
               <div className="text-4xl font-bold text-white mb-3">2º Lote</div>
               <p className="text-white text-lg mb-4 font-semibold">06/02/26 até 30/03/26</p>
               <div className="bg-white rounded-lg p-4 mb-6">
-                <p className="text-3xl font-bold text-purple-600">R$ 100,00</p>
+                <p className="text-3xl font-bold text-purple-600">R$ 102,50</p>
               </div>
               <button 
                 onClick={() => setShowInscricaoModal(true)}
@@ -143,7 +143,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
 
         {/* About Section */}
-        <section id="#about" className="bg-white rounded-lg shadow-md p-8">
+        <section id="#sobre" className="bg-white rounded-lg shadow-md p-8">
           <h2 className="text-3xl font-bold text-pink-600 mb-4">O que é Entre Amigas?</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
             🌸 A Corrida Entre Amigas é mais do que um evento esportivo — é um encontro de pessoas que acreditam na força da amizade, na saúde e no poder de se superar.
