@@ -24,7 +24,10 @@ export default function Header() {
           <a href="#depoimentos" className="hover:text-pink-600 transition">
             Depoimentos
           </a>
-          <a href="#contato" className="hover:text-pink-600 transition">
+          <a href="https://wa.me/5581984671327"        
+          target="_blank"
+          rel="noopener noreferrer" 
+          className="hover:text-pink-600 transition">
             Contato
           </a>
           <a href="#regras" className="hover:text-pink-600 transition">
@@ -60,7 +63,7 @@ export default function Header() {
           </a>
           <a href="#depoimentos" className="block py-2 text-gray-700 hover:text-pink-600">
             Depoimentos
-          </a>
+          </a>               
           <a href="https://wa.me/5581984671327"
           target="_blank"
           rel="noopener noreferrer" 
