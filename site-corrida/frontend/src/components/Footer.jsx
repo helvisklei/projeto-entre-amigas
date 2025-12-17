@@ -22,7 +22,7 @@ export default function Footer() {
             <h4 className="font-bold mb-4 text-white drop-shadow text-lg">Links Rápidos</h4>
             <ul className="space-y-2 text-sm text-pink-50">
               <li>
-                <a href="#about" className="hover:text-white transition font-semibold">
+                <a href="sobre" className="hover:text-white transition font-semibold">
                   Sobre o Evento
                 </a>
               </li>

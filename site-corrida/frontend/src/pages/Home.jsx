@@ -216,7 +216,7 @@ export default function Home() {
 
         {/* Kit e Pagamento */}
         <section className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg shadow-lg p-8 text-white">
-          <h2 className="text-3xl font-bold mb-6">🎁 Kit Oficial - R$ 100,00</h2>
+          <h2 className="text-3xl font-bold mb-6">🎁 Kit Oficial - R$ 102,50</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-semibold mb-3">O que inclui:</h3>
