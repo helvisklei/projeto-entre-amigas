@@ -37,8 +37,8 @@ export default function EventsSection() {
       setEvents([
         {
           id: 1,
-          titulo: 'Corrida Entre Amigas 2025',
-          data_evento: '2025-05-17',
+          titulo: 'Corrida Entre Amigas 2026',
+          data_evento: '2026-05-17',
           descricao: 'Corrida beneficente para as amigas',
           local: 'Recife - PE'
         }
@@ -99,7 +99,7 @@ export default function EventsSection() {
           <>
             {/* Eventos Atuais */}
             <div className="mb-16">
-              <h3 className="text-2xl font-bold text-pink-600 mb-8 text-center">⭐ Evento Atual</h3>
+              <h3 className="text-2xl font-bold text-pink-600 mb-8 text-center">⭐ Próximo Evento</h3>{/*Evento Atual*/}
               <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
                 {events.map((event, index) => {
                   if (index !== 0) return null;
@@ -130,7 +130,7 @@ export default function EventsSection() {
                         >
                           <div>
                             <div className="bg-purple-600 text-white text-center py-2 font-bold rounded mb-4">
-                              ⭐ EVENTO ATUAL
+                              ⭐ PRÓXIMO EVENTO
                             </div>
                             <h3 className="text-2xl font-bold text-purple-600 mb-4">
                               {event.titulo}
@@ -242,7 +242,7 @@ export default function EventsSection() {
                             {pastEvent.highlights}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Momento memorável da corrida Entre Amigas! Obrigada a todas que participaram! 💕
+                            Gratidão a Deus por cada corrida realizada. Por cada detalhe cuidado, por cada sonho tirado do papel, por cada pessoa alcançada. Que tudo continue sendo feito com propósito, fé e amor 🙏✨” 💕
                           </p>
                         </div>
                         <p className="text-xs text-gray-600 text-center mt-3 font-semibold">
