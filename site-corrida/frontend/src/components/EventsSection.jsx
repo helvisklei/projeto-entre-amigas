@@ -72,8 +72,8 @@ export default function EventsSection() {
   ];
 
   const pastEvents = [
-    { title: '4ª Edição 2025', date: '19 Outubro 2025', participants: '160 participantes', highlights: 'Melhor equipe!' },
-    { title: '3ª Edição 2025', date: '20 Junho 2025', participants: '110 participantes', highlights: 'Melhor estrutura!' }
+    { title: '4ª Edição 2025', date: '19 Outubro 2025', participants: '160 participantes', highlights: 'Melhor equipe!', message:'Gratidão a Deus por cada corrida realizada. Por cada detalhe cuidado, por cada sonho tirado do papel, por cada pessoa alcançada. Que tudo continue sendo feito com propósito, fé e amor 🙏✨ 💕' },
+    { title: '3ª Edição 2025', date: '20 Junho 2025', participants: '110 participantes', highlights: 'Melhor estrutura!', message:'Quando Deus está à frente, tudo faz sentido. Gratidão por cada corrida concluída, por cada história vivida e por cada propósito cumprido. Tudo é d’Ele, por Ele e para Ele 🙏✨ 💕' },
   ];
 
   if (loading) {
@@ -242,7 +242,7 @@ export default function EventsSection() {
                             {pastEvent.highlights}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Gratidão a Deus por cada corrida realizada. Por cada detalhe cuidado, por cada sonho tirado do papel, por cada pessoa alcançada. Que tudo continue sendo feito com propósito, fé e amor 🙏✨” 💕
+                            Grande mensagem: {pastEvent.message}
                           </p>                          
                         </div>                        
                         <p className="text-xs text-gray-600 text-center mt-3 font-semibold">
