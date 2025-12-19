@@ -243,11 +243,21 @@ export default function EventsSection() {
                           </p>
                           <p className="text-sm text-gray-600">
                             Gratidão a Deus por cada corrida realizada. Por cada detalhe cuidado, por cada sonho tirado do papel, por cada pessoa alcançada. Que tudo continue sendo feito com propósito, fé e amor 🙏✨” 💕
-                          </p>
+                          </p>                          
+                        </div>
+
+                        <div>
+                          <h4 className="text-lg font-bold text-yellow-700 mb-3">
+                            ⭐ Destaque
+                          </h4>
+                          <p className="text-gray-700 font-semibold mb-2">
+                            {pastEvent.highlights}
+                          </p>                        
                           <p className="text-sm text-gray-600">
                             Quando Deus está à frente, tudo faz sentido. Gratidão por cada corrida concluída, por cada história vivida e por cada propósito cumprido. Tudo é d’Ele, por Ele e para Ele 🙏✨” 💕
                           </p>
                         </div>
+
                         <p className="text-xs text-gray-600 text-center mt-3 font-semibold">
                           👆 Clique para voltar
                         </p>
