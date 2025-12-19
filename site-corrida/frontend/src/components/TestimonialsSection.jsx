@@ -15,12 +15,13 @@ export default function TestimonialsSection() {
       );
       setTestimonials(response.data || []);
     } catch (err) {
-      console.error('Erro ao buscar depoimentos:', err);
+      console.error('Erro ao buscar depoimentos:', err); 
+      /*'1º lugar feminino'*/      
       setTestimonials([
         {
           id: 1,
           nome: 'Dayana',
-          categoria: '1º lugar feminino',
+          categoria: 'Feminino', 
           depoimento: 'Eu conheci a família entre amigas através das redes sociais. Resolvi entrar em contato e obtive um retorno imediato. Denise que é a responsável  me acolheu e explicou tudo direitinho. Através do grupo consegui melhorar minha ansiedade e hoje sou uma pessoa extremamente ativa. Me sinto orgulhosa em saber que agora estou inspirando outras mulheres a correr..',
           genero: 'F',
           posicao: 1
@@ -28,7 +29,7 @@ export default function TestimonialsSection() {
         {
           id: 2,
           nome: 'Carlos Santos',
-          categoria: '1º lugar masculino',
+          categoria: 'Masculino',
           depoimento: 'Uma corrida repleta de energia e solidariedade. Voltarei com certeza!',
           genero: 'M',
           posicao: 1
@@ -55,10 +56,10 @@ export default function TestimonialsSection() {
     <section id= "depoimentos" className="py-12 bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-4 text-purple-600">
-          ⭐ Depoimentos dos Vencedores
+          ⭐ Depoimentos dos Atletas   {/*Depoimentos dos Vencedores*/}
         </h2>
         <p className="text-center text-gray-600 mb-12">
-          Destaque dos atletas que chegaram em 1º lugar
+          Destaque dos atletas {/*Destaque dos atletas que chegaram em 1º lugar*/}
         </p>
 
         {testimonials.length === 0 ? (
@@ -88,7 +89,7 @@ export default function TestimonialsSection() {
                         {testimonial.nome}
                       </h3>
                       <p className="text-sm text-yellow-600 font-semibold">
-                        🏆 {testimonial.categoria}
+                        🏃‍♀️ {testimonial.categoria} {/*🏆*/}
                       </p>
                     </div>
                   </div>
