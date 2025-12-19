@@ -51,9 +51,9 @@ export default function Home() {
       {/* Hero Banner Melhorado */}
       <div className="relative h-96 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-200 overflow-hidden flex items-center justify-center shadow-lg">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 left-10 text-6xl animate-bounce" style={{animationDelay: '0s'}}>🏃‍♀️</div>
-          <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}>💕</div>
-          <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}>🌸</div>
+          <div className="absolute top-10 left-10 text-6xl animate-bounce" style={{animationDelay: '0s'}}></div>{/*🏃‍♀️*/}
+          <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}></div>{/*💕*/}
+          <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}></div> {/*🌸*/}
         </div>
         <div className="relative text-center px-4 z-10">
           <img
@@ -96,16 +96,16 @@ export default function Home() {
       <div className="relative bg-gradient-to-b from-white to-pink-50 py-12 shadow-lg">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-600 mb-10 drop-shadow">
-            💰 Valores por Lote de Inscrição
+            💰 Valor da Inscrição
           </h2>
           
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {/* Lote 1 */}
             <div className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer" onClick={() => setShowInscricaoModal(true)}>
-              <div className="text-4xl font-bold text-white mb-3">1º Lote</div>
-              <p className="text-white text-lg mb-4 font-semibold">05/01/26 até 05/02/26</p>
+              <div className="text-4xl font-bold text-white mb-3">PIX</div>
+              <p className="text-white text-lg mb-4 font-semibold">Á vista</p> {/* Alterado de 05/01/26 até 05/02/26 */}
               <div className="bg-white rounded-lg p-4 mb-6">
-                <p className="text-3xl font-bold text-pink-600">R$ 102,50</p>
+                <p className="text-3xl font-bold text-pink-600">R$ 105,00</p>
               </div>
               <button 
                 onClick={() => setShowInscricaoModal(true)}
@@ -117,10 +117,10 @@ export default function Home() {
 
             {/* Lote 2 */}
             <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer" onClick={() => setShowInscricaoModal(true)}>
-              <div className="text-4xl font-bold text-white mb-3">2º Lote</div>
-              <p className="text-white text-lg mb-4 font-semibold">06/02/26 até 30/03/26</p>
+              <div className="text-4xl font-bold text-white mb-3">Crédito</div>
+              <p className="text-white text-lg mb-4 font-semibold">Em duas vezes sem acréscimo</p>{/*06/02/26 até 30/03/26*/}
               <div className="bg-white rounded-lg p-4 mb-6">
-                <p className="text-3xl font-bold text-purple-600">R$ 102,50</p>
+                <p className="text-3xl font-bold text-purple-600">R$ 115</p>
               </div>
               <button 
                 onClick={() => setShowInscricaoModal(true)}
@@ -216,7 +216,7 @@ export default function Home() {
 
         {/* Kit e Pagamento */}
         <section className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg shadow-lg p-8 text-white">
-          <h2 className="text-3xl font-bold mb-6">🎁 Kit Oficial - R$ 102,50</h2>
+          <h2 className="text-3xl font-bold mb-6">🎁 Kit Oficial</h2>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-semibold mb-3">O que inclui:</h3>
@@ -234,7 +234,7 @@ export default function Home() {
               <p className="text-lg mb-4">ou</p>
               <p className="text-lg">💰 <strong>Pix Direto:</strong></p>
               <p className="text-sm bg-white text-gray-900 p-3 rounded mt-2 font-mono">
-                81984671327
+                07944726484
               </p>
             </div>
           </div>

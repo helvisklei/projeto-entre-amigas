@@ -72,8 +72,8 @@ export default function EventsSection() {
   ];
 
   const pastEvents = [
-    { title: '4ª Edição 2025', date: '19 Outubro 2025', participants: '120 participantes', highlights: 'Melhor equipe!' },
-    { title: '3ª Edição 2025', date: '17 Maio 2025', participants: '100 participantes', highlights: 'Melhor estrutura!' }
+    { title: '4ª Edição 2025', date: '19 Outubro 2025', participants: '160 participantes', highlights: 'Melhor equipe!' },
+    { title: '3ª Edição 2025', date: '20 Junho 2025', participants: '110 participantes', highlights: 'Melhor estrutura!' }
   ];
 
   if (loading) {
