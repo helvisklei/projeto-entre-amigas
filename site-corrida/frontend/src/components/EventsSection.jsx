@@ -242,7 +242,7 @@ export default function EventsSection() {
                             {pastEvent.highlights}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Grande mensagem: {pastEvent.message}
+                            {pastEvent.message}
                           </p>                          
                         </div>                        
                         <p className="text-xs text-gray-600 text-center mt-3 font-semibold">
