@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -76,7 +76,7 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
 
   const handleGoToPayment = () => {
     // Redireciona para pagamento (Mercado Pago)
-    window.location.href = 'https://mpago.li/17yVTQM';
+    window.location.href = 'https://mpago.li/2BNyGHm';
   };
 
   const handleCancel = () => {
