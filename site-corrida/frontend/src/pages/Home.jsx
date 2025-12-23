@@ -40,7 +40,8 @@ export default function Home() {
     { icon: '❄️', title: 'Piscina de Gelo', desc: 'Recuperação profissional' },
     { icon: '🎧', title: 'DJ ao Vivo', desc: 'Animando todo o evento' },
     { icon: '☕', title: 'Café da Manhã', desc: 'Hidratação + refeição' },
-    { icon: '🎁', title: 'Brindes Especiais', desc: 'Sorteios e prêmios' }
+    { icon: '🎁', title: 'Brindes Especiais', desc: 'Sorteios e prêmios' },
+    { icon: '🛡️', title: 'Seguro Atleta', desc: 'Cobertura durante o evento' }
   ];
 
   return (
