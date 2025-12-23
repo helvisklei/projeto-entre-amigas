@@ -28,9 +28,9 @@ export default function TestimonialsSection() {
         },
         {
           id: 2,
-          nome: 'Carlos Santos',
+          nome: 'Kawê Messias',
           categoria: 'Masculino',
-          depoimento: 'Uma corrida repleta de energia e solidariedade. Voltarei com certeza!',
+          depoimento: 'Com grande prazer, venho deixar meu depoimento sobre esse evento incrível.A corrida foi muito bem estruturada e organizada, contou com ótimos apoiadores e ofereceu todo o suporte que nós, corredores, precisamos. Tivemos alimentação antes e após a prova, banheira de gelo para recuperação e apoio dos bombeiros, garantindo segurança e cuidado em todos os detalhes. Foi uma honra participar desse evento e, com certeza, pretendo estar presente nas próximas edições.',
           genero: 'M',
           posicao: 1
         }
