@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 export default function Home() {
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
+  const [paymentType, setPaymentType] = useState(null); // 'pix' | 'credito'
 
   // Abre o modal automaticamente quando vindo do Google Forms
   useEffect(() => {
@@ -109,7 +110,7 @@ export default function Home() {
                 <p className="text-3xl font-bold text-pink-600">R$ 105,00</p>
               </div>
               <button 
-                onClick={() => setShowInscricaoModal(true)}
+                onClick={() => {setPaymentType('pix');setShowInscricaoModal(true); }}// coloca o tipo de pagamento PIX
                 className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
               >
                 🎯 Se Inscrever Agora
@@ -262,6 +263,7 @@ export default function Home() {
           onClose={() => setShowInscricaoModal(false)}
           googleFormUrl={GOOGLE_FORM_URL}
           onSuccess={handleInscricaoSuccess}
+          paymentType={paymentType}
         />
 
         {/* Events Section */}

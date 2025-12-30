@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSuccess }) {
+export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSuccess,paymentType }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -77,6 +77,18 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
   const handleGoToPayment = () => {
     // Redireciona para pagamento (Mercado Pago)
     window.location.href = 'https://mpago.li/2BNyGHm';
+  };
+
+  // ⬇⬇⬇ AQUI ⬇⬇⬇
+  const pixKey = "123e4567-e89b-12d3-a456-426614174000";
+
+  const handleCopyPix = async () => {
+    try {
+      await navigator.clipboard.writeText(pixKey);
+      alert("Chave Pix copiada! Abra o app do seu banco → Pix → Cola e Paga");
+    } catch (err) {
+      alert("Não foi possível copiar automaticamente. Copie manualmente a chave Pix.");
+    }
   };
 
   const handleCancel = () => {
@@ -177,12 +189,14 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
               </button>
 
               {/* Opção 3: Pagar depois */}
+
+              {paymentType==='pix'&& (
               <button
-                onClick={handleConfirmInscription}
+                onClick={handleCopyPix}
                 className="w-full text-gray-600 hover:text-gray-800 font-semibold py-2 border border-gray-300 rounded-lg transition"
               >
-                Pago Depois
-              </button>
+                💠 Copiar chave Pix e pagar no banco
+              </button>)}
             </div>
 
             <p className="text-xs text-gray-500 mt-4 text-center">
