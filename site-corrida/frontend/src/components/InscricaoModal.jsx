@@ -80,12 +80,12 @@ export default function InscricaoModal({ isOpen, onClose, googleFormUrl, onSucce
   };
 
   // ⬇⬇⬇ AQUI ⬇⬇⬇
-  const pixKey = "123e4567-e89b-12d3-a456-426614174000";
+  const pixKey = "00020126330014br.gov.bcb.pix0111079447264845204000053039865406105.005802BR5921Denize Jaques Valenca6009Sao Paulo610901227-20062230519daqr1745725661741916304042E";
 
   const handleCopyPix = async () => {
     try {
       await navigator.clipboard.writeText(pixKey);
-      alert("Chave Pix copiada! Abra o app do seu banco → Pix → Cola e Paga");
+      alert("Chave Pix copiada com sucesso. Abra o aplicativo do seu banco, acesse a opção Pix, cole a chave e finalize o pagamento.");
     } catch (err) {
       alert("Não foi possível copiar automaticamente. Copie manualmente a chave Pix.");
     }
