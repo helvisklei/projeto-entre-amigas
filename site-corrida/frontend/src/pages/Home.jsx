@@ -1,12 +1,12 @@
-import '../styles/flip-animation.css';
+import "../styles/flip-animation.css";
 
-import EventsSection from '../components/EventsSection';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-import InscricaoModal from '../components/InscricaoModal';
-import TestimonialsSection from '../components/TestimonialsSection';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import EventsSection from "../components/EventsSection";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import InscricaoModal from "../components/InscricaoModal";
+import TestimonialsSection from "../components/TestimonialsSection";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function Home() {
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
@@ -22,27 +22,28 @@ export default function Home() {
     }
   }, []);
 
-  
   // URL do Google Form (configurada)
-  const GOOGLE_FORM_URL = process.env.REACT_APP_GOOGLE_FORM_URL || 'https://forms.gle/cK5rsEZ75nbTYgTj9';
+  const GOOGLE_FORM_URL =
+    process.env.REACT_APP_GOOGLE_FORM_URL ||
+    "https://forms.gle/cK5rsEZ75nbTYgTj9";
 
   const handleInscricaoSuccess = () => {
     // Lógica adicional após sucesso
-    console.log('Inscrição realizada com sucesso!');
+    console.log("Inscrição realizada com sucesso!");
   };
 
   // Benefícios do evento
   const benefits = [
-    { icon: '👕', title: 'Camisa Oficial', desc: 'Design exclusivo do evento' },
-    { icon: '🔢', title: 'Número de Peito', desc: 'Identificação única' },
-    { icon: '🥇', title: 'Medalha Exclusiva', desc: 'Lembrança especial' },
-    { icon: '🏆', title: 'Pódios por Categoria', desc: '3 km e 5 km' },
-    { icon: '💆', title: 'Massagem', desc: 'Para os atletas pós-corrida' },
-    { icon: '❄️', title: 'Piscina de Gelo', desc: 'Recuperação profissional' },
-    { icon: '🎧', title: 'DJ ao Vivo', desc: 'Animando todo o evento' },
-    { icon: '☕', title: 'Café da Manhã', desc: 'Hidratação + refeição' },
-    { icon: '🎁', title: 'Brindes Especiais', desc: 'Sorteios e prêmios' },
-    { icon: '🛡️', title: 'Seguro Atleta', desc: 'Cobertura durante o evento' }
+    { icon: "👕", title: "Camisa Oficial", desc: "Design exclusivo do evento" },
+    { icon: "🔢", title: "Número de Peito", desc: "Identificação única" },
+    { icon: "🥇", title: "Medalha Exclusiva", desc: "Lembrança especial" },
+    { icon: "🏆", title: "Pódios por Categoria", desc: "3 km e 5 km" },
+    { icon: "💆", title: "Massagem", desc: "Para os atletas pós-corrida" },
+    { icon: "❄️", title: "Piscina de Gelo", desc: "Recuperação profissional" },
+    { icon: "🎧", title: "DJ ao Vivo", desc: "Animando todo o evento" },
+    { icon: "☕", title: "Café da Manhã", desc: "Hidratação + refeição" },
+    { icon: "🎁", title: "Brindes Especiais", desc: "Sorteios e prêmios" },
+    { icon: "🛡️", title: "Seguro Atleta", desc: "Cobertura durante o evento" },
   ];
 
   return (
@@ -53,9 +54,21 @@ export default function Home() {
       {/* Hero Banner Melhorado */}
       <div className="relative h-96 bg-gradient-to-r from-pink-300 via-purple-300 to-pink-200 overflow-hidden flex items-center justify-center shadow-lg">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 left-10 text-6xl animate-bounce" style={{animationDelay: '0s'}}></div>{/*🏃‍♀️*/}
-          <div className="absolute top-20 right-20 text-5xl animate-bounce" style={{animationDelay: '0.2s'}}></div>{/*💕*/}
-          <div className="absolute bottom-10 left-1/4 text-5xl animate-bounce" style={{animationDelay: '0.4s'}}></div> {/*🌸*/}
+          <div
+            className="absolute top-10 left-10 text-6xl animate-bounce"
+            style={{ animationDelay: "0s" }}
+          ></div>
+          {/*🏃‍♀️*/}
+          <div
+            className="absolute top-20 right-20 text-5xl animate-bounce"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
+          {/*💕*/}
+          <div
+            className="absolute bottom-10 left-1/4 text-5xl animate-bounce"
+            style={{ animationDelay: "0.4s" }}
+          ></div>{" "}
+          {/*🌸*/}
         </div>
         <div className="relative text-center px-4 z-10">
           <img
@@ -63,7 +76,7 @@ export default function Home() {
             alt="Entre Amigas Logo"
             className="h-64 md:h80 w-auto mx-auto drop-shadow-2xl"
             title="Entre Amigas - Corrida de Mulheres"
-          />          
+          />
           <p className="text-xl md:text-2xl text-white drop-shadow-md font-semibold -mt-6 -translate-y-2">
             5ª Edição • Celebrando Amizade, Saúde e Superação 💖
           </p>
@@ -76,12 +89,17 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 drop-shadow-lg">
             ✨ Prepare-se para viver uma experiência incrível! ✨
           </h2>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             {benefits.map((benefit, idx) => (
-              <div key={idx} className="text-center transform transition hover:scale-110">
+              <div
+                key={idx}
+                className="text-center transform transition hover:scale-110"
+              >
                 <div className="text-4xl md:text-5xl mb-2">{benefit.icon}</div>
-                <p className="font-bold text-sm md:text-base drop-shadow">{benefit.title}</p>
+                <p className="font-bold text-sm md:text-base drop-shadow">
+                  {benefit.title}
+                </p>
               </div>
             ))}
           </div>
@@ -100,17 +118,26 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-600 mb-10 drop-shadow">
             💰 Valor da Inscrição
           </h2>
-          
+
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {/* Lote 1 */}
-            <div className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer" onClick={() => setShowInscricaoModal(true)}>
+            <div
+              className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer"
+              onClick={() => setShowInscricaoModal(true)}
+            >
               <div className="text-4xl font-bold text-white mb-3">PIX</div>
-              <p className="text-white text-lg mb-4 font-semibold">Á vista</p> {/* Alterado de 05/01/26 até 05/02/26 */}
+              <p className="text-white text-lg mb-4 font-semibold">
+                Á vista
+              </p>{" "}
+              {/* Alterado de 05/01/26 até 05/02/26 */}
               <div className="bg-white rounded-lg p-4 mb-6">
                 <p className="text-3xl font-bold text-pink-600">R$ 105,00</p>
               </div>
-              <button 
-                onClick={() => {setPaymentType('pix');setShowInscricaoModal(true); }}// coloca o tipo de pagamento PIX
+              <button
+                onClick={() => {
+                  setPaymentType("pix");
+                  setShowInscricaoModal(true);
+                }} // coloca o tipo de pagamento PIX
                 className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
               >
                 🎯 Se Inscrever Agora
@@ -118,13 +145,19 @@ export default function Home() {
             </div>
 
             {/* Lote 2 */}
-            <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer" onClick={() => setShowInscricaoModal(true)}>
+            <div
+              className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer"
+              onClick={() => setShowInscricaoModal(true)}
+            >
               <div className="text-4xl font-bold text-white mb-3">Crédito</div>
-              <p className="text-white text-lg mb-4 font-semibold">Em duas vezes sem acréscimo</p>{/*06/02/26 até 30/03/26*/}
+              <p className="text-white text-lg mb-4 font-semibold">
+                Em duas vezes sem acréscimo
+              </p>
+              {/*06/02/26 até 30/03/26*/}
               <div className="bg-white rounded-lg p-4 mb-6">
                 <p className="text-3xl font-bold text-purple-600">R$ 115</p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowInscricaoModal(true)}
                 className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-lg hover:bg-purple-50 transition transform hover:scale-105 shadow-md"
               >
@@ -143,13 +176,18 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
-
         {/* About Section */}
         <section id="sobre" className="bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-3xl font-bold text-pink-600 mb-4">O que é Entre Amigas?</h2>
+          <h2 className="text-3xl font-bold text-pink-600 mb-4">
+            O que é Entre Amigas?
+          </h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            🌸 A Corrida Entre Amigas é mais do que um evento esportivo — é um encontro de pessoas que acreditam na força da amizade, na saúde e no poder de se superar.
-            Venha viver essa experiência inesquecível! <strong>Corra, caminhe, sorria e celebre conosco a força da amizade!</strong>
+            🌸 A Corrida Entre Amigas é mais do que um evento esportivo — é um
+            encontro de pessoas que acreditam na força da amizade, na saúde e no
+            poder de se superar. Venha viver essa experiência inesquecível!{" "}
+            <strong>
+              Corra, caminhe, sorria e celebre conosco a força da amizade!
+            </strong>
           </p>
           <p className="text-lg text-purple-700 font-semibold mt-4">
             Entre Amigas, toda corrida tem mais significado. 💕
@@ -158,8 +196,10 @@ export default function Home() {
 
         {/* Event Details - Cards Unificados e Responsivos */}
         <section id="eventos" className="space-y-6">
-          <h2 className="text-3xl font-bold text-center text-purple-600 mb-8">📋 Informações do Evento</h2>
-          
+          <h2 className="text-3xl font-bold text-center text-purple-600 mb-8">
+            📋 Informações do Evento
+          </h2>
+
           {/* Card 1: Data e Local - Lado a Lado em Desktop */}
           <div className="grid md:grid-cols-2 gap-6">
             {/* Data Card */}
@@ -172,8 +212,12 @@ export default function Home() {
 
             {/* Local Card */}
             <div className="bg-gradient-to-br from-purple-100 to-purple-50 rounded-lg shadow-lg p-8 border-l-4 border-purple-500 transform transition hover:scale-105">
-              <h3 className="text-3xl font-bold text-purple-600 mb-3">📍 Local</h3>
-              <p className="text-2xl font-semibold text-gray-800">Orla de Brasília Teimosa</p>
+              <h3 className="text-3xl font-bold text-purple-600 mb-3">
+                📍 Local
+              </h3>
+              <p className="text-2xl font-semibold text-gray-800">
+                Orla de Brasília Teimosa
+              </p>
               <p className="text-lg text-gray-700">(Buraco da Velha)</p>
               <p className="text-sm text-gray-600 mt-2">Recife - PE</p>
             </div>
@@ -183,36 +227,56 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Largada Card */}
             <div className="bg-gradient-to-br from-rose-100 to-rose-50 rounded-lg shadow-lg p-6 border-l-4 border-rose-500 transform transition hover:scale-105">
-              <h3 className="text-2xl font-bold text-rose-600 mb-3">⏰ Largada</h3>
+              <h3 className="text-2xl font-bold text-rose-600 mb-3">
+                ⏰ Largada
+              </h3>
               <p className="text-3xl font-bold text-gray-800">06:00</p>
               <p className="text-gray-700">horas (matutino)</p>
-              <p className="text-sm text-gray-600 mt-2">Chegar com antecedência!</p>
+              <p className="text-sm text-gray-600 mt-2">
+                Chegar com antecedência!
+              </p>
             </div>
 
             {/* Distâncias Card */}
             <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg shadow-lg p-6 border-l-4 border-blue-500 transform transition hover:scale-105">
-              <h3 className="text-2xl font-bold text-blue-600 mb-3">🏁 Distâncias</h3>
-              <p className="text-lg font-semibold text-gray-800">📏 <strong>3 km</strong></p>
+              <h3 className="text-2xl font-bold text-blue-600 mb-3">
+                🏁 Distâncias
+              </h3>
+              <p className="text-lg font-semibold text-gray-800">
+                📏 <strong>3 km</strong>
+              </p>
               <p className="text-gray-700 text-sm mb-2">Para mulheres</p>
-              <p className="text-lg font-semibold text-gray-800">📏 <strong>5 km</strong></p>
+              <p className="text-lg font-semibold text-gray-800">
+                📏 <strong>5 km</strong>
+              </p>
               <p className="text-gray-700 text-sm">Mulheres e Homens</p>
             </div>
 
             {/* Categorias Card */}
             <div className="bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-lg shadow-lg p-6 border-l-4 border-indigo-500 transform transition hover:scale-105">
-              <h3 className="text-2xl font-bold text-indigo-600 mb-3">🎽 Categorias</h3>
+              <h3 className="text-2xl font-bold text-indigo-600 mb-3">
+                🎽 Categorias
+              </h3>
               <p className="text-lg font-semibold text-gray-800">👩 Feminino</p>
               <p className="text-gray-700 text-sm mb-2">Todas as idades</p>
-              <p className="text-lg font-semibold text-gray-800">👨 Masculino</p>
-              <p className="text-gray-700 text-sm">Convidados especiais</p>
+              <p className="text-lg font-semibold text-gray-800">
+                👨 Masculino
+              </p>
+              <p className="text-gray-700 text-sm">Todas as idades</p>
             </div>
           </div>
 
           {/* Card 3: Premiação */}
           <div className="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-lg shadow-lg p-8 border-l-4 border-yellow-500 transform transition hover:scale-105">
-            <h3 className="text-3xl font-bold text-yellow-600 mb-3">🏆 Premiação</h3>
-            <p className="text-lg text-gray-800 font-semibold">Troféus para os 3 primeiros colocados em cada categoria</p>
-            <p className="text-gray-700 mt-3">Além de brindes especiais para todos os participantes!</p>
+            <h3 className="text-3xl font-bold text-yellow-600 mb-3">
+              🏆 Premiação
+            </h3>
+            <p className="text-lg text-gray-800 font-semibold">
+              Troféus para os 3 primeiros colocados em cada categoria
+            </p>
+            <p className="text-gray-700 mt-3">
+              Além de brindes especiais para todos os participantes!
+            </p>
           </div>
         </section>
 
@@ -231,10 +295,16 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-3">Formas de Pagamento:</h3>
-              <p className="text-lg mb-4">💳 <strong>Pix ou Cartão</strong> (via Mercado Pago)</p>
+              <h3 className="text-xl font-semibold mb-3">
+                Formas de Pagamento:
+              </h3>
+              <p className="text-lg mb-4">
+                💳 <strong>Pix ou Cartão</strong> (via Mercado Pago)
+              </p>
               <p className="text-lg mb-4">ou</p>
-              <p className="text-lg">💰 <strong>Pix Direto:</strong></p>
+              <p className="text-lg">
+                💰 <strong>Pix Direto:</strong>
+              </p>
               <p className="text-sm bg-white text-gray-900 p-3 rounded mt-2 font-mono">
                 07944726484
               </p>
@@ -273,12 +343,26 @@ export default function Home() {
         <TestimonialsSection />
 
         {/* Regras */}
-        <section id="regras" className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">🏆 Regras Importantes</h2>
+        <section
+          id="regras"
+          className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400"
+        >
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            🏆 Regras Importantes
+          </h2>
           <ul className="space-y-3 text-lg text-gray-700">
-            <li><strong>📋 Pipoca não vai para os pódios</strong></li>
-            <li><strong>🎽 Não levamos kits para retirar no dia da corrida</strong> - Retirada uma semana antes</li>
-            <li><strong>⏰ Chegue com antecedência</strong></li>
+            <li>
+              <strong>📋 Pipoca não vai para os pódios</strong>
+            </li>
+            <li>
+              <strong>
+                🎽 Não levamos kits para retirar no dia da corrida
+              </strong>{" "}
+              - Retirada uma semana antes
+            </li>
+            <li>
+              <strong>⏰ Chegue com antecedência</strong>
+            </li>
           </ul>
         </section>
 
@@ -291,7 +375,6 @@ export default function Home() {
             Corra, caminhe, sorria e celebre conosco a força da amizade! 💕
           </p>
         </div>
-
       </div>
       <Footer />
     </div>
