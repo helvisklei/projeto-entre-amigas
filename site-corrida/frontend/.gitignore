@@ -11,6 +11,8 @@
 # production
 /build
 
+"site-corrida/backup fornt 12112025 - 1/"
+
 # misc
 .DS_Store
 .env.local
