@@ -301,7 +301,7 @@ export default function Home() {
                 <li>✓ Viseira</li>
                 <li>✓ Ecobag</li>
                 <li>✓ Seguro Atleta</li>
-                <li>✓ Brindes de patrocinadores</li>
+                <li>✓ Brindes de patrocinadores - Sorteios</li>
               </ul>
             </div>
 
