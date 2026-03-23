@@ -4,6 +4,7 @@ import EventsSection from "../components/EventsSection";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import InscricaoModal from "../components/InscricaoModal";
+import KitExtrasSection from "../components/KitExtrasSection";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -290,6 +291,8 @@ export default function Home() {
                 <li>✓ Camisa oficial</li>
                 <li>✓ Número de peito</li>
                 <li>✓ Medalha de participação</li>
+                <li>✓ Viseira</li>
+                <li>✓ Ecobag</li>
                 <li>✓ Seguro Atleta</li>
                 <li>✓ Brindes de patrocinadores</li>
               </ul>
@@ -310,6 +313,8 @@ export default function Home() {
               </p>
             </div>
           </div>
+          {/* 👇 Kit Extras 25 e 55*/}
+          <KitExtrasSection />
         </section>
 
         {/* Inscrição CTA */}
