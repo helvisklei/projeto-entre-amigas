@@ -282,10 +282,58 @@ export default function Home() {
         </section>
 
         {/* Kit e Pagamento */}
+
+        {/* Kit e Pagamento */}
         <section className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg shadow-lg p-8 text-white">
-          <h2 className="text-3xl font-bold mb-6">
-            🎁 Inscrição Completa - R$ 105 (Pix) | R$ 115 (Cartão)
-          </h2>
+          <h2 className="text-3xl font-bold mb-6">🎁 Inscrição Completa</h2>
+
+          <p className="text-2xl font-bold mb-6">
+            R$ 105 (Pix) | R$ 115 (Cartão)
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-xl font-semibold mb-3">O que inclui:</h3>
+              <ul className="space-y-2 text-lg">
+                <li>✓ Camisa oficial</li>
+                <li>✓ Número de peito</li>
+                <li>✓ Medalha de participação</li>
+                <li>✓ Viseira</li>
+                <li>✓ Ecobag</li>
+                <li>✓ Seguro Atleta</li>
+                <li>✓ Brindes de patrocinadores</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold mb-3">
+                Formas de Pagamento:
+              </h3>
+              <p className="text-lg mb-4">
+                💳 <strong>Pix ou Cartão</strong> (via Mercado Pago)
+              </p>
+              <p className="text-lg mb-4">ou</p>
+              <p className="text-lg">
+                💰 <strong>Pix Direto:</strong>
+              </p>
+              <p className="text-sm bg-white text-gray-900 p-3 rounded mt-2 font-mono">
+                07944726484
+              </p>
+            </div>
+          </div>
+
+          {/* 🔥 DIVISOR VISUAL */}
+          <div className="border-t border-white/30 my-8"></div>
+
+          {/* 👇 Kits alternativos */}
+          <KitExtrasSection />
+        </section>
+        {/*         <section className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg shadow-lg p-8 text-white">
+          <h2 className="text-3xl font-bold mb-6">🎁 Inscrição Completa</h2>
+          <p className="text-2xl font-bold mb-4">
+            {" "}
+            R$ 105 (Pix) | R$ 115 (Cartão)
+          </p>
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-semibold mb-3">O que inclui:</h3>
@@ -314,10 +362,10 @@ export default function Home() {
                 07944726484
               </p>
             </div>
-          </div>
-          {/* 👇 Kit Extras 25 e 55*/}
-          <KitExtrasSection />
-        </section>
+          </div> */}
+        {/* 👇 Kit Extras 25 e 55*/}
+        {/*  <KitExtrasSection />
+        </section> */}
 
         {/* Inscrição CTA */}
         <section className="text-center space-y-6">
