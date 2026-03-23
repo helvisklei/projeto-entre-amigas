@@ -377,7 +377,7 @@ export default function Home() {
               onClick={() => setShowInscricaoModal(true)}
               className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
             >
-              🏃‍♀️ Se inscreva você também! 💕
+              🏃‍♀️ Clique aqui. Se inscreva você também! 💕
             </button>
           </div>
         </section>
