@@ -7,7 +7,7 @@ export default function KitExtrasSection() {
   return (
     <div className="mt-10">
       <h3 className="text-2xl font-bold mb-6 text-center">
-        ➕ Kits Adicionais
+        🎯 Outras opções de participação
       </h3>
 
       <div className="grid md:grid-cols-2 gap-6">
