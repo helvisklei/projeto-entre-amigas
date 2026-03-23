@@ -5,6 +5,7 @@ export const kitsExtras = [
     nome: "🥈 Kit Participação",
     preco: 55,
     destaque: false,
+    observacao: "Não inclui camisa",
     itens: ["Número de peito", "Medalha pós-prova", "Sorteios", "Pódio"],
   },
   {
@@ -12,7 +13,7 @@ export const kitsExtras = [
     nome: "☕ Kit Café da Manhã",
     preco: 25,
     destaque: false,
-    observacao: "Não inclui medalha e não participa do pódio",
+    observacao: "Não inclui medalha, camisa e não participa do pódio",
     itens: ["Número de peito", "Seguro atleta", "Café da manhã"],
   },
 ];
