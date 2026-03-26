@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 export default function Home() {
+  // 🔒 Controle de inscrições
+  const isInscriptionOpen = false; // Mude para true quando quiser reabrir
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
   const [paymentType, setPaymentType] = useState(null); // 'pix' | 'credito'
 
@@ -124,7 +126,7 @@ export default function Home() {
             {/* Lote 1 */}
             <div
               className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer"
-              // onClick={() => setShowInscricaoModal(true)}
+              onClick={() => setShowInscricaoModal(true)}
             >
               <div className="text-4xl font-bold text-white mb-3">PIX</div>
               <p className="text-white text-lg mb-4 font-semibold">
@@ -134,21 +136,32 @@ export default function Home() {
               <div className="bg-white rounded-lg p-4 mb-6">
                 <p className="text-3xl font-bold text-pink-600">R$ 105,00</p>
               </div>
-              <button
-                /* onClick={() => {
-                  setPaymentType("pix");
-                  setShowInscricaoModal(true);
-                }}  */ // coloca o tipo de pagamento PIX
-                className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
-              >
-                🎯 Se Inscrever Agora
-              </button>
+              {isInscriptionOpen ? (
+                <button
+                  onClick={() => {
+                    setPaymentType("pix");
+                    setShowInscricaoModal(true);
+                  }}
+                  disabled={!isInscriptionOpen} // 👈 Adicione isto
+                  // coloca o tipo de pagamento PIX
+                  className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
+                >
+                  🎯 Se Inscrever Agora
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="w-full bg-gray-300 text-gray-600 font-bold py-3 px-4 rounded-lg cursor-not-allowed opacity-50"
+                >
+                  ⏰ Inscrições Fechadas
+                </button>
+              )}
             </div>
 
             {/* Lote 2 */}
             <div
               className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer"
-              // onClick={() => setShowInscricaoModal(true)}
+              onClick={() => setShowInscricaoModal(true)}
             >
               <div className="text-4xl font-bold text-white mb-3">Crédito</div>
               <p className="text-white text-lg mb-4 font-semibold">
@@ -158,12 +171,23 @@ export default function Home() {
               <div className="bg-white rounded-lg p-4 mb-6">
                 <p className="text-3xl font-bold text-purple-600">R$ 115</p>
               </div>
-              <button
-                // onClick={() => setShowInscricaoModal(true)}
-                className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-lg hover:bg-purple-50 transition transform hover:scale-105 shadow-md"
-              >
-                🎯 Se Inscrever Agora
-              </button>
+
+              {isInscriptionOpen ? (
+                <button
+                  onClick={() => setShowInscricaoModal(true)}
+                  disabled={!isInscriptionOpen} // 👈 Adicione isto
+                  className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-lg hover:bg-purple-50 transition transform hover:scale-105 shadow-md"
+                >
+                  🎯 Se Inscrever Agora
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="w-full bg-gray-300 text-gray-600 font-bold py-3 px-4 rounded-lg cursor-not-allowed opacity-50"
+                >
+                  ⏰ Inscrições Fechadas
+                </button>
+              )}
             </div>
           </div>
 
@@ -373,22 +397,38 @@ export default function Home() {
             <p className="text-2xl text-gray-700 mb-4">
               Pronto(a) para fazer parte dessa história?
             </p>
-            <button
-              // onClick={() => setShowInscricaoModal(true)}
-              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
-            >
-              🏃‍♀️ Clique aqui. Se inscreva você também! 💕
-            </button>
+            {!isInscriptionOpen ? (
+              // 📢 Mensagem quando inscrições estão FECHADAS
+              <div className="bg-red-50 rounded-lg p-8 border-2 border-red-300 mb-4 mx-auto max-w-md">
+                <p className="text-2xl font-bold text-red-600 mb-2">
+                  ⏰ Em Breve!
+                </p>
+                <p className="text-gray-700 mb-3">
+                  Inscrições temporariamente fechadas
+                </p>
+                <p className="text-sm text-gray-600">
+                  Fique atenta para as próximas inscrições! 💕
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowInscricaoModal(true)}
+                disabled={!isInscriptionOpen} // 👈 Adicione isto
+                className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
+              >
+                🏃‍♀️ Clique aqui. Se inscreva você também! 💕
+              </button>
+            )}
           </div>
         </section>
 
         {/* Modal de Inscrição */}
         <InscricaoModal
-        /* isOpen={showInscricaoModal}
-         onClose={() => setShowInscricaoModal(false)}
-          googleFormUrl={GOOGLE_FORM_URL} 
+          isOpen={showInscricaoModal}
+          onClose={() => setShowInscricaoModal(false)}
+          googleFormUrl={GOOGLE_FORM_URL}
           onSuccess={handleInscricaoSuccess}
-          paymentType={paymentType}*/
+          paymentType={paymentType}
         />
 
         {/* Events Section */}
