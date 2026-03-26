@@ -142,7 +142,7 @@ export default function Home() {
                     setPaymentType("pix");
                     setShowInscricaoModal(true);
                   }}
-                  disabled={!isInscriptionOpen} // 👈 Adicione isto
+                  //disabled={!isInscriptionOpen} // 👈 Adicione isto
                   // coloca o tipo de pagamento PIX
                   className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
                 >
@@ -178,7 +178,7 @@ export default function Home() {
                     setPaymentType("credito"); // coloquei para testar o tipo de pagamento cartão de crédito
                     setShowInscricaoModal(true);
                   }}
-                  disabled={!isInscriptionOpen} // 👈 Adicione isto
+                  //disabled={!isInscriptionOpen} // 👈 Adicione isto
                   className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-lg hover:bg-purple-50 transition transform hover:scale-105 shadow-md"
                 >
                   🎯 Se Inscrever Agora
@@ -416,7 +416,7 @@ export default function Home() {
             ) : (
               <button
                 onClick={() => setShowInscricaoModal(true)}
-                disabled={!isInscriptionOpen} // 👈 Adicione isto
+                //disabled={!isInscriptionOpen} // 👈 Adicione isto
                 className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
               >
                 🏃‍♀️ Clique aqui. Se inscreva você também! 💕
