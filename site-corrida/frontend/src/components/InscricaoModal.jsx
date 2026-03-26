@@ -103,8 +103,8 @@ export default function InscricaoModal({
   };
 
   const handleCancel = () => {
-    /* setShowConfirmation(false);
-    setIsLoading(false); */
+    setShowConfirmation(false);
+    setIsLoading(false);
     onClose();
   };
 
@@ -137,8 +137,8 @@ export default function InscricaoModal({
 
             <div className="space-y-3">
               <button
-                /* onClick={handleGoogleFormClick}
-                disabled={isLoading} */
+                onClick={handleGoogleFormClick}
+                disabled={isLoading}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg transition disabled:opacity-70"
               >
                 {isLoading
@@ -148,10 +148,10 @@ export default function InscricaoModal({
 
               {isLoading && (
                 <button
-                  /* onClick={() => {
+                  onClick={() => {
                     setIsLoading(false);
                     setShowConfirmation(true);
-                  }} */ // Permite avançar manualmente para pagamento se o usuário não voltar do Forms, permitir depois
+                  }}
                   className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition text-sm"
                 >
                   ✓ Já Preencheu? Avançar para Pagamento
@@ -191,7 +191,7 @@ export default function InscricaoModal({
             <div className="space-y-3">
               {/* Opção 1: Pagar e voltar */}
               <button
-                // onClick={handleConfirmInscription} // Descomente se quiser permitir confirmação manual, depois liberar
+                onClick={handleConfirmInscription}
                 className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-lg transition"
               >
                 ✓ Já Paguei / Pago depois
@@ -199,7 +199,7 @@ export default function InscricaoModal({
 
               {/* Opção 2: Ir para Mercado Pago */}
               <button
-                // onClick={handleGoToPayment} // Descomente se quiser permitir redirecionamento direto para pagamento, depois liberar
+                onClick={handleGoToPayment}
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2"
               >
                 <span>💳</span> Pagar com Mercado Pago
@@ -209,7 +209,7 @@ export default function InscricaoModal({
 
               {paymentType === "pix" && (
                 <button
-                  // onClick={handleCopyPix} // Descomente se quiser permitir cópia da chave Pix, depois liberar
+                  onClick={handleCopyPix}
                   className="w-full text-gray-600 hover:text-gray-800 font-semibold py-2 border border-gray-300 rounded-lg transition"
                 >
                   💠 Copiar chave Pix e pagar no banco
