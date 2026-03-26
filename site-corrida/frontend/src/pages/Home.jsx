@@ -385,8 +385,8 @@ export default function Home() {
         {/* Modal de Inscrição */}
         <InscricaoModal
           isOpen={showInscricaoModal}
-          onClose={() => setShowInscricaoModal(false)}
-          googleFormUrl={GOOGLE_FORM_URL}
+          /* onClose={() => setShowInscricaoModal(false)}
+          googleFormUrl={GOOGLE_FORM_URL} */
           onSuccess={handleInscricaoSuccess}
           paymentType={paymentType}
         />
