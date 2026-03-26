@@ -374,7 +374,7 @@ export default function Home() {
               Pronto(a) para fazer parte dessa história?
             </p>
             <button
-              onClick={() => setShowInscricaoModal(true)}
+              // onClick={() => setShowInscricaoModal(true)}
               className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg transform transition hover:scale-105"
             >
               🏃‍♀️ Clique aqui. Se inscreva você também! 💕
@@ -384,11 +384,11 @@ export default function Home() {
 
         {/* Modal de Inscrição */}
         <InscricaoModal
-          isOpen={showInscricaoModal}
-          /* onClose={() => setShowInscricaoModal(false)}
-          googleFormUrl={GOOGLE_FORM_URL} */
+        /* isOpen={showInscricaoModal}
+         onClose={() => setShowInscricaoModal(false)}
+          googleFormUrl={GOOGLE_FORM_URL} 
           onSuccess={handleInscricaoSuccess}
-          paymentType={paymentType}
+          paymentType={paymentType}*/
         />
 
         {/* Events Section */}
