@@ -135,10 +135,10 @@ export default function Home() {
                 <p className="text-3xl font-bold text-pink-600">R$ 105,00</p>
               </div>
               <button
-                onClick={() => {
+                /* onClick={() => {
                   setPaymentType("pix");
                   setShowInscricaoModal(true);
-                }} // coloca o tipo de pagamento PIX
+                }}  */ // coloca o tipo de pagamento PIX
                 className="w-full bg-white text-pink-600 font-bold py-3 px-4 rounded-lg hover:bg-pink-50 transition transform hover:scale-105 shadow-md"
               >
                 🎯 Se Inscrever Agora
@@ -159,7 +159,7 @@ export default function Home() {
                 <p className="text-3xl font-bold text-purple-600">R$ 115</p>
               </div>
               <button
-                onClick={() => setShowInscricaoModal(true)}
+                // onClick={() => setShowInscricaoModal(true)}
                 className="w-full bg-white text-purple-600 font-bold py-3 px-4 rounded-lg hover:bg-purple-50 transition transform hover:scale-105 shadow-md"
               >
                 🎯 Se Inscrever Agora
