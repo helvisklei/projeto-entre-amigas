@@ -124,7 +124,7 @@ export default function Home() {
             {/* Lote 1 */}
             <div
               className="bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer"
-              onClick={() => setShowInscricaoModal(true)}
+              // onClick={() => setShowInscricaoModal(true)}
             >
               <div className="text-4xl font-bold text-white mb-3">PIX</div>
               <p className="text-white text-lg mb-4 font-semibold">
@@ -148,7 +148,7 @@ export default function Home() {
             {/* Lote 2 */}
             <div
               className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg shadow-lg p-8 text-center transform transition hover:scale-105 cursor-pointer"
-              onClick={() => setShowInscricaoModal(true)}
+              // onClick={() => setShowInscricaoModal(true)}
             >
               <div className="text-4xl font-bold text-white mb-3">Crédito</div>
               <p className="text-white text-lg mb-4 font-semibold">
