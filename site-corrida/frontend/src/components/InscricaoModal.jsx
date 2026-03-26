@@ -103,8 +103,8 @@ export default function InscricaoModal({
   };
 
   const handleCancel = () => {
-    setShowConfirmation(false);
-    setIsLoading(false);
+    /* setShowConfirmation(false);
+    setIsLoading(false); */
     onClose();
   };
 
@@ -137,8 +137,8 @@ export default function InscricaoModal({
 
             <div className="space-y-3">
               <button
-                onClick={handleGoogleFormClick}
-                disabled={isLoading}
+                /* onClick={handleGoogleFormClick}
+                disabled={isLoading} */
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg transition disabled:opacity-70"
               >
                 {isLoading
@@ -148,10 +148,10 @@ export default function InscricaoModal({
 
               {isLoading && (
                 <button
-                  onClick={() => {
+                  /* onClick={() => {
                     setIsLoading(false);
                     setShowConfirmation(true);
-                  }}
+                  }} */ // Permite avançar manualmente para pagamento se o usuário não voltar do Forms, permitir depois
                   className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition text-sm"
                 >
                   ✓ Já Preencheu? Avançar para Pagamento
