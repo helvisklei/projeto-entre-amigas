@@ -3,7 +3,7 @@ export const kitsExtras = [
   {
     id: "participacao",
     nome: "🥈 Kit Participação",
-    preco: 55,
+    preco: false,
     destaque: false,
     observacao: "Não inclui camisa",
     itens: ["Número de peito", "Medalha pós-prova", "Sorteios", "Pódio"],
@@ -11,7 +11,7 @@ export const kitsExtras = [
   {
     id: "cafe",
     nome: "☕ Kit Café da Manhã",
-    preco: 25,
+    preco: false,
     destaque: false,
     observacao: "Não inclui medalha, camisa e não participa do pódio",
     itens: ["Número de peito", "Seguro atleta", "Café da manhã"],

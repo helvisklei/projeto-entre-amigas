@@ -1,80 +1,49 @@
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from "react";
 
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+//import InscricaoModal from "./InscricaoModal";
 
-export default function EventsSection() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+import { useState } from "react";
+
+//import axios from "axios";
+
+export default function EventsSection({ config, onInscricaoClick }) {
+  //const [events, setEvents] = useState([]);
+  //const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
   const [flippedCards, setFlippedCards] = useState({});
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  // parse date string "YYYY-MM-DD" como data local (evita shift para dia anterior por timezone)
-  const parseDateLocal = (isoDate) => {
-    if (!isoDate) return null;
-    const parts = isoDate.split('-');
-    if (parts.length !== 3) return null;
-    const [year, month, day] = parts.map(Number);
-    return new Date(year, month - 1, day);
-  };
-
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      // cache-busting + headers para evitar respostas em cache com data incorreta
-      const url = `${process.env.REACT_APP_API_URL}/events?_ts=${Date.now()}`;
-      const response = await axios.get(url, {
-        headers: { 'Cache-Control': 'no-cache, no-store', Pragma: 'no-cache' }
-      });
-      console.log('API /events response:', response.data);
-      setEvents(response.data || []);
-    } catch (err) {
-      console.error('Erro ao buscar eventos:', err);
-      setEvents([
-        {
-          id: 1,
-          titulo: 'Corrida Entre Amigas 2026',
-          data_evento: '2026-05-17',
-          descricao: 'Corrida beneficente para as amigas',
-          local: 'Recife - PE'
-        }
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggleFlip = (cardId) => {
-    setFlippedCards(prev => ({
+    setFlippedCards((prev) => ({
       ...prev,
-      [cardId]: !prev[cardId]
+      [cardId]: !prev[cardId],
     }));
   };
 
-  const handleEventClick = (eventId) => {
-    navigate('/inscricao', { state: { eventId } });
-  };
-
   const benefits = [
-    { icon: '👕', title: 'Camisa Oficial' },
-    { icon: '🔢', title: 'Número de Peito' },
-    { icon: '🥇', title: 'Medalha Exclusiva' },
-    { icon: '🏆', title: 'Pódios (3 e 5 km)' },
-    { icon: '💆', title: 'Massagem' },
-    { icon: '❄️', title: 'Piscina de Gelo' },
-    { icon: '🎧', title: 'DJ ao Vivo' },
-    { icon: '☕', title: 'Café + Hidratação' },
-    { icon: '🎁', title: 'Brindes Especiais' }
+    { icon: "👕", title: "Camisa Oficial" },
+    { icon: "🔢", title: "Número de Peito" },
+    { icon: "🥇", title: "Medalha Exclusiva" },
+    { icon: "🏆", title: "Pódios (3 e 5 km)" },
+    { icon: "💆", title: "Massagem" },
+    { icon: "❄️", title: "Piscina de Gelo" },
+    { icon: "🎧", title: "DJ ao Vivo" },
+    { icon: "☕", title: "Café + Hidratação" },
+    { icon: "🎁", title: "Brindes Especiais" },
   ];
 
-  const pastEvents = [
-    { title: '4ª Edição 2025', date: '19 Outubro 2025', participants: '160 participantes', highlights: 'Melhor equipe!', message:'Gratidão a Deus por cada corrida realizada. Por cada detalhe cuidado, por cada sonho tirado do papel, por cada pessoa alcançada. Que tudo continue sendo feito com propósito, fé e amor 🙏✨ 💕' },
-    { title: '3ª Edição 2025', date: '20 Junho 2025', participants: '110 participantes', highlights: 'Melhor estrutura!', message:'Quando Deus está à frente, tudo faz sentido. Gratidão por cada corrida concluída, por cada história vivida e por cada propósito cumprido. Tudo é d’Ele, por Ele e para Ele 🙏✨ 💕' },
-  ];
+  const pastEvents = config?.eventosAnteriores || [];
+
+  const hasPastEvents = pastEvents.length > 0;
+
+  const currentEvent = {
+    id: 1,
+
+    titulo: config?.evento?.nome || "Corrida Entre Amigas",
+
+    data: config?.evento?.data || config?.corridaAtiva,
+
+    local: config?.evento?.local || "Local a definir",
+  };
 
   if (loading) {
     return (
@@ -85,13 +54,16 @@ export default function EventsSection() {
   }
 
   return (
-    <section id="eventos" className="py-12 bg-gradient-to-b from-white to-purple-50">
+    <section
+      id="eventos"
+      className="py-12 bg-gradient-to-b from-white to-purple-50"
+    >
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-12 text-purple-600">
           🏃 Nossos Eventos
         </h2>
 
-        {events.length === 0 ? (
+        {!config?.evento ? (
           <div className="text-center py-8 text-gray-600">
             <p>Nenhum evento disponível no momento.</p>
           </div>
@@ -99,168 +71,193 @@ export default function EventsSection() {
           <>
             {/* Eventos Atuais */}
             <div className="mb-16">
-              <h3 className="text-2xl font-bold text-pink-600 mb-8 text-center">⭐ Próximo Evento</h3>{/*Evento Atual*/}
-              <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
-                {events.map((event, index) => {
-                  if (index !== 0) return null;
-                  const dateObj = parseDateLocal(event.data_evento) || new Date(event.data_evento);
-                  const dataFormatada = dateObj.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                  });
+              <h3 className="text-2xl font-bold text-pink-600 mb-8 text-center">
+                ⭐ Próximo Evento
+              </h3>
 
-                  return (
+              <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                <div
+                  className="h-80 cursor-pointer group"
+                  onClick={() => toggleFlip("current")}
+                >
+                  <div
+                    className="relative w-full h-full transition-transform duration-500 transform-gpu"
+                    style={{
+                      transformStyle: "preserve-3d",
+                      transform: flippedCards.current
+                        ? "rotateY(180deg)"
+                        : "rotateY(0deg)",
+                    }}
+                  >
+                    {/* Frente */}
                     <div
-                      key={event.id}
-                      className="h-80 cursor-pointer group"
-                      onClick={() => toggleFlip(`current-${event.id}`)}
+                      className="absolute w-full h-full bg-gradient-to-br from-purple-50 to-white rounded-lg shadow-lg p-6 border-4 border-purple-600 flex flex-col justify-between"
+                      style={{ backfaceVisibility: "hidden" }}
+                    >
+                      <div>
+                        <div className="bg-purple-600 text-white text-center py-2 font-bold rounded mb-4">
+                          ⭐ PRÓXIMO EVENTO
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-purple-600 mb-4">
+                          {currentEvent.titulo}
+                        </h3>
+
+                        <div className="space-y-3 text-gray-700">
+                          <p className="flex items-center gap-2">
+                            <span className="text-2xl">📅</span>
+                            <span className="font-semibold">
+                              {currentEvent.data}
+                            </span>
+                          </p>
+
+                          <p className="flex items-center gap-2">
+                            <span className="text-2xl">📍</span>
+                            <span>{currentEvent.local}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="text-sm text-gray-600 text-center mt-4 font-semibold">
+                        👆 Clique para ver benefícios
+                      </p>
+                    </div>
+
+                    {/* Verso */}
+                    <div
+                      className="absolute w-full h-full bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg shadow-lg p-6 border-4 border-pink-500 flex flex-col"
+                      style={{
+                        backfaceVisibility: "hidden",
+                        transform: "rotateY(180deg)",
+                      }}
+                    >
+                      <h4 className="text-xl font-bold text-pink-600 mb-4 text-center">
+                        🎉 Benefícios do Evento
+                      </h4>
+
+                      <div className="grid grid-cols-3 gap-2 flex-1 overflow-y-auto">
+                        {benefits.map((benefit, idx) => (
+                          <div key={idx} className="text-center text-sm">
+                            <p className="text-2xl mb-1">{benefit.icon}</p>
+                            <p className="font-semibold text-gray-700 text-xs">
+                              {benefit.title}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition"
+                        /* disabled={
+                          !config?.inscricoesAbertas
+                            ? "📝 Inscrever-se"
+                            : "🚫 Inscrições Encerradas"
+                        } */
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onInscricaoClick) {
+                            onInscricaoClick();
+                          }
+                        }}
+                      >
+                        📝 Inscrever-se
+                      </button>
+
+                      <p className="text-xs text-gray-600 text-center mt-2">
+                        👆 Clique novamente para voltar
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* <InscricaoModal isOpen={isInscricaoOpen} onClose={closeInscricao} /> */}
+
+            {/* Eventos Passados */}
+            {hasPastEvents && (
+              <div>
+                <h3 className="text-2xl font-bold text-purple-700 mb-8 text-center">
+                  📜 Edições Anteriores
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {pastEvents.map((pastEvent, index) => (
+                    <div
+                      key={index}
+                      className="h-64 cursor-pointer"
+                      onClick={() => toggleFlip(`past-${index}`)}
                     >
                       <div
                         className="relative w-full h-full transition-transform duration-500 transform-gpu"
                         style={{
-                          transformStyle: 'preserve-3d',
-                          transform: flippedCards[`current-${event.id}`] ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                          transformStyle: "preserve-3d",
+                          transform: flippedCards[`past-${index}`]
+                            ? "rotateY(180deg)"
+                            : "rotateY(0deg)",
                         }}
                       >
-                        {/* Front - Event Info */}
+                        {/* Front - Past Event Info */}
                         <div
-                          className="absolute w-full h-full bg-gradient-to-br from-purple-50 to-white rounded-lg shadow-lg p-6 border-4 border-purple-600 flex flex-col justify-between"
-                          style={{ backfaceVisibility: 'hidden' }}
+                          className="absolute w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg shadow-lg p-6 border-4 border-purple-600 flex flex-col justify-between"
+                          style={{ backfaceVisibility: "hidden" }}
                         >
                           <div>
-                            <div className="bg-purple-600 text-white text-center py-2 font-bold rounded mb-4">
-                              ⭐ PRÓXIMO EVENTO
-                            </div>
-                            <h3 className="text-2xl font-bold text-purple-600 mb-4">
-                              {event.titulo}
+                            <h3 className="text-2xl font-bold text-purple-800 mb-4">
+                              {pastEvent.titulo}
                             </h3>
                             <div className="space-y-3 text-gray-700">
                               <p className="flex items-center gap-2">
                                 <span className="text-2xl">📅</span>
-                                <span className="font-semibold">{dataFormatada}</span> {/* a data está errada nessa parte*/}
+                                <span className="font-semibold">
+                                  {pastEvent.data}
+                                </span>
                               </p>
                               <p className="flex items-center gap-2">
-                                <span className="text-2xl">📍</span>
-                                <span>{event.local || 'Local a definir'}</span>
+                                <span className="text-2xl">👥</span>
+                                <span>{pastEvent.participantes}</span>
                               </p>
                             </div>
                           </div>
-                          <p className="text-sm text-gray-600 text-center mt-4 font-semibold">
-                            👆 Clique para ver benefícios
+                          <p className="text-sm text-gray-600 text-center font-semibold">
+                            👆 Clique para ver detalhes
                           </p>
                         </div>
 
-                        {/* Back - Benefits */}
+                        {/* Back - Past Event Details */}
                         <div
-                          className="absolute w-full h-full bg-gradient-to-br from-pink-100 to-purple-100 rounded-lg shadow-lg p-6 border-4 border-pink-500 flex flex-col"
-                          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                          className="absolute w-full h-full bg-gradient-to-br from-yellow-100 to-orange-100 rounded-lg shadow-lg p-6 border-4 border-yellow-500 flex flex-col justify-between"
+                          style={{
+                            backfaceVisibility: "hidden",
+                            transform: "rotateY(180deg)",
+                          }}
                         >
-                          <h4 className="text-xl font-bold text-pink-600 mb-4 text-center">
-                            🎉 Benefícios do Evento
-                          </h4>
-                          <div className="grid grid-cols-3 gap-2 flex-1 overflow-y-auto">
-                            {benefits.map((benefit, idx) => (
-                              <div key={idx} className="text-center text-sm">
-                                <p className="text-2xl mb-1">{benefit.icon}</p>
-                                <p className="font-semibold text-gray-700 text-xs">{benefit.title}</p>
-                              </div>
-                            ))}
+                          <div>
+                            <h4 className="text-lg font-bold text-yellow-700 mb-3">
+                              ⭐ Destaques
+                            </h4>
+                            <p className="text-gray-700 font-semibold mb-2">
+                              {pastEvent.destaque}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {pastEvent.mensagem}
+                            </p>
                           </div>
-                          <button
-                            className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEventClick(event.id);
-                            }}
-                          >
-                            📝 Inscrever-se
-                          </button>
-                          <p className="text-xs text-gray-600 text-center mt-2">
-                            👆 Clique novamente para voltar
+                          <p className="text-xs text-gray-600 text-center mt-3 font-semibold">
+                            👆 Clique para voltar
                           </p>
                         </div>
                       </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Eventos Passados */}
-            <div>
-              <h3 className="text-2xl font-bold text-purple-700 mb-8 text-center">📜 Edições Anteriores</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                {pastEvents.map((pastEvent, index) => (
-                  <div
-                    key={index}
-                    className="h-64 cursor-pointer"
-                    onClick={() => toggleFlip(`past-${index}`)}
-                  >
-                    <div
-                      className="relative w-full h-full transition-transform duration-500 transform-gpu"
-                      style={{
-                        transformStyle: 'preserve-3d',
-                        transform: flippedCards[`past-${index}`] ? 'rotateY(180deg)' : 'rotateY(0deg)'
-                      }}
-                    >
-                      {/* Front - Past Event Info */}
-                      <div
-                        className="absolute w-full h-full bg-gradient-to-br from-gray-100 to-gray-50 rounded-lg shadow-lg p-6 border-4 border-purple-600 flex flex-col justify-between"
-                        style={{ backfaceVisibility: 'hidden' }}
-                      >
-                        <div>
-                          <h3 className="text-2xl font-bold text-purple-800 mb-4">
-                            {pastEvent.title}
-                          </h3>
-                          <div className="space-y-3 text-gray-700">
-                            <p className="flex items-center gap-2">
-                              <span className="text-2xl">📅</span>
-                              <span className="font-semibold">{pastEvent.date}</span>
-                            </p>
-                            <p className="flex items-center gap-2">
-                              <span className="text-2xl">👥</span>
-                              <span>{pastEvent.participants}</span>
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-600 text-center font-semibold">
-                          👆 Clique para ver detalhes
-                        </p>
-                      </div>
-
-                      {/* Back - Past Event Details */}
-                      <div
-                        className="absolute w-full h-full bg-gradient-to-br from-yellow-100 to-orange-100 rounded-lg shadow-lg p-6 border-4 border-yellow-500 flex flex-col justify-between"
-                        style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
-                      >
-                        <div>
-                          <h4 className="text-lg font-bold text-yellow-700 mb-3">
-                            ⭐ Destaques
-                          </h4>
-                          <p className="text-gray-700 font-semibold mb-2">
-                            {pastEvent.highlights}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {pastEvent.message}
-                          </p>                          
-                        </div>                        
-                        <p className="text-xs text-gray-600 text-center mt-3 font-semibold">
-                          👆 Clique para voltar
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
           </>
         )}
 
-        {events.length > 0 && (
+        {config?.evento && (
           <div className="text-center mt-12">
             <p className="text-gray-600 text-lg">
-              Próximo evento: <strong>Maio 2026</strong>
+              Próximo evento: <strong>{config?.corridaAtiva}</strong>
             </p>
             <p className="text-gray-500 text-sm mt-2">
               Acompanhe nossas redes sociais para mais informações!

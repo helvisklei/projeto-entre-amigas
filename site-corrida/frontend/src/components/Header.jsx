@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,9 +9,10 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
         <div className="hidden sm:block">
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-          Entre Amigas
+            Entre Amigas
           </h1>
-          {/* <p className="text-xs text-gray-600">5ª Edição 2026</p> */} {/* Commented out for future use */}
+          {/* <p className="text-xs text-gray-600">5ª Edição 2026</p> */}{" "}
+          {/* Commented out for future use */}
         </div>
 
         {/* Navigation (Future) */}
@@ -20,19 +22,24 @@ export default function Header() {
           </a>
           <a href="#eventos" className="hover:text-pink-600 transition">
             Eventos
-          </a>  
+          </a>
           <a href="#depoimentos" className="hover:text-pink-600 transition">
             Depoimentos
           </a>
-          <a href="https://wa.me/5581984671327"        
-          target="_blank"
-          rel="noopener noreferrer" 
-          className="hover:text-pink-600 transition">
+          <a
+            href="https://wa.me/5581984671327"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-pink-600 transition"
+          >
             Contato
           </a>
           <a href="#regras" className="hover:text-pink-600 transition">
             Regras
           </a>
+          <Link to="/login" className="hover:text-pink-600 transition">
+            Admin
+          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -41,7 +48,12 @@ export default function Header() {
           className="lg:hidden p-2 text-gray-700 hover:text-pink-600"
           title="Menu"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -55,24 +67,44 @@ export default function Header() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-gradient-to-b from-pink-50 to-purple-50 px-4 py-4 border-t border-pink-200">
-          <a href="#sobre" className="block py-2 text-gray-700 hover:text-pink-600">
+          <a
+            href="#sobre"
+            className="block py-2 text-gray-700 hover:text-pink-600"
+          >
             Sobre
           </a>
-          <a href="#eventos" className="block py-2 text-gray-700 hover:text-pink-600">
+          <a
+            href="#eventos"
+            className="block py-2 text-gray-700 hover:text-pink-600"
+          >
             Eventos
           </a>
-          <a href="#depoimentos" className="block py-2 text-gray-700 hover:text-pink-600">
+          <a
+            href="#depoimentos"
+            className="block py-2 text-gray-700 hover:text-pink-600"
+          >
             Depoimentos
-          </a>               
-          <a href="https://wa.me/5581984671327"
-          target="_blank"
-          rel="noopener noreferrer" 
-          className="block py-2 text-gray-700 hover:text-pink-600">
+          </a>
+          <a
+            href="https://wa.me/5581984671327"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block py-2 text-gray-700 hover:text-pink-600"
+          >
             Contato
           </a>
-          <a href="#regras" className="block py-2 text-gray-700 hover:text-pink-600">
+          <a
+            href="#regras"
+            className="block py-2 text-gray-700 hover:text-pink-600"
+          >
             Regras
           </a>
+          <Link
+            to="/login"
+            className="block py-2 text-gray-700 hover:text-pink-600"
+          >
+            Admin
+          </Link>
         </div>
       )}
     </header>
