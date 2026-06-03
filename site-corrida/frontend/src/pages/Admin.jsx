@@ -5,7 +5,7 @@ import AnalyticsSection from "../components/analytics/AnalyticsSection";
 import AnalyticsSkeleton from "../components/analytics/AnalyticsSkeleton";
 import DashboardGrid from "../components/dashboard/DashboardGrid";
 import Footer from "../components/Footer";
-import { exportExcel } from "../services/reportService";
+//import { exportExcel } from "../services/reportService";
 import { getAnalytics } from "../services/analyticsService";
 import { getDashboardData } from "../services/dashboardService";
 import { updateInscrito } from "../services/adminUpdateService";
