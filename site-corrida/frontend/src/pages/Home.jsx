@@ -593,7 +593,7 @@ export default function Home() {
             O que é Entre Amigas?
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            🌸 A Corrida Entre Amigas é mais do que um evento esportivo — é um
+            🌸 A Corrida Entre Amigas é mais do que um evento esportivo é um
             encontro de pessoas que acreditam na força da amizade, na saúde e no
             poder de se superar. Venha viver essa experiência inesquecível!{" "}
             <strong>
