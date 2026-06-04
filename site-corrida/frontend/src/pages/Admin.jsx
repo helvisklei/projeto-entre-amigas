@@ -5,11 +5,14 @@ import AnalyticsSection from "../components/analytics/AnalyticsSection";
 import AnalyticsSkeleton from "../components/analytics/AnalyticsSkeleton";
 import DashboardGrid from "../components/dashboard/DashboardGrid";
 import Footer from "../components/Footer";
-//import { exportExcel } from "../services/reportService";
+import KitRetiradaDashboard from "../components/dashboard/KitRetiradaDashboard";
+import SeguroAtletaDashboard from "../components/dashboard/SeguroAtletaDashboard";
 import { getAnalytics } from "../services/analyticsService";
 import { getDashboardData } from "../services/dashboardService";
 import { updateInscrito } from "../services/adminUpdateService";
 import { useNavigate } from "react-router-dom";
+
+//import { exportExcel } from "../services/reportService";
 
 //import axios from "axios";
 
@@ -157,6 +160,40 @@ export default function Admin() {
     }
   };
 
+  const handleConfirmarKit = async (inscrito) => {
+    try {
+      await updateInscrito(inscrito.row, {
+        kit_retirado: "SIM",
+      });
+
+      await fetchInscritos();
+
+      await loadDashboard();
+
+      await loadAnalytics();
+
+      alert("Kit entregue com sucesso.");
+    } catch (error) {
+      alert(error.message || "Erro ao confirmar kit.");
+    }
+  };
+
+  /*   const handleConfirmarKit = async (inscrito) => {
+    try {
+      await confirmarRetiradaKit(inscrito.row);
+
+      await fetchInscritos();
+
+      loadDashboard();
+
+      loadAnalytics();
+
+      alert("Kit entregue com sucesso.");
+    } catch (error) {
+      alert(error.message);
+    }
+  }; */
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
       {/* Header */}
@@ -219,7 +256,13 @@ export default function Admin() {
         {loadingAnalytics ? (
           <AnalyticsSkeleton />
         ) : (
-          <AnalyticsSection analytics={analytics} />
+          <>
+            <AnalyticsSection analytics={analytics} />
+
+            <SeguroAtletaDashboard analytics={analytics} />
+
+            <KitRetiradaDashboard analytics={analytics} />
+          </>
         )}
 
         {loading ? (
@@ -299,147 +342,98 @@ export default function Admin() {
                           {inscrito.tamanho_camisa}
                         </td>
 
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col gap-2">
-                            {/* STATUS PAGAMENTO */}
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <div className="flex flex-col gap-3 min-w-[200px]">
+                            {/* Bloco de Selects Superior */}
+                            <div className="grid grid-cols-1 gap-2">
+                              {/* STATUS PAGAMENTO */}
+                              <select
+                                value={inscrito.status_pagamento || "PENDENTE"}
+                                className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-medium bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                                onChange={(e) => {
+                                  handleUpdateInscrito(
+                                    inscrito,
+                                    "status_pagamento",
+                                    e.target.value,
+                                  );
+                                }}
+                              >
+                                <option value="PENDENTE">⏳ PENDENTE</option>
+                                <option value="PAGO">✅ PAGO</option>
+                              </select>
 
-                            <select
-                              value={inscrito.status_pagamento || "PENDENTE"}
-                              className="
-                                border
-                                rounded-lg
-                                px-3
-                                py-2
-                                text-sm
-                                bg-white
-                                focus:outline-none
-                                focus:ring-2
-                                focus:ring-green-500
-                              "
-                              onChange={(e) => {
-                                //console.log("Novo status:", e.target.value);
-                                handleUpdateInscrito(
-                                  inscrito,
-                                  "status_pagamento",
-                                  e.target.value,
-                                );
-                              }}
-                            >
-                              <option value="PENDENTE">⏳ PENDENTE</option>
+                              {/* TIPO INSCRIÇÃO E DISTÂNCIA JUNTOS NA MESMA LINHA */}
+                              <div className="grid grid-cols-2 gap-2">
+                                <select
+                                  value={inscrito.tipo_inscricao || "NORMAL"}
+                                  className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs font-medium bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                                  onChange={(e) => {
+                                    handleUpdateInscrito(
+                                      inscrito,
+                                      "tipo_inscricao",
+                                      e.target.value,
+                                    );
+                                  }}
+                                >
+                                  <option value="NORMAL">NORMAL</option>
+                                  <option value="EQUIPE">EQUIPE</option>
+                                  <option value="PARCERIA">PARCERIA</option>
+                                  <option value="DIVULGACAO">DIVULGAÇÃO</option>
+                                  <option value="CORTESIA">CORTESIA</option>
+                                </select>
 
-                              <option value="PAGO">✅ PAGO</option>
-                            </select>
+                                <select
+                                  value={inscrito.distancia || "0 KM"}
+                                  className="w-full border border-gray-300 rounded-lg px-2 py-1.5 text-xs font-medium bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                                  onChange={(e) => {
+                                    handleUpdateInscrito(
+                                      inscrito,
+                                      "distancia",
+                                      e.target.value,
+                                    );
+                                  }}
+                                >
+                                  <option value="0 KM">0 KM</option>
+                                  <option value="5 KM">5 KM</option>
+                                </select>
+                              </div>
+                            </div>
 
-                            {/* TIPO INSCRIÇÃO */}
+                            {/* Divisor Sutil Interno */}
+                            <div className="border-t border-gray-100 my-0.5"></div>
 
-                            <select
-                              value={inscrito.tipo_inscricao || "NORMAL"}
-                              className="
-                                border
-                                rounded-lg
-                                px-3
-                                py-2
-                                text-sm
-                                bg-white
-                                focus:outline-none
-                                focus:ring-2
-                                focus:ring-purple-500
-                              "
-                              onChange={(e) => {
-                                //console.log("Novo tipo:", e.target.value);
-                                handleUpdateInscrito(
-                                  inscrito,
-                                  "tipo_inscricao",
-                                  e.target.value,
-                                );
-                              }}
-                            >
-                              <option value="NORMAL">NORMAL</option>
+                            {/* Bloco de Botões Inferior (Refatorados e Modernos) */}
+                            <div className="flex flex-col gap-2">
+                              <button
+                                disabled={inscrito.kit_retirado === "SIM"}
+                                onClick={() => handleConfirmarKit(inscrito)}
+                                className={
+                                  inscrito.kit_retirado === "SIM"
+                                    ? "w-full bg-gray-400 text-white font-semibold rounded-lg py-2 px-3 text-xs cursor-not-allowed"
+                                    : "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg py-2 px-3 text-xs"
+                                }
+                              >
+                                {inscrito.kit_retirado === "SIM"
+                                  ? "✅ Kit Entregue"
+                                  : "🎽 Confirmar Kit"}
+                              </button>
 
-                              <option value="EQUIPE">EQUIPE</option>
+                              {/*  <button
+                                onClick={() => handleConfirmarKit(inscrito)}
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold rounded-lg py-2 px-3 text-xs tracking-wide shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-1.5"
+                              >
+                                <span>🎽</span> Confirmar Kit
+                              </button> */}
 
-                              <option value="PARCERIA">PARCERIA</option>
-
-                              <option value="DIVULGACAO">DIVULGAÇÃO</option>
-
-                              <option value="CORTESIA">CORTESIA</option>
-                            </select>
-
-                            {/* DISTÂNCIA */}
-
-                            <select
-                              value={inscrito.distancia || "0 KM"}
-                              className="
-                                border
-                                rounded-lg
-                                px-3
-                                py-2
-                                text-sm
-                                bg-white
-                                focus:outline-none
-                                focus:ring-2
-                                focus:ring-blue-500
-                              "
-                              onChange={(e) => {
-                                //console.log("Nova distância:", e.target.value);
-                                handleUpdateInscrito(
-                                  inscrito,
-                                  "distancia",
-                                  e.target.value,
-                                );
-                              }}
-                            >
-                              <option value="0 KM">0 KM</option>
-
-                              {/* <option value="3 KM">3 KM</option> */}
-
-                              <option value="5 KM">5 KM</option>
-                            </select>
+                              <button
+                                onClick={() => handleResendEmail(inscrito)}
+                                className="w-full bg-purple-600 hover:bg-purple-700 active:bg-purple-800 text-white font-semibold rounded-lg py-2 px-3 text-xs tracking-wide shadow-sm hover:shadow transition-all duration-200 flex items-center justify-center gap-1.5"
+                              >
+                                <span>📧</span> Reenviar E-mail
+                              </button>
+                            </div>
                           </div>
-
-                          <button
-                            onClick={() => handleResendEmail(inscrito)}
-                            className="
-                                bg-indigo-600
-                                hover:bg-indigo-700
-                                text-white
-                                rounded-lg
-                                px-3
-                                py-2
-                                text-sm
-                              "
-                          >
-                            📧 Reenviar E-mail
-                          </button>
                         </td>
-
-                        {/*                         <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <span
-                              className={`px-3 py-1 rounded-full font-semibold ${
-                                inscrito.pago
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-red-100 text-red-800"
-                              }`}
-                            >
-                              {inscrito.pago ? "✅ Pago" : "⏳ Pendente"}
-                            </span>
-                            <button
-                              onClick={() =>
-                                // togglePago(inscrito.id, inscrito.pago)
-                                alert("ETAPA 4.4 - integração pagamento admin")
-                              }
-                              className="text-sm bg-white border px-2 py-1 rounded hover:bg-gray-50"
-                              title={
-                                inscrito.pago
-                                  ? "Desmarcar como pago"
-                                  : "Marcar como pago"
-                              }
-                            >
-                              {inscrito.pago ? "Desmarcar" : "Marcar"}
-                            </button>
-                          </div>
-                        </td> */}
                       </tr>
                     ))}
                   </tbody>

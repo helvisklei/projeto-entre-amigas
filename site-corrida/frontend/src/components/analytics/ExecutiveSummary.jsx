@@ -188,6 +188,66 @@ export default function ExecutiveSummary({ analytics }) {
 
         <div
           className="
+            bg-cyan-50
+            rounded-xl
+            p-4
+          "
+        >
+          <p className="text-sm text-gray-500">PIX</p>
+
+          <h3
+            className="
+              text-2xl
+              font-bold
+              text-cyan-700
+            "
+          >
+            {formatMoney(analytics.pixRecebido)}
+          </h3>
+        </div>
+
+        <div
+          className="
+            bg-indigo-50
+            rounded-xl
+            p-4
+          "
+        >
+          <p className="text-sm text-gray-500">Cartão</p>
+
+          <h3
+            className="
+              text-2xl
+              font-bold
+              text-indigo-700
+            "
+          >
+            {formatMoney(analytics.cartaoRecebido)}
+          </h3>
+        </div>
+
+        <div
+          className="
+            bg-emerald-50
+            rounded-xl
+            p-4
+          "
+        >
+          <p className="text-sm text-gray-500">Ticket Médio</p>
+
+          <h3
+            className="
+              text-2xl
+              font-bold
+              text-emerald-700
+            "
+          >
+            {formatMoney(analytics.ticketMedio)}
+          </h3>
+        </div>
+
+        <div
+          className="
             bg-yellow-50
             rounded-xl
             p-4
