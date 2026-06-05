@@ -106,6 +106,7 @@ export default function InscricaoModal({
     cupom: "",
     //isIdoso: false,
     isPcd: false,
+    isTea: false,
     sexo: "",
     website: "",
     createdAt: Date.now(),
@@ -224,6 +225,8 @@ export default function InscricaoModal({
 
           isPcd: formData.isPcd,
 
+          isTea: formData.isTea,
+
           cupom: formData.cupom,
         });
 
@@ -251,6 +254,7 @@ export default function InscricaoModal({
     formData.formaPagamento,
     formData.idade,
     formData.isPcd,
+    formData.isTea,
     formData.cupom,
     setPricing,
   ]);
@@ -826,6 +830,31 @@ export default function InscricaoModal({
                   >
                     Sou PCD e desejo solicitar o benefício legal de 50% mediante
                     validação documental.
+                  </span>
+                </label>
+
+                <label
+                  className="
+                    flex
+                    items-start
+                    gap-3
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    name="isTea"
+                    checked={formData.isTea}
+                    onChange={handleChange}
+                  />
+
+                  <span
+                    className="
+                      text-sm
+                      text-gray-700
+                    "
+                  >
+                    Sou TEA (Transtorno do Espectro Autista) e desejo solicitar
+                    o benefício legal mediante validação documental.
                   </span>
                 </label>
 

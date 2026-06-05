@@ -87,6 +87,32 @@ export default function SeguroAtletaDashboard({ analytics }) {
             {sessentaMaisFeminino}
           </h3>
         </div>
+
+        {/* NOVOS CARDS */}
+
+        <div className="bg-indigo-50 rounded-xl p-4">
+          <p className="text-sm text-gray-500">TEA</p>
+
+          <h3 className="text-3xl font-bold text-indigo-700">
+            {analytics.totalTea || 0}
+          </h3>
+        </div>
+
+        <div className="bg-sky-50 rounded-xl p-4">
+          <p className="text-sm text-gray-500">PCD</p>
+
+          <h3 className="text-3xl font-bold text-sky-700">
+            {analytics.totalPcd || 0}
+          </h3>
+        </div>
+
+        <div className="bg-green-50 rounded-xl p-4">
+          <p className="text-sm text-gray-500">Idosos 60+</p>
+
+          <h3 className="text-3xl font-bold text-green-700">
+            {analytics.totalIdoso || 0}
+          </h3>
+        </div>
       </div>
     </div>
   );
