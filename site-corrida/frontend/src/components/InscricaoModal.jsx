@@ -804,7 +804,7 @@ export default function InscricaoModal({
                     <br />
                     Envie documento comprobatório para:
                     <br />
-                    <strong>corrida.entre.amigas@gmail.com</strong>
+                    <strong>(81) 98467-1327</strong>
                   </div>
                 )}
 
@@ -869,11 +869,11 @@ export default function InscricaoModal({
                     leading-relaxed
                   "
                 >
-                  ⚠️ Para validação do benefício legal (60+ ou PCD), envie
+                  ⚠️ Para validação do benefício legal (60+, TEA e PCD), envie
                   documento comprobatório para:
                   <br />
                   <br />
-                  <strong>corrida.entre.amigas@gmail.com</strong>
+                  <strong>(81) 98467-1327</strong>
                   <br />
                   <br />A validação será realizada manualmente pela organização.
                 </div>
@@ -1062,10 +1062,11 @@ export default function InscricaoModal({
             >
               <strong>Atenção:</strong>
               <br />
-              Participantes 60+ e PCD devem enviar o comprovante elegível para:
+              Participantes 60+, TEA e PCD devem enviar o comprovante elegível
+              para WhatsApp da organização para validação do benefício legal:
               <br />
               <br />
-              <strong>corrida.entre.amigas@gmail.com</strong>
+              <strong>(81) 98467-1327</strong>
               <br />
               <br />
               A organização fará a validação manual do benefício.
