@@ -23,7 +23,7 @@ export default function DashboardGrid({ dashboard }) {
       <DashboardCard title="Pendentes" value={dashboard.totalPendente} />
 
       <DashboardCard
-        title="Arrecadado"
+        title="Vendas Totais" //Arrecadado
         value={`R$ ${dashboard.totalArrecadado}`}
       />
 

@@ -239,7 +239,7 @@ export default function ExecutiveSummary({ analytics }) {
             p-4
           "
         >
-          <p className="text-sm text-gray-500">PIX</p>
+          <p className="text-sm text-gray-500">PIX Recebido</p>
 
           <h3
             className="
@@ -259,7 +259,7 @@ export default function ExecutiveSummary({ analytics }) {
             p-4
           "
         >
-          <p className="text-sm text-gray-500">Cartão</p>
+          <p className="text-sm text-gray-500">Cartão Recebido</p>
 
           <h3
             className="
