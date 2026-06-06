@@ -103,7 +103,7 @@ export default function ExecutiveSummary({ analytics }) {
             overflow-hidden
           "
         >
-          <p className="text-sm text-gray-500">Arrecadado</p>
+          <p className="text-sm text-gray-500">Arrecadado Bruto</p>
 
           <h3
             className="
@@ -114,6 +114,52 @@ export default function ExecutiveSummary({ analytics }) {
             "
           >
             {formatMoney(analytics.totalArrecadado)}
+          </h3>
+        </div>
+
+        <div
+          className="
+            bg-emerald-50
+            rounded-xl
+            p-4
+            min-w-0
+            overflow-hidden
+          "
+        >
+          <p className="text-sm text-gray-500">Receita Líquida</p>
+
+          <h3
+            className="
+              text-2xl
+              font-bold
+              text-emerald-700
+              break-words
+            "
+          >
+            {formatMoney(analytics.totalLiquido)}
+          </h3>
+        </div>
+
+        <div
+          className="
+            bg-red-50
+            rounded-xl
+            p-4
+            min-w-0
+            overflow-hidden
+          "
+        >
+          <p className="text-sm text-gray-500">Taxas Mercado Pago</p>
+
+          <h3
+            className="
+              text-2xl
+              font-bold
+              text-red-700
+              break-words
+            "
+          >
+            {formatMoney(analytics.totalTaxasMp)}
           </h3>
         </div>
 
