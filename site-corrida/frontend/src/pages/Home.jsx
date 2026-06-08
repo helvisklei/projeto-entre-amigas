@@ -711,7 +711,7 @@ export default function Home() {
 
         {/* Kit e Pagamento */}
         <section className="bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg shadow-lg p-8 text-white">
-          <h2 className="text-3xl font-bold mb-6">🎁 Inscrição Completa</h2>
+          <h2 className="text-3xl font-bold mb-6">🎁 Kit Completo</h2>
 
           <p className="text-2xl font-bold mb-6">
             {/* R$ 105 (Pix) | R$ 115 (Cartão) */}
@@ -801,7 +801,49 @@ export default function Home() {
         <TestimonialsSection config={config} />
 
         {/* Regras */}
-        <section
+
+        <section className="bg-amber-50/60 border border-amber-200/70 rounded-xl p-5 mb-6">
+          <h2 className="text-lg font-extrabold text-gray-900 mb-3 flex items-center gap-2">
+            🏆 REGRAS IMPORTANTES PARA O ATLETA
+          </h2>
+
+          <ul className="space-y-2.5 text-sm text-gray-700">
+            <li className="flex items-start gap-2">
+              <span className="text-amber-600 mt-0.5">🍿</span>
+              <span>
+                <strong>Atletas sem inscrição ("Pipoca"):</strong> Não possuem
+                direito a cronometragem, medalha ou acesso aos pódios.
+              </span>
+            </li>
+
+            <li className="flex items-start gap-2">
+              <span className="text-amber-600 mt-0.5">🎽</span>
+              <span>
+                <strong>Retirada de Kits antecipada:</strong> Não haverá entrega
+                de kits no dia da corrida. A retirada ocorrerá na semana
+                anterior ao evento.
+              </span>
+            </li>
+
+            <li className="flex items-start gap-2">
+              <span className="text-amber-600 mt-0.5">⏰</span>
+              <span>
+                <strong>Pontualidade:</strong> Programe-se para chegar ao local
+                com antecedência no dia da prova.
+              </span>
+            </li>
+
+            <li className="flex items-start gap-2">
+              <span className="text-amber-600 mt-0.5">📖</span>
+              <span>
+                <strong>Leitura Obrigatória:</strong> Leia atentamente o
+                regulamento completo disponibilizado no ato da inscrição logo
+                abaixo antes de finalizar.
+              </span>
+            </li>
+          </ul>
+        </section>
+        {/* <section
           id="regras"
           className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400"
         >
@@ -821,8 +863,11 @@ export default function Home() {
             <li>
               <strong>⏰ Chegue com antecedência</strong>
             </li>
+                        <li>
+              <strong>⏰ Leiam o regulamento da corrida no ato da inscrição</strong>
+            </li>
           </ul>
-        </section>
+        </section> */}
 
         {/* Footer Message */}
         <div className="text-center py-8 border-t-4 border-pink-300">

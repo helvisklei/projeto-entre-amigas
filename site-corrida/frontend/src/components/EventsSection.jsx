@@ -212,7 +212,7 @@ export default function EventsSection({ config, onInscricaoClick }) {
                                 </span>
                               </p>
                               <p className="flex items-center gap-2">
-                                <span className="text-2xl">👥</span>
+                                <span className="text-2xl"></span> {/*👥 */}
                                 <span>{pastEvent.participantes}</span>
                               </p>
                             </div>
