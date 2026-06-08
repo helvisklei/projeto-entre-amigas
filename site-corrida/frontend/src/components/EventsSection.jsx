@@ -23,7 +23,7 @@ export default function EventsSection({ config, onInscricaoClick }) {
     { icon: "👕", title: "Camisa Oficial" },
     { icon: "🔢", title: "Número de Peito" },
     { icon: "🥇", title: "Medalha Exclusiva" },
-    { icon: "🏆", title: "Pódios (3 e 5 km)" },
+    { icon: "🏆", title: "Pódio 5 km" },
     { icon: "💆", title: "Massagem" },
     { icon: "❄️", title: "Piscina de Gelo" },
     { icon: "🎧", title: "DJ ao Vivo" },
