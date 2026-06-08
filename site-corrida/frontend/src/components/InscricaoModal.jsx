@@ -428,8 +428,7 @@ export default function InscricaoModal({
             <div className="space-y-3">
               <button
                 onClick={() => {
-                  //window.location.href = paymentLinks[valorCalculado];
-                  window.location.href = success.paymentLink; // Link dinâmico retornado pela API
+                  window.location.href = success.paymentLink;
                 }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors"
               >
@@ -446,7 +445,6 @@ export default function InscricaoModal({
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* O Grid mantém o comportamento em telas maiores, e cada div protege a sua própria célula */}
             <div className="hidden">
               <input
                 type="text"
@@ -605,7 +603,6 @@ export default function InscricaoModal({
                 )}
               </div>
 
-              {/* Correção estrutural do select de sexo: Erro movido para fora da tag select */}
               <div className="flex flex-col">
                 <select
                   name="sexo"
@@ -735,22 +732,14 @@ export default function InscricaoModal({
                   value={
                     pricing?.valor ? `R$ ${pricing.valor}` : "Calculando..."
                   }
-                  //value={`R$ ${pricing?.valor || valorCalculado}`} // value={`R$ ${valorCalculado}`}
                   disabled
                   className="border rounded-lg p-3 bg-gray-100 font-bold"
                 />
                 {pricingError && (
-                  <p
-                    className="
-                      text-red-500
-                      text-sm
-                      mt-1
-                    "
-                  >
-                    {pricingError}
-                  </p>
+                  <p className="text-red-500 text-sm mt-1">{pricingError}</p>
                 )}
               </div>
+
               <div className="flex flex-col">
                 <input
                   type="text"
@@ -758,47 +747,16 @@ export default function InscricaoModal({
                   placeholder="Cupom promocional"
                   value={formData.cupom}
                   onChange={handleChange}
-                  className="
-                  border
-                  border-gray-300
-                  rounded-lg
-                  p-3
-                "
+                  className="border border-gray-300 rounded-lg p-3"
                 />
-
-                <span
-                  className="
-                  text-xs
-                  text-gray-500
-                  mt-1
-                "
-                >
+                <span className="text-xs text-gray-500 mt-1">
                   Caso possua cupom promocional, informe aqui.
                 </span>
               </div>
 
-              <div
-                className="
-                  border
-                  border-yellow-200
-                  bg-yellow-50
-                  rounded-xl
-                  p-4
-                  space-y-3
-                "
-              >
+              <div className="border border-yellow-200 bg-yellow-50 rounded-xl p-4 space-y-3">
                 {Number(formData.idade) >= 60 && (
-                  <div
-                    className="
-                        bg-green-100
-                        border
-                        border-green-300
-                        text-green-800
-                        rounded-lg
-                        p-3
-                        text-sm
-                      "
-                  >
+                  <div className="bg-green-100 border border-green-300 text-green-800 rounded-lg p-3 text-sm">
                     ✅ Benefício legal 60+ identificado automaticamente.
                     <br />
                     <br />
@@ -808,67 +766,33 @@ export default function InscricaoModal({
                   </div>
                 )}
 
-                <label
-                  className="
-                    flex
-                    items-start
-                    gap-3
-                  "
-                >
+                <label className="flex items-start gap-3">
                   <input
                     type="checkbox"
                     name="isPcd"
                     checked={formData.isPcd}
                     onChange={handleChange}
                   />
-
-                  <span
-                    className="
-                      text-sm
-                      text-gray-700
-                    "
-                  >
+                  <span className="text-sm text-gray-700">
                     Sou PCD e desejo solicitar o benefício legal de 50% mediante
                     validação documental.
                   </span>
                 </label>
 
-                <label
-                  className="
-                    flex
-                    items-start
-                    gap-3
-                  "
-                >
+                <label className="flex items-start gap-3">
                   <input
                     type="checkbox"
                     name="isTea"
                     checked={formData.isTea}
                     onChange={handleChange}
                   />
-
-                  <span
-                    className="
-                      text-sm
-                      text-gray-700
-                    "
-                  >
+                  <span className="text-sm text-gray-700">
                     Sou TEA (Transtorno do Espectro Autista) e desejo solicitar
                     o benefício legal mediante validação documental.
                   </span>
                 </label>
 
-                {/* =====================================================
-                    INSTRUÇÃO DOCUMENTAL
-                ===================================================== */}
-
-                <div
-                  className="
-                    text-xs
-                    text-red-600
-                    leading-relaxed
-                  "
-                >
+                <div className="text-xs text-red-600 leading-relaxed">
                   ⚠️ Para validação do benefício legal (60+, TEA e PCD), envie
                   documento comprobatório para:
                   <br />
@@ -904,6 +828,7 @@ export default function InscricaoModal({
                 )}
               </div>
             </div>
+
             <div className="flex flex-col">
               <label className="block mb-2 font-semibold">
                 Restrições médicas?
@@ -970,66 +895,188 @@ export default function InscricaoModal({
               )}
             </div>
 
+            {/* =====================================================
+                NOVO REGULAMENTO OTIMIZADO PROFISSIONALMENTE
+            ===================================================== */}
             <div
               className="
-                border
-                border-gray-200
+                border border-gray-200
                 rounded-xl
-                p-4
-                bg-gray-50
-                max-h-64
+                p-5
+                bg-slate-50
+                max-h-72
                 overflow-y-auto
                 text-sm
                 leading-relaxed
+                text-gray-700
+                shadow-inner
               "
             >
-              <h3 className="font-bold text-lg mb-3">
-                📌 Regulamento – Corrida Entre Amigas Run
-              </h3>
+              <div className="text-center border-b border-gray-200 pb-3 mb-4">
+                <h3 className="font-extrabold text-base text-gray-950 tracking-tight">
+                  📋 REGULAMENTO OFICIAL
+                </h3>
+                <p className="text-xs text-pink-600 font-bold mt-0.5">
+                  6ª CORRIDA ENTRE AMIGAS RUN – RECIFE/PE
+                </p>
+              </div>
 
-              <p>
-                A inscrição é pessoal e intransferível, salvo autorização da
-                organização.
-              </p>
+              <div className="space-y-5 text-[13px]">
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">1. DO EVENTO</h4>
+                  <p>
+                    A 6ª Corrida Entre Amigas RUN acontecerá no dia{" "}
+                    <strong>29 de novembro de 2026</strong>, em Brasília Teimosa
+                    – Recife/PE.
+                  </p>
+                  <ul className="list-disc pl-4 space-y-1 mt-1 text-gray-600">
+                    <li>
+                      O percurso será de 5 km, nas modalidades corrida e
+                      caminhada.
+                    </li>
+                    <li>
+                      Caso o participante não deseje concluir os 5 km, poderá
+                      finalizar sua participação no percurso de 3 km.
+                    </li>
+                    <li>
+                      Ao realizar sua inscrição, o atleta declara estar apto
+                      fisicamente para participar do evento.
+                    </li>
+                  </ul>
+                </div>
 
-              <br />
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    2. DAS INSCRIÇÕES
+                  </h4>
+                  <p>
+                    A inscrição garante o direito ao kit oficial do evento. As
+                    inscrições serão encerradas na data divulgada pela
+                    organização ou quando o limite de vagas for atingido.
+                  </p>
+                </div>
 
-              <p>
-                Cancelamentos possuem regras específicas e prazo limite de até
-                15 dias antes do evento.
-              </p>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    3. DO REPASSE DE INSCRIÇÃO
+                  </h4>
+                  <p>
+                    O repasse da inscrição é de responsabilidade exclusiva do
+                    atleta inscrito. A organização não realizará intermediação
+                    de vendas, cobranças ou negociações entre participantes.
+                  </p>
+                  <p className="mt-1 text-red-600 font-medium">
+                    ⚠️ O prazo para solicitar a alteração cadastral é de até 30
+                    dias antes do evento, ou seja, até 29 de outubro de 2026.
+                    Após essa data não serão realizadas alterações de
+                    titularidade, tamanho de camisa ou dados cadastrais.
+                  </p>
+                </div>
 
-              <br />
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    4. CANCELAMENTO E REEMBOLSO
+                  </h4>
+                  <p>
+                    O cancelamento poderá ser solicitado até 30 dias antes da
+                    prova. Nesses casos, será realizado reembolso correspondente
+                    a 50% do valor pago pela inscrição.
+                  </p>
+                  <p className="mt-1">
+                    Após esse prazo não haverá devolução de valores, devido aos
+                    compromissos assumidos com fornecedores, produção de kits,
+                    medalhas, seguro atleta e demais serviços do evento. O
+                    cancelamento deverá ser solicitado pelo titular através dos
+                    canais oficiais.
+                  </p>
+                </div>
 
-              <p>
-                A medalha será entregue apenas para atletas que concluírem
-                oficialmente o percurso.
-              </p>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    5. ENTREGA DOS KITS
+                  </h4>
+                  <p>
+                    Local, datas e horários serão divulgados pela organização.
+                    Para retirada será obrigatória a apresentação de documento
+                    oficial com foto.
+                  </p>
+                  <div className="bg-white border border-gray-200 rounded-lg p-2.5 mt-2">
+                    <span className="font-semibold text-xs text-gray-900 block mb-1">
+                      O seu kit poderá conter:
+                    </span>
+                    <ul className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-gray-600 pl-2 list-inside">
+                      <li>✓ Camisa oficial do evento</li>
+                      <li>✓ Número de peito</li>
+                      <li>✓ Medalha de participação</li>
+                      <li>✓ Viseira personalizada</li>
+                      <li>✓ Seguro atleta</li>
+                      <li>✓ Café da manhã</li>
+                    </ul>
+                  </div>
+                  <p className="mt-2 text-xs text-amber-700 font-medium">
+                    ⚠️ Participantes que não retirarem seus kits nas datas
+                    divulgadas perderão o direito aos itens, sem reembolso da
+                    inscrição.
+                  </p>
+                </div>
 
-              <br />
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    6. GUARDA-VOLUME
+                  </h4>
+                  <p className="text-gray-600">
+                    A organização da 6ª Corrida Entre Amigas RUN não
+                    disponibilizará serviço de guarda-volume. Cada participante
+                    será responsável pelos seus pertences antes, durante e após
+                    o evento. A organização não se responsabiliza por danos,
+                    perdas ou furtos.
+                  </p>
+                </div>
 
-              <p>
-                Ao participar do evento, o atleta autoriza gratuitamente o uso
-                de imagem em materiais promocionais.
-              </p>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    7. IDENTIFICAÇÃO DO PARTICIPANTE
+                  </h4>
+                  <p>
+                    O uso do número de peito é obrigatório durante toda a prova,
+                    devendo permanecer visível na parte frontal do corpo. A
+                    medalha de participação será entregue apenas aos atletas
+                    regularmente inscritos que concluírem o percurso e estiverem
+                    devidamente identificados.
+                  </p>
+                </div>
 
-              <br />
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">8. PREMIAÇÃO</h4>
+                  <p>
+                    As categorias de premiação serão: Geral Masculino (5 km),
+                    Geral Feminino (5 km), Categoria PCD (5 km) e Categoria 60+
+                    (5 km).
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Havendo quantidade suficiente de inscritos, as categorias
+                    PCD e 60+ poderão ter premiação separada por gênero. Caso
+                    contrário, a premiação será em categoria única.
+                  </p>
+                </div>
 
-              <p>
-                O regulamento completo poderá ser atualizado pela organização
-                por motivos técnicos, operacionais ou de segurança.
-              </p>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    9. RESPONSABILIDADES E DISPOSIÇÕES GERAIS
+                  </h4>
+                  <p>
+                    O participante deve respeitar o percurso e orientações da
+                    equipe de apoio. Todos os inscritos estarão cobertos pelo
+                    seguro atleta contratado. Ao efetuar a inscrição, o
+                    participante declara estar de acordo com este regulamento na
+                    íntegra.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <label
-              className="
-                flex
-                items-start
-                gap-3
-                mt-4
-                cursor-pointer
-              "
-            >
+            {/* CHECKBOX DO ACEITE DO REGULAMENTO (MANTIDO INTACTO) */}
+            <label className="flex items-start gap-3 mt-4 cursor-pointer">
               <input
                 type="checkbox"
                 name="aceiteRegulamento"
@@ -1037,7 +1084,6 @@ export default function InscricaoModal({
                 onChange={handleChange}
                 className="mt-1"
               />
-
               <span className="text-sm text-gray-700">
                 Declaro que li e aceito integralmente o regulamento da corrida.
               </span>
@@ -1049,17 +1095,7 @@ export default function InscricaoModal({
               </p>
             )}
 
-            <div
-              className="
-                bg-yellow-50
-                border
-                border-yellow-200
-                rounded-xl
-                p-4
-                text-sm
-                text-yellow-800
-              "
-            >
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-sm text-yellow-800">
               <strong>Atenção:</strong>
               <br />
               Participantes 60+, TEA e PCD devem enviar o comprovante elegível
@@ -1086,18 +1122,7 @@ export default function InscricaoModal({
             )}
 
             {loading && (
-              <div
-                className="
-                  bg-blue-50
-                  border
-                  border-blue-200
-                  text-blue-700
-                  rounded-xl
-                  p-4
-                  text-center
-                  mb-4
-                "
-              >
+              <div className="bg-blue-50 border border-blue-200 text-blue-700 rounded-xl p-4 text-center mb-4">
                 ⏳ Aguarde...
                 <br />
                 Estamos gerando seu link de pagamento. Não feche esta página.
@@ -1107,48 +1132,772 @@ export default function InscricaoModal({
             <button
               type="submit"
               disabled={loading}
-              className={`
-                w-full
-                rounded-xl
-                py-4
-                font-bold
-                shadow-lg
-                transition-all
-                duration-200
-
-                ${
-                  loading
-                    ? `
-                      bg-gray-400
-                      cursor-not-allowed
-                      text-white
-                    `
-                    : `
-                      bg-gradient-to-r
-                      from-pink-500
-                      to-purple-500
-                      hover:scale-[1.01]
-                      hover:opacity-95
-                      text-white
-                    `
-                }
-              `}
+              className={`w-full rounded-xl py-4 font-bold shadow-lg transition-all duration-200 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-gradient-to-r from-pink-500 to-purple-500 hover:scale-[1.01] hover:opacity-95 text-white"
+              }`}
             >
               {loading
                 ? "⏳ Gerando link de pagamento..."
                 : "🎯 Finalizar Inscrição"}
             </button>
-
-            {/*             <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-4 rounded-lg shadow-lg hover:opacity-95 transition-opacity disabled:opacity-50"
-            >
-              {loading ? "⏳ Enviando..." : "🎯 Finalizar Inscrição"}
-            </button> */}
           </form>
         )}
       </div>
     </div>
   );
+
+  //   return (
+  //     <div className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center p-4">
+  //       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto p-8 animate-in fade-in zoom-in-95">
+  //         <div className="flex justify-between items-center mb-6">
+  //           <h2 className="text-2xl font-bold text-pink-600">
+  //             🎯 Inscrição Entre Amigas Run
+  //           </h2>
+  //           <button
+  //             onClick={onClose}
+  //             className="text-gray-500 text-2xl hover:text-gray-700 transition-colors"
+  //           >
+  //             ×
+  //           </button>
+  //         </div>
+
+  //         {success ? (
+  //           <div className="text-center">
+  //             <div className="text-5xl mb-4">✅</div>
+  //             <h2 className="text-2xl font-bold text-green-600 mb-4">
+  //               Inscrição Realizada!
+  //             </h2>
+  //             <p className="mb-2">Número da inscrição:</p>
+  //             <p className="text-2xl font-bold text-purple-600 mb-6">
+  //               {success.numeroInscricao}
+  //             </p>
+
+  //             <div className="space-y-3">
+  //               <button
+  //                 onClick={() => {
+  //                   //window.location.href = paymentLinks[valorCalculado];
+  //                   window.location.href = success.paymentLink; // Link dinâmico retornado pela API
+  //                 }}
+  //                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors"
+  //               >
+  //                 💳 Pagar com Mercado Pago
+  //               </button>
+
+  //               <button
+  //                 onClick={onClose}
+  //                 className="w-full text-gray-600 py-3 hover:text-gray-800 transition-colors"
+  //               >
+  //                 Fechar
+  //               </button>
+  //             </div>
+  //           </div>
+  //         ) : (
+  //           <form onSubmit={handleSubmit} className="space-y-6">
+  //             {/* O Grid mantém o comportamento em telas maiores, e cada div protege a sua própria célula */}
+  //             <div className="hidden">
+  //               <input
+  //                 type="text"
+  //                 name="website"
+  //                 value={formData.website}
+  //                 onChange={handleChange}
+  //                 autoComplete="off"
+  //                 tabIndex="-1"
+  //               />
+  //             </div>
+  //             <div className="grid md:grid-cols-2 gap-4">
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="text"
+  //                   name="nomeCompleto"
+  //                   placeholder="Nome completo"
+  //                   value={formData.nomeCompleto}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.nomeCompleto
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 />
+  //                 {activeFieldErrors.nomeCompleto && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.nomeCompleto}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="text"
+  //                   name="cpf"
+  //                   placeholder="CPF"
+  //                   value={formData.cpf}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.cpf ? "border-red-500" : "border-gray-300"
+  //                   }`}
+  //                 />
+  //                 {activeFieldErrors.cpf && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.cpf}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="email"
+  //                   name="email"
+  //                   placeholder="E-mail"
+  //                   value={formData.email}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.email
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 />
+  //                 {activeFieldErrors.email && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.email}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="text"
+  //                   name="telefone"
+  //                   placeholder="Telefone"
+  //                   value={formData.telefone}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.telefone
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 />
+  //                 {activeFieldErrors.telefone && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.telefone}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="cidade"
+  //                   value={formData.cidade}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.cidade
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   <option value="">Cidade</option>
+  //                   {cidades.map((cidade) => (
+  //                     <option key={cidade} value={cidade}>
+  //                       {cidade}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.cidade && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.cidade}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               {formData.cidade === "Outros" && (
+  //                 <div className="flex flex-col">
+  //                   <input
+  //                     type="text"
+  //                     name="cidadeOutra"
+  //                     placeholder="Digite sua cidade"
+  //                     value={formData.cidadeOutra}
+  //                     onChange={handleChange}
+  //                     className={`border rounded-lg p-3 ${
+  //                       activeFieldErrors.cidadeOutra
+  //                         ? "border-red-500"
+  //                         : "border-gray-300"
+  //                     }`}
+  //                   />
+  //                   {activeFieldErrors.cidadeOutra && (
+  //                     <p className="text-red-500 text-sm mt-1">
+  //                       {activeFieldErrors.cidadeOutra}
+  //                     </p>
+  //                   )}
+  //                 </div>
+  //               )}
+
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="number"
+  //                   name="idade"
+  //                   min="1"
+  //                   max="120"
+  //                   placeholder="Idade"
+  //                   value={formData.idade}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.idade
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 />
+  //                 {activeFieldErrors.idade && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.idade}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               {/* Correção estrutural do select de sexo: Erro movido para fora da tag select */}
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="sexo"
+  //                   value={formData.sexo}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.sexo
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   <option value="">Sexo</option>
+  //                   {sexos.map((sexo) => (
+  //                     <option key={sexo} value={sexo}>
+  //                       {sexo}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.sexo && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.sexo}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="tamanhoCamisa"
+  //                   value={formData.tamanhoCamisa}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.tamanhoCamisa
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   <option value="">Tamanho da camisa</option>
+  //                   {tamanhosCamisa.map((item) => (
+  //                     <option key={item} value={item}>
+  //                       {item}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.tamanhoCamisa && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.tamanhoCamisa}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="distancia"
+  //                   value={formData.distancia}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.distancia
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   <option value="">Distância</option>
+  //                   {distancias.map((item) => (
+  //                     <option key={item} value={item}>
+  //                       {item}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.distancia && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.distancia}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="tipoKit"
+  //                   value={formData.tipoKit}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.tipoKit
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   {kitsDisponiveis.map((item) => (
+  //                     <option key={item} value={item}>
+  //                       {item}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.tipoKit && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.tipoKit}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="formaPagamento"
+  //                   value={formData.formaPagamento}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.formaPagamento
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   {formasPagamento.map((item) => (
+  //                     <option key={item} value={item}>
+  //                       {item}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.formaPagamento && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.formaPagamento}
+  //                   </p>
+  //                 )}
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="text"
+  //                   value={
+  //                     pricing?.valor ? `R$ ${pricing.valor}` : "Calculando..."
+  //                   }
+  //                   //value={`R$ ${pricing?.valor || valorCalculado}`} // value={`R$ ${valorCalculado}`}
+  //                   disabled
+  //                   className="border rounded-lg p-3 bg-gray-100 font-bold"
+  //                 />
+  //                 {pricingError && (
+  //                   <p
+  //                     className="
+  //                       text-red-500
+  //                       text-sm
+  //                       mt-1
+  //                     "
+  //                   >
+  //                     {pricingError}
+  //                   </p>
+  //                 )}
+  //               </div>
+  //               <div className="flex flex-col">
+  //                 <input
+  //                   type="text"
+  //                   name="cupom"
+  //                   placeholder="Cupom promocional"
+  //                   value={formData.cupom}
+  //                   onChange={handleChange}
+  //                   className="
+  //                   border
+  //                   border-gray-300
+  //                   rounded-lg
+  //                   p-3
+  //                 "
+  //                 />
+
+  //                 <span
+  //                   className="
+  //                   text-xs
+  //                   text-gray-500
+  //                   mt-1
+  //                 "
+  //                 >
+  //                   Caso possua cupom promocional, informe aqui.
+  //                 </span>
+  //               </div>
+
+  //               <div
+  //                 className="
+  //                   border
+  //                   border-yellow-200
+  //                   bg-yellow-50
+  //                   rounded-xl
+  //                   p-4
+  //                   space-y-3
+  //                 "
+  //               >
+  //                 {Number(formData.idade) >= 60 && (
+  //                   <div
+  //                     className="
+  //                         bg-green-100
+  //                         border
+  //                         border-green-300
+  //                         text-green-800
+  //                         rounded-lg
+  //                         p-3
+  //                         text-sm
+  //                       "
+  //                   >
+  //                     ✅ Benefício legal 60+ identificado automaticamente.
+  //                     <br />
+  //                     <br />
+  //                     Envie documento comprobatório para:
+  //                     <br />
+  //                     <strong>(81) 98467-1327</strong>
+  //                   </div>
+  //                 )}
+
+  //                 <label
+  //                   className="
+  //                     flex
+  //                     items-start
+  //                     gap-3
+  //                   "
+  //                 >
+  //                   <input
+  //                     type="checkbox"
+  //                     name="isPcd"
+  //                     checked={formData.isPcd}
+  //                     onChange={handleChange}
+  //                   />
+
+  //                   <span
+  //                     className="
+  //                       text-sm
+  //                       text-gray-700
+  //                     "
+  //                   >
+  //                     Sou PCD e desejo solicitar o benefício legal de 50% mediante
+  //                     validação documental.
+  //                   </span>
+  //                 </label>
+
+  //                 <label
+  //                   className="
+  //                     flex
+  //                     items-start
+  //                     gap-3
+  //                   "
+  //                 >
+  //                   <input
+  //                     type="checkbox"
+  //                     name="isTea"
+  //                     checked={formData.isTea}
+  //                     onChange={handleChange}
+  //                   />
+
+  //                   <span
+  //                     className="
+  //                       text-sm
+  //                       text-gray-700
+  //                     "
+  //                   >
+  //                     Sou TEA (Transtorno do Espectro Autista) e desejo solicitar
+  //                     o benefício legal mediante validação documental.
+  //                   </span>
+  //                 </label>
+
+  //                 {/* =====================================================
+  //                     INSTRUÇÃO DOCUMENTAL
+  //                 ===================================================== */}
+
+  //                 <div
+  //                   className="
+  //                     text-xs
+  //                     text-red-600
+  //                     leading-relaxed
+  //                   "
+  //                 >
+  //                   ⚠️ Para validação do benefício legal (60+, TEA e PCD), envie
+  //                   documento comprobatório para:
+  //                   <br />
+  //                   <br />
+  //                   <strong>(81) 98467-1327</strong>
+  //                   <br />
+  //                   <br />A validação será realizada manualmente pela organização.
+  //                 </div>
+  //               </div>
+
+  //               <div className="flex flex-col">
+  //                 <select
+  //                   name="comoConheceu"
+  //                   value={formData.comoConheceu}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 ${
+  //                     activeFieldErrors.comoConheceu
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 >
+  //                   <option value="">Como conheceu?</option>
+  //                   {comoConheceuOpcoes.map((item) => (
+  //                     <option key={item} value={item}>
+  //                       {item}
+  //                     </option>
+  //                   ))}
+  //                 </select>
+  //                 {activeFieldErrors.comoConheceu && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.comoConheceu}
+  //                   </p>
+  //                 )}
+  //               </div>
+  //             </div>
+  //             <div className="flex flex-col">
+  //               <label className="block mb-2 font-semibold">
+  //                 Restrições médicas?
+  //               </label>
+  //               <select
+  //                 name="restricoesMedicas"
+  //                 value={formData.restricoesMedicas}
+  //                 onChange={handleChange}
+  //                 className={`border rounded-lg p-3 w-full ${
+  //                   activeFieldErrors.restricoesMedicas
+  //                     ? "border-red-500"
+  //                     : "border-gray-300"
+  //                 }`}
+  //               >
+  //                 <option value="NÃO">NÃO</option>
+  //                 <option value="SIM">SIM</option>
+  //               </select>
+  //               {activeFieldErrors.restricoesMedicas && (
+  //                 <p className="text-red-500 text-sm mt-1">
+  //                   {activeFieldErrors.restricoesMedicas}
+  //                 </p>
+  //               )}
+  //             </div>
+
+  //             {formData.restricoesMedicas === "SIM" && (
+  //               <div className="flex flex-col">
+  //                 <textarea
+  //                   name="descricaoRestricao"
+  //                   placeholder="Informe as restrições médicas"
+  //                   value={formData.descricaoRestricao}
+  //                   onChange={handleChange}
+  //                   className={`border rounded-lg p-3 w-full ${
+  //                     activeFieldErrors.descricaoRestricao
+  //                       ? "border-red-500"
+  //                       : "border-gray-300"
+  //                   }`}
+  //                 />
+  //                 {activeFieldErrors.descricaoRestricao && (
+  //                   <p className="text-red-500 text-sm mt-1">
+  //                     {activeFieldErrors.descricaoRestricao}
+  //                   </p>
+  //                 )}
+  //               </div>
+  //             )}
+
+  //             <div className="flex flex-col">
+  //               <label className="flex items-start gap-3 cursor-pointer">
+  //                 <input
+  //                   type="checkbox"
+  //                   name="declaracao"
+  //                   checked={formData.declaracao}
+  //                   onChange={handleChange}
+  //                   className="mt-1"
+  //                 />
+  //                 <span className="text-sm text-gray-700">
+  //                   Declaro que estou ciente de que devo realizar o pagamento da
+  //                   inscrição e enviar o comprovante com antecedência.
+  //                 </span>
+  //               </label>
+  //               {activeFieldErrors.declaracao && (
+  //                 <p className="text-red-500 text-sm mt-1">
+  //                   {activeFieldErrors.declaracao}
+  //                 </p>
+  //               )}
+  //             </div>
+
+  //             <div
+  //               className="
+  //                 border
+  //                 border-gray-200
+  //                 rounded-xl
+  //                 p-4
+  //                 bg-gray-50
+  //                 max-h-64
+  //                 overflow-y-auto
+  //                 text-sm
+  //                 leading-relaxed
+  //               "
+  //             >
+  //               <h3 className="font-bold text-lg mb-3">
+  //                 📌 Regulamento – Corrida Entre Amigas Run
+  //               </h3>
+
+  //               <p>
+  //                 A inscrição é pessoal e intransferível, salvo autorização da
+  //                 organização.
+  //               </p>
+
+  //               <br />
+
+  //               <p>
+  //                 Cancelamentos possuem regras específicas e prazo limite de até
+  //                 15 dias antes do evento.
+  //               </p>
+
+  //               <br />
+
+  //               <p>
+  //                 A medalha será entregue apenas para atletas que concluírem
+  //                 oficialmente o percurso.
+  //               </p>
+
+  //               <br />
+
+  //               <p>
+  //                 Ao participar do evento, o atleta autoriza gratuitamente o uso
+  //                 de imagem em materiais promocionais.
+  //               </p>
+
+  //               <br />
+
+  //               <p>
+  //                 O regulamento completo poderá ser atualizado pela organização
+  //                 por motivos técnicos, operacionais ou de segurança.
+  //               </p>
+  //             </div>
+
+  //             <label
+  //               className="
+  //                 flex
+  //                 items-start
+  //                 gap-3
+  //                 mt-4
+  //                 cursor-pointer
+  //               "
+  //             >
+  //               <input
+  //                 type="checkbox"
+  //                 name="aceiteRegulamento"
+  //                 checked={formData.aceiteRegulamento}
+  //                 onChange={handleChange}
+  //                 className="mt-1"
+  //               />
+
+  //               <span className="text-sm text-gray-700">
+  //                 Declaro que li e aceito integralmente o regulamento da corrida.
+  //               </span>
+  //             </label>
+
+  //             {activeFieldErrors.aceiteRegulamento && (
+  //               <p className="text-red-500 text-sm mt-1">
+  //                 {activeFieldErrors.aceiteRegulamento}
+  //               </p>
+  //             )}
+
+  //             <div
+  //               className="
+  //                 bg-yellow-50
+  //                 border
+  //                 border-yellow-200
+  //                 rounded-xl
+  //                 p-4
+  //                 text-sm
+  //                 text-yellow-800
+  //               "
+  //             >
+  //               <strong>Atenção:</strong>
+  //               <br />
+  //               Participantes 60+, TEA e PCD devem enviar o comprovante elegível
+  //               para WhatsApp da organização para validação do benefício legal:
+  //               <br />
+  //               <br />
+  //               <strong>(81) 98467-1327</strong>
+  //               <br />
+  //               <br />
+  //               A organização fará a validação manual do benefício.
+  //               <br />
+  //               <br />
+  //               <em>
+  //                 Nota: Caso a documentação não seja enviada ou seja considerada
+  //                 inválida, o desconto será desconsiderado e o valor integral da
+  //                 inscrição será cobrado para a efetivação da vaga.
+  //               </em>
+  //             </div>
+
+  //             {activeGeneralError && (
+  //               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-4 animate-shake">
+  //                 {activeGeneralError}
+  //               </div>
+  //             )}
+
+  //             {loading && (
+  //               <div
+  //                 className="
+  //                   bg-blue-50
+  //                   border
+  //                   border-blue-200
+  //                   text-blue-700
+  //                   rounded-xl
+  //                   p-4
+  //                   text-center
+  //                   mb-4
+  //                 "
+  //               >
+  //                 ⏳ Aguarde...
+  //                 <br />
+  //                 Estamos gerando seu link de pagamento. Não feche esta página.
+  //               </div>
+  //             )}
+
+  //             <button
+  //               type="submit"
+  //               disabled={loading}
+  //               className={`
+  //                 w-full
+  //                 rounded-xl
+  //                 py-4
+  //                 font-bold
+  //                 shadow-lg
+  //                 transition-all
+  //                 duration-200
+
+  //                 ${
+  //                   loading
+  //                     ? `
+  //                       bg-gray-400
+  //                       cursor-not-allowed
+  //                       text-white
+  //                     `
+  //                     : `
+  //                       bg-gradient-to-r
+  //                       from-pink-500
+  //                       to-purple-500
+  //                       hover:scale-[1.01]
+  //                       hover:opacity-95
+  //                       text-white
+  //                     `
+  //                 }
+  //               `}
+  //             >
+  //               {loading
+  //                 ? "⏳ Gerando link de pagamento..."
+  //                 : "🎯 Finalizar Inscrição"}
+  //             </button>
+
+  //             {/*             <button
+  //               type="submit"
+  //               disabled={loading}
+  //               className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-bold py-4 rounded-lg shadow-lg hover:opacity-95 transition-opacity disabled:opacity-50"
+  //             >
+  //               {loading ? "⏳ Enviando..." : "🎯 Finalizar Inscrição"}
+  //             </button> */}
+  //           </form>
+  //         )}
+  //       </div>
+  //     </div>
+  //   );
 }
