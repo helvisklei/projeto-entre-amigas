@@ -24,7 +24,7 @@ export default function DashboardGrid({ dashboard }) {
 
       <DashboardCard
         title="Vendas Totais" //Arrecadado
-        value={`R$ ${dashboard.totalArrecadado}`}
+        value={`R$ ${Number(dashboard.totalArrecadado || 0).toFixed(2)}`}
       />
 
       <DashboardCard title="Masculino" value={dashboard.masculino} />
