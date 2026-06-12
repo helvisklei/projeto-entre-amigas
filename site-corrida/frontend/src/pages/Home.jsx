@@ -455,12 +455,24 @@ export default function Home() {
               ))}
             </div>
           )}
-
-          <div className="text-center bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300">
+          <div className="text-center bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300 flex flex-col items-center justify-center gap-4">
             <p className="text-lg font-semibold text-yellow-800">
               ⏰ Garanta sua inscrição no primeiro lote e economize! 💪
             </p>
+
+            <button
+              onClick={() => tryOpenInscricaoModal()}
+              className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-md transform transition hover:scale-105"
+            >
+              🏃‍♀️ Quero me Inscrever Agora! 💕
+            </button>
           </div>
+
+          {/*           <div className="text-center bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300">
+            <p className="text-lg font-semibold text-yellow-800">
+              ⏰ Garanta sua inscrição no primeiro lote e economize! 💪
+            </p>
+          </div> */}
         </div>
       </div>
       {/*       <div className="relative bg-gradient-to-b from-white to-pink-50 py-12 shadow-lg">
