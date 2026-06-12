@@ -23,15 +23,19 @@ const cidades = [
 ];
 
 const tamanhosCamisa = [
+  "Infantil 02",
+  "Infantil 04",
+  "Infantil 06",
+  "Infantil 08",
+  "Infantil 10",
+  "Infantil 12",
+  "Infantil 14",
   "PP",
   "P",
   "M",
   "G",
   "GG",
   "XG",
-  "Infantil P",
-  "Infantil M",
-  "Infantil G",
 ];
 
 const distancias = ["5 KM"]; //"3 KM"
@@ -408,6 +412,8 @@ export default function InscricaoModal({
       alert("Erro ao copiar chave PIX.");
     }
   } */
+
+  //console.log("Tamanhos:", tamanhosCamisa);
 
   if (!isOpen) return null;
 
