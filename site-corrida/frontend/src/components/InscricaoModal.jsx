@@ -39,18 +39,30 @@ const formasPagamento = ["PIX", "CARTÃO"]; //"DINHEIRO"
 const sexos = ["Feminino", "Masculino"];
 
 const comoConheceuOpcoes = [
-  "Amigos",
-  "Brabras do Asfalto",
-  "Correr é melhor que lasanha",
-  "Facebook",
-  "Instagram",
-  "Milayne",
-  "Race Running",
-  "Raquel",
   "Site",
-  "Whatsapp",
+  "Instagram",
+  "Facebook",
+  "Amigos",
+  "Afogados Ordinário",
+  "Mariana Mongin",
+  "Pina Ordinário",
+  "Race Running",
+  "Ray Lins",
   "Outros",
 ];
+
+/* const comoConheceuOpcoes = [
+  "Amigos",
+  "Facebook",
+  "Instagram",
+  "Race Running",
+  "Ray Lins",
+  "Mariana Mongin",
+  "Pina Ordinário",
+  "Afogados Ordinário",
+  "Site",
+  "Outros",
+]; */
 
 export default function InscricaoModal({
   isOpen,
