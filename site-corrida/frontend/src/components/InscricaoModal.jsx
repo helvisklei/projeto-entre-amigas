@@ -887,6 +887,28 @@ export default function InscricaoModal({
               </p>
             )}
 
+            <div className="flex flex-col">
+  <label className="flex items-start gap-3 mt-4 cursor-pointer">
+    <input
+      type="checkbox"
+      name="aceiteRegulamento"
+      checked={formData.aceiteRegulamento}
+      onChange={handleChange}
+      className="mt-1"
+    />
+
+    <span className="text-sm text-gray-700">
+      Declaro que li e aceito integralmente o regulamento da corrida.
+    </span>
+  </label>
+
+  {activeFieldErrors.aceiteRegulamento && (
+    <p className="text-red-500 text-sm mt-1">
+      {activeFieldErrors.aceiteRegulamento}
+    </p>
+  )}
+</div>
+
             <button
               type="submit"
               disabled={loading}
