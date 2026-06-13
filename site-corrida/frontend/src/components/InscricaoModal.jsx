@@ -293,7 +293,7 @@ export default function InscricaoModal({
         setLocalGeneralError(err.message || "Erro ao realizar inscrição.");
       }
     }
-     console.error(err); // retirar depois TESTAR
+    // console.error(err); // retirar depois TESTAR
   }
 
   if (!isOpen) return null;
