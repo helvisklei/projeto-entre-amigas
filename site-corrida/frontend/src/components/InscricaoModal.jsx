@@ -255,8 +255,8 @@ export default function InscricaoModal({
     try {
 
       // testar o erro depois retirar TESTAR conole log
-       console.log("=== FORMDATA ANTES DA VALIDACAO ===");
-       console.log(formData);
+      // console.log("=== FORMDATA ANTES DA VALIDACAO ===");
+       //console.log(formData);
       validarInscricao(formData);
 
       const payload = {
@@ -265,8 +265,8 @@ export default function InscricaoModal({
           formData.cidade === "Outros" ? formData.cidadeOutra : formData.cidade,
       };
       // testar o erro depois retirar TESTAR conole log
-      console.log("=== PAYLOAD FINAL ===");
-      console.log(payload);
+      //console.log("=== PAYLOAD FINAL ===");
+      //console.log(payload);
 
       const response = await submitInscricao(payload);
 
@@ -276,7 +276,7 @@ export default function InscricaoModal({
     } catch (err) {
       console.error("ERRO COMPLETO:", err);
       if (err.fieldErrors) {
-        console.error("FIELD ERRORS:", err.fieldErrors); // retirar esse console log depois TESTAR
+        //console.error("FIELD ERRORS:", err.fieldErrors); // retirar esse console log depois TESTAR
         setLocalFieldErrors(err.fieldErrors);
 
         const firstField = Object.keys(err.fieldErrors)[0];
