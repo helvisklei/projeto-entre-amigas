@@ -27,6 +27,16 @@ export default function DashboardGrid({ dashboard }) {
         value={`R$ ${Number(dashboard.totalArrecadado || 0).toFixed(2)}`}
       />
 
+      <DashboardCard
+        title="Cupons Utilizados"
+        value={`${dashboard.cupom.utilizados}/${dashboard.cupom.limite}`}
+      />
+
+      {/*       <DashboardCard
+        title="Cupons Restantes"
+        value={dashboard.cupom.restantes}
+      /> */}
+
       <DashboardCard title="Masculino" value={dashboard.masculino} />
 
       <DashboardCard title="Feminino" value={dashboard.feminino} />
