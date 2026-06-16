@@ -48,11 +48,13 @@ const comoConheceuOpcoes = [
   "Facebook",
   "Amigos",
   "Afogados Ordinário",
+  "Dany",
   "Jacy",
   "Mariana Mongin",
   "Pina Ordinário",
   "Race Running",
   "Ray Lins",
+  "Robsotero",
   "Outros",
 ];
 
