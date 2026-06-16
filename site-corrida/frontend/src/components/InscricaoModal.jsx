@@ -48,6 +48,7 @@ const comoConheceuOpcoes = [
   "Facebook",
   "Amigos",
   "Afogados Ordinário",
+  "Jacy",
   "Mariana Mongin",
   "Pina Ordinário",
   "Race Running",
@@ -253,10 +254,9 @@ export default function InscricaoModal({
     setLocalFieldErrors({});
 
     try {
-
       // testar o erro depois retirar TESTAR conole log
       // console.log("=== FORMDATA ANTES DA VALIDACAO ===");
-       //console.log(formData);
+      //console.log(formData);
       validarInscricao(formData);
 
       const payload = {
@@ -888,26 +888,27 @@ export default function InscricaoModal({
             )}
 
             <div className="flex flex-col">
-  <label className="flex items-start gap-3 mt-4 cursor-pointer">
-    <input
-      type="checkbox"
-      name="aceiteRegulamento"
-      checked={formData.aceiteRegulamento}
-      onChange={handleChange}
-      className="mt-1"
-    />
+              <label className="flex items-start gap-3 mt-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="aceiteRegulamento"
+                  checked={formData.aceiteRegulamento}
+                  onChange={handleChange}
+                  className="mt-1"
+                />
 
-    <span className="text-sm text-gray-700">
-      Declaro que li e aceito integralmente o regulamento da corrida.
-    </span>
-  </label>
+                <span className="text-sm text-gray-700">
+                  Declaro que li e aceito integralmente o regulamento da
+                  corrida.
+                </span>
+              </label>
 
-  {activeFieldErrors.aceiteRegulamento && (
-    <p className="text-red-500 text-sm mt-1">
-      {activeFieldErrors.aceiteRegulamento}
-    </p>
-  )}
-</div>
+              {activeFieldErrors.aceiteRegulamento && (
+                <p className="text-red-500 text-sm mt-1">
+                  {activeFieldErrors.aceiteRegulamento}
+                </p>
+              )}
+            </div>
 
             <button
               type="submit"
