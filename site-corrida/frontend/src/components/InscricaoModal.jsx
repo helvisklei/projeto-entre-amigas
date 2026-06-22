@@ -48,6 +48,7 @@ const comoConheceuOpcoes = [
   "Amigos",
   "Afogados Ordinário",
   "Danny Oliveira",
+  "Divulga Corrida",
   "Jacy",
   "Pahkarina",
   "Pina Ordinário",
