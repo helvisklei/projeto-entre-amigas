@@ -34,6 +34,8 @@ export async function criarInscricao(payload) {
       throw new Error(data.message || "Erro ao processar inscrição.");
     }
 
+    console.log("RESPOSTA INSCRICAO:", data);
+
     return data;
   } catch (error) {
     console.error("Erro completo:", error);
