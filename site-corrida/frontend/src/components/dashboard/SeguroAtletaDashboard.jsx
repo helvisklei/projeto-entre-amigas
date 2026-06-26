@@ -14,12 +14,13 @@ export default function SeguroAtletaDashboard({ analytics }) {
   if (!analytics) {
     return null;
   }
-  console.log(
+  /*   console.log(
     "Analytics Seguro:",
     analytics.listaTea,
     analytics.listaPcd,
     analytics.listaIdoso,
-  );
+    analytics.listaAcolhimento,
+  ); */
 
   const masculino = getTotalCategoria(analytics?.categorias?.masculino);
 
@@ -145,6 +146,30 @@ export default function SeguroAtletaDashboard({ analytics }) {
           </div>
           <h3 className="text-3xl font-bold text-green-700 mt-1">
             {analytics.totalIdoso || 0}
+          </h3>
+        </div>
+
+        {/* ACOLHIMENTO */}
+        <div
+          onClick={() =>
+            handleOpenModal("Atletas - Acolhimento", analytics.listaAcolhimento)
+          }
+          className={`rounded-xl p-4 bg-purple-50 transition-all ${
+            analytics.listaAcolhimento?.length
+              ? "cursor-pointer hover:bg-purple-100 hover:shadow-sm select-none"
+              : ""
+          }`}
+        >
+          <div className="flex justify-between items-start">
+            <p className="text-sm text-gray-500 font-medium">💜 Acolhimento</p>
+
+            {analytics.listaAcolhimento?.length > 0 && (
+              <span className="text-[10px] bg-purple-200 text-purple-800 font-bold px-1.5 py-0.5 rounded uppercase tracking-wider"></span>
+            )}
+          </div>
+
+          <h3 className="text-3xl font-bold text-purple-700 mt-1">
+            {analytics.totalAcolhimento || 0}
           </h3>
         </div>
       </div>
