@@ -29,6 +29,39 @@ export default function Admin() {
   const [expandedRow, setExpandedRow] = useState(null);
   const [processingId, setProcessingId] = useState(null);
 
+  /*
+  ==========================================================
+  EDIÇÃO CADASTRAL DO PARTICIPANTE
+  ==========================================================
+
+  Controla:
+
+  - abertura e fechamento do modal;
+  - participante selecionado;
+  - dados temporários do formulário;
+  - estado de salvamento.
+
+  Os dados somente serão enviados ao backend quando o
+  administrador confirmar a alteração.
+
+  Nenhuma chamada à API ocorre ao abrir o modal.
+  ==========================================================
+  */
+
+  const [participanteEmEdicao, setParticipanteEmEdicao] = useState(null);
+
+  const [formularioEdicao, setFormularioEdicao] = useState({
+    nome: "",
+
+    email: "",
+
+    telefone: "",
+
+    tamanho_camisa: "",
+  });
+
+  const [salvandoEdicao, setSalvandoEdicao] = useState(false);
+
   const navigate = useNavigate();
   const adminUser = localStorage.getItem("admin_user") || "Admin";
 
@@ -122,6 +155,328 @@ export default function Admin() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("admin_user");
     navigate("/login");
+  };
+
+  /*
+  ==========================================================
+  ABRIR MODAL DE EDIÇÃO
+  ==========================================================
+
+  Recebe o participante selecionado e cria uma cópia dos
+  dados editáveis.
+
+  A edição ocorre inicialmente apenas no estado local.
+
+  Nenhuma alteração é realizada na planilha nesta etapa.
+  ==========================================================
+  */
+
+  const abrirModalEdicao = (inscrito) => {
+    setParticipanteEmEdicao(inscrito);
+
+    setFormularioEdicao({
+      nome: String(inscrito.nome || ""),
+
+      email: String(inscrito.email || ""),
+
+      telefone: String(inscrito.telefone || ""),
+
+      tamanho_camisa: String(inscrito.tamanho_camisa || ""),
+    });
+  };
+
+  /*
+  ==========================================================
+  FECHAR MODAL DE EDIÇÃO
+  ==========================================================
+
+  Limpa o participante selecionado e descarta alterações
+  que ainda não foram enviadas ao backend.
+  ==========================================================
+  */
+
+  const fecharModalEdicao = () => {
+    if (salvandoEdicao) {
+      return;
+    }
+
+    setParticipanteEmEdicao(null);
+
+    setFormularioEdicao({
+      nome: "",
+
+      email: "",
+
+      telefone: "",
+
+      tamanho_camisa: "",
+    });
+  };
+
+  /*
+  ==========================================================
+  SALVAR EDIÇÃO CADASTRAL
+  ==========================================================
+
+  Responsável por:
+
+  - validar os dados informados;
+  - normalizar os valores;
+  - enviar todos os campos em uma única chamada;
+  - atualizar a lista local;
+  - atualizar Dashboard e Analytics;
+  - fechar o modal após sucesso.
+
+  Campos atualizados:
+
+  - nome;
+  - e-mail;
+  - telefone;
+  - tamanho da camisa.
+
+  Não altera:
+
+  - pagamento;
+  - documentação;
+  - tipo de inscrição;
+  - distância;
+  - valores financeiros;
+  - retirada do kit.
+  ==========================================================
+  */
+
+  const salvarEdicaoParticipante = async () => {
+    /*
+    ========================================================
+    PROTEÇÃO
+    ========================================================
+    */
+
+    if (!participanteEmEdicao || salvandoEdicao) {
+      return;
+    }
+
+    /*
+    ========================================================
+    NORMALIZAÇÃO
+    ========================================================
+    */
+
+    const nome = String(formularioEdicao.nome || "").trim();
+
+    const email = String(formularioEdicao.email || "")
+      .trim()
+      .toLowerCase();
+
+    const telefone = String(formularioEdicao.telefone || "").replace(
+      /\D/g,
+
+      "",
+    );
+
+    const tamanhoCamisa = String(formularioEdicao.tamanho_camisa || "")
+      .trim()
+      .toUpperCase();
+
+    /*
+    ========================================================
+    VALIDAÇÃO DO NOME
+    ========================================================
+    */
+
+    if (nome.length < 3) {
+      showError("Informe o nome completo do participante.");
+
+      return;
+    }
+
+    /*
+    ========================================================
+    VALIDAÇÃO DO E-MAIL
+    ========================================================
+    */
+
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!emailValido) {
+      showError("Informe um endereço de e-mail válido.");
+
+      return;
+    }
+
+    /*
+    ========================================================
+    VALIDAÇÃO DO TELEFONE
+    ========================================================
+
+    Aceita:
+
+    - telefone fixo com DDD: 10 dígitos;
+    - celular com DDD: 11 dígitos.
+    ========================================================
+    */
+
+    if (telefone.length < 10 || telefone.length > 11) {
+      showError("Informe um telefone válido com DDD.");
+
+      return;
+    }
+
+    /*
+    ========================================================
+    VALIDAÇÃO DA CAMISA
+    ========================================================
+    */
+
+    const tamanhosPermitidos = [
+      "INFANTIL 02",
+
+      "INFANTIL 04",
+
+      "INFANTIL 06",
+
+      "INFANTIL 08",
+
+      "INFANTIL 10",
+
+      "INFANTIL 12",
+
+      "INFANTIL 14",
+
+      "PP",
+
+      "P",
+
+      "M",
+
+      "G",
+
+      "GG",
+
+      "XG",
+    ];
+
+    if (!tamanhosPermitidos.includes(tamanhoCamisa)) {
+      showError("Selecione um tamanho de camisa válido.");
+
+      return;
+    }
+
+    /*
+    ========================================================
+    OBJETO ÚNICO DE ATUALIZAÇÃO
+    ========================================================
+
+    Todos os campos são enviados em uma única requisição.
+    ========================================================
+    */
+
+    const dadosAtualizados = {
+      nome,
+
+      email,
+
+      telefone,
+
+      tamanho_camisa: tamanhoCamisa,
+    };
+
+    try {
+      /*
+      ======================================================
+      INÍCIO DO PROCESSAMENTO
+      ======================================================
+      */
+
+      setSalvandoEdicao(true);
+
+      /*
+      ======================================================
+      ÚNICA CHAMADA DE ATUALIZAÇÃO
+      ======================================================
+      */
+
+      await updateInscrito(
+        participanteEmEdicao.row,
+
+        dadosAtualizados,
+      );
+
+      /*
+      ======================================================
+      ATUALIZAÇÃO IMEDIATA DA LISTA LOCAL
+      ======================================================
+
+      Evita esperar uma nova consulta para que os dados
+      editados apareçam na Lista de Inscritos.
+      ======================================================
+      */
+
+      setInscritos((listaAnterior) =>
+        listaAnterior.map((inscrito) => {
+          if (inscrito.row !== participanteEmEdicao.row) {
+            return inscrito;
+          }
+
+          return {
+            ...inscrito,
+
+            ...dadosAtualizados,
+          };
+        }),
+      );
+
+      /*
+      ======================================================
+      ATUALIZAÇÃO DOS RELATÓRIOS
+      ======================================================
+
+      A alteração da camisa pode modificar:
+
+      - Camisas por Tamanho;
+      - listas nominais;
+      - Camisas Especiais;
+      - indicadores logísticos.
+
+      Dashboard e Analytics são atualizados somente após
+      confirmação de sucesso do backend.
+      ======================================================
+      */
+
+      await Promise.all([loadDashboard(), loadAnalytics()]);
+
+      /*
+      ======================================================
+      FECHAMENTO APÓS SUCESSO
+      ======================================================
+      */
+
+      setParticipanteEmEdicao(null);
+
+      setFormularioEdicao({
+        nome: "",
+
+        email: "",
+
+        telefone: "",
+
+        tamanho_camisa: "",
+      });
+
+      showSuccess("Dados do participante atualizados com sucesso.");
+    } catch (error) {
+      console.error(
+        "Erro ao atualizar dados do participante:",
+
+        error,
+      );
+
+      showError(
+        error.message || "Não foi possível atualizar os dados do participante.",
+      );
+    } finally {
+      setSalvandoEdicao(false);
+    }
   };
 
   const handleUpdateInscrito = async (inscrito, field, value) => {
@@ -729,6 +1084,44 @@ export default function Admin() {
                                       ? "Enviando..."
                                       : "Reenviar E-mail"}
                                   </button>
+
+                                  {/*
+                                  ========================================================
+                                  EDITAR DADOS CADASTRAIS
+                                  ========================================================
+                                  */}
+
+                                  <button
+                                    type="button"
+                                    onClick={() => abrirModalEdicao(inscrito)}
+                                    disabled={Boolean(processingId)}
+                                    className="
+                                      w-full
+                                      inline-flex
+                                      items-center
+                                      justify-center
+                                      gap-2
+                                      rounded-xl
+                                      border
+                                      border-blue-200
+                                      bg-blue-50
+                                      px-4
+                                      py-3
+                                      text-sm
+                                      font-semibold
+                                      text-blue-700
+                                      transition
+
+                                      hover:bg-blue-100
+
+                                      disabled:cursor-not-allowed
+                                      disabled:opacity-60
+                                    "
+                                  >
+                                    <span>✏️</span>
+
+                                    <span>Editar dados</span>
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -753,6 +1146,523 @@ export default function Admin() {
           </button>
         </div>
       </main>
+
+      {/*
+      ========================================================
+      MODAL DE EDIÇÃO CADASTRAL
+      ========================================================
+
+      Permite editar:
+
+      - nome;
+      - e-mail;
+      - telefone;
+      - tamanho da camisa.
+
+      Nesta etapa, os campos alteram somente o estado local.
+
+      O envio ao backend será implementado na próxima etapa.
+      ========================================================
+      */}
+
+      {participanteEmEdicao && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-50
+            flex
+            items-center
+            justify-center
+            bg-slate-950/60
+            p-4
+            backdrop-blur-sm
+          "
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              fecharModalEdicao();
+            }
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-modal-edicao"
+            className="
+              w-full
+              max-w-2xl
+              overflow-hidden
+              rounded-2xl
+              border
+              border-slate-200
+              bg-white
+              shadow-2xl
+            "
+          >
+            {/*
+            ==================================================
+            CABEÇALHO
+            ==================================================
+            */}
+
+            <div
+              className="
+                flex
+                items-start
+                justify-between
+                gap-4
+                border-b
+                border-slate-200
+                px-6
+                py-5
+              "
+            >
+              <div>
+                <h2
+                  id="titulo-modal-edicao"
+                  className="
+                    text-xl
+                    font-bold
+                    text-slate-900
+                  "
+                >
+                  ✏️ Editar dados do participante
+                </h2>
+
+                <p
+                  className="
+                    mt-1
+                    text-sm
+                    text-slate-500
+                  "
+                >
+                  Atualize os dados cadastrais antes de confirmar o salvamento.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={fecharModalEdicao}
+                disabled={salvandoEdicao}
+                aria-label="Fechar modal"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-lg
+                  text-slate-400
+                  transition
+
+                  hover:bg-slate-100
+                  hover:text-slate-700
+
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
+                "
+              >
+                ✕
+              </button>
+            </div>
+
+            {/*
+            ==================================================
+            FORMULÁRIO
+            ==================================================
+            */}
+
+            <div
+              className="
+                max-h-[70vh]
+                overflow-y-auto
+                px-6
+                py-6
+              "
+            >
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-5
+                  md:grid-cols-2
+                "
+              >
+                {/*
+                ==============================================
+                NOME
+                ==============================================
+                */}
+
+                <div className="md:col-span-2">
+                  <label
+                    htmlFor="edicao-nome"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-semibold
+                      text-slate-700
+                    "
+                  >
+                    Nome completo
+                  </label>
+
+                  <input
+                    id="edicao-nome"
+                    type="text"
+                    value={formularioEdicao.nome}
+                    onChange={(event) =>
+                      setFormularioEdicao((estadoAnterior) => ({
+                        ...estadoAnterior,
+
+                        nome: event.target.value,
+                      }))
+                    }
+                    disabled={salvandoEdicao}
+                    autoComplete="name"
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                {/*
+                ==============================================
+                E-MAIL
+                ==============================================
+                */}
+
+                <div>
+                  <label
+                    htmlFor="edicao-email"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-semibold
+                      text-slate-700
+                    "
+                  >
+                    E-mail
+                  </label>
+
+                  <input
+                    id="edicao-email"
+                    type="email"
+                    value={formularioEdicao.email}
+                    onChange={(event) =>
+                      setFormularioEdicao((estadoAnterior) => ({
+                        ...estadoAnterior,
+
+                        email: event.target.value,
+                      }))
+                    }
+                    disabled={salvandoEdicao}
+                    autoComplete="email"
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                {/*
+                ==============================================
+                TELEFONE
+                ==============================================
+                */}
+
+                <div>
+                  <label
+                    htmlFor="edicao-telefone"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-semibold
+                      text-slate-700
+                    "
+                  >
+                    Telefone
+                  </label>
+
+                  <input
+                    id="edicao-telefone"
+                    type="tel"
+                    value={formularioEdicao.telefone}
+                    onChange={(event) =>
+                      setFormularioEdicao((estadoAnterior) => ({
+                        ...estadoAnterior,
+
+                        telefone: event.target.value,
+                      }))
+                    }
+                    disabled={salvandoEdicao}
+                    autoComplete="tel"
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                {/*
+                ==============================================
+                TAMANHO DA CAMISA
+                ==============================================
+                */}
+
+                <div className="md:col-span-2">
+                  <label
+                    htmlFor="edicao-tamanho-camisa"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-semibold
+                      text-slate-700
+                    "
+                  >
+                    Tamanho da camisa
+                  </label>
+
+                  <select
+                    id="edicao-tamanho-camisa"
+                    value={formularioEdicao.tamanho_camisa}
+                    onChange={(event) =>
+                      setFormularioEdicao((estadoAnterior) => ({
+                        ...estadoAnterior,
+
+                        tamanho_camisa: event.target.value,
+                      }))
+                    }
+                    disabled={salvandoEdicao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  >
+                    <option value="">Selecione o tamanho</option>
+
+                    <option value="INFANTIL 02">Infantil 02</option>
+
+                    <option value="INFANTIL 04">Infantil 04</option>
+
+                    <option value="INFANTIL 06">Infantil 06</option>
+
+                    <option value="INFANTIL 08">Infantil 08</option>
+
+                    <option value="INFANTIL 10">Infantil 10</option>
+
+                    <option value="INFANTIL 12">Infantil 12</option>
+
+                    <option value="INFANTIL 14">Infantil 14</option>
+
+                    <option value="PP">PP</option>
+
+                    <option value="P">P</option>
+
+                    <option value="M">M</option>
+
+                    <option value="G">G</option>
+
+                    <option value="GG">GG</option>
+
+                    <option value="XG">XG</option>
+                  </select>
+                </div>
+              </div>
+
+              <div
+                className="
+                  mt-6
+                  rounded-xl
+                  border
+                  border-blue-200
+                  bg-blue-50
+                  p-4
+                "
+              >
+                <p
+                  className="
+                    text-sm
+                    leading-relaxed
+                    text-blue-800
+                  "
+                >
+                  <strong>Participante selecionado:</strong>{" "}
+                  {participanteEmEdicao.nome}
+                  <br />
+                  <strong>Linha de referência:</strong>{" "}
+                  {participanteEmEdicao.row}
+                </p>
+              </div>
+            </div>
+
+            {/*
+            ==================================================
+            RODAPÉ
+            ==================================================
+            */}
+
+            <div
+              className="
+                flex
+                flex-col-reverse
+                gap-3
+                border-t
+                border-slate-200
+                bg-slate-50
+                px-6
+                py-4
+
+                sm:flex-row
+                sm:justify-end
+              "
+            >
+              <button
+                type="button"
+                onClick={fecharModalEdicao}
+                disabled={salvandoEdicao}
+                className="
+                  rounded-xl
+                  border
+                  border-slate-300
+                  bg-white
+                  px-5
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-slate-700
+                  transition
+
+                  hover:bg-slate-100
+
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
+                "
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                onClick={salvarEdicaoParticipante}
+                disabled={salvandoEdicao}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  bg-indigo-600
+                  px-5
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-white
+                  transition
+
+                  hover:bg-indigo-700
+
+                  focus:outline-none
+                  focus:ring-4
+                  focus:ring-indigo-500/20
+
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+                "
+              >
+                {salvandoEdicao ? (
+                  <>
+                    <span
+                      className="
+                            h-4
+                            w-4
+                            animate-spin
+                            rounded-full
+                            border-2
+                            border-white/40
+                            border-t-white
+                          "
+                    />
+                    Salvando...
+                  </>
+                ) : (
+                  <>💾 Salvar alterações</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   );
