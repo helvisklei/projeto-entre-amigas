@@ -1,6 +1,9 @@
 import ExecutiveSummary from "./ExecutiveSummary";
 import ExportButtons from "./ExportButtons";
+import LogisticsSection from "../logistics/LogisticsSection";
 import { useState } from "react";
+
+//import LogisticsSection from "./LogisticsSection";
 
 export default function AnalyticsSection({ analytics }) {
   const [mostrarCupons, setMostrarCupons] = useState(false);
@@ -12,6 +15,8 @@ export default function AnalyticsSection({ analytics }) {
     <div className="space-y-6">
       {/* RESUMO EXECUTIVO */}
       <ExecutiveSummary analytics={analytics} />
+
+      <LogisticsSection analytics={analytics} />
 
       {/* CUPONS */}
       <div className="bg-white rounded-2xl shadow-lg p-6">

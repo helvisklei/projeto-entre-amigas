@@ -896,3 +896,37 @@ export default function Home() {
     </div>
   );
 }
+
+/*
+Plano de implementação (registrado)
+Fase 1 — Backend (sem alterar frontend)
+
+✅ Criar novos acumuladores exclusivos da logística.
+✅ Não alterar nenhum contador existente.
+✅ Não remover nenhuma variável atual.
+
+Fase 2 — Processamento
+
+Calcular somente participantes pagantes.
+Calcular kits reais.
+Calcular camisas reais.
+Calcular lanches reais.
+Calcular meio kit real.
+
+Fase 3 — JSON
+
+Acrescentar os novos campos ao retorno da API.
+
+Fase 4 — Frontend
+
+Atualizar os cards para utilizar os novos indicadores.
+Exibir todos os tamanhos de camisa (incluindo infantis), mesmo quando o total for zero.
+Manter os indicadores operacionais (Seguro Atleta e Número de Peito) separados dos indicadores logísticos.
+
+Essa arquitetura deixará o sistema dividido em dois grandes blocos:
+
+Operacional: controle de inscritos, seguro atleta, número de peito e acompanhamento geral.
+Logístico/Financeiro: compra de kits, camisas, medalhas e lanches, utilizando apenas os participantes que efetivamente geram necessidade de materiais.
+
+Essa separação reduz o risco de compras incorretas e torna o painel muito mais confiável para a organização do evento.
+*/
