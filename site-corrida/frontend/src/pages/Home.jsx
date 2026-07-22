@@ -109,7 +109,11 @@ export default function Home() {
       </div>
     );
   }
-  const descontoLegal = Number(config?.descontos?.pcd || 50) / 100;
+  //const descontoLegal = Number(config?.descontos?.pcd || 50) / 100;
+
+  const descontoLegal = Number(config?.lote1?.descontos?.pcd || 0) / 100;
+
+  const descontoLegalAtivo = config?.beneficios?.descontoPcdTea60Ativo ?? true;
 
   const getDataEvento = () => {
     if (!config?.evento?.data) {
@@ -421,31 +425,93 @@ export default function Home() {
                                   <span>🧩</span>
                                   <span>👵</span>
                                 </div>
-                                <span className="bg-green-100 text-green-700 font-bold text-xs px-2.5 py-1 rounded-full uppercase tracking-wider">
+
+                                {descontoLegalAtivo ? (
+                                  <span
+                                    className="
+                                              bg-green-100
+                                              text-green-700
+                                              font-bold
+                                              text-xs
+                                              px-2.5
+                                              py-1
+                                              rounded-full
+                                              uppercase
+                                              tracking-wider
+                                          "
+                                  >
+                                    {config?.lote1.descontos.pcd || 50}%
+                                    Desconto
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="
+                                              bg-red-100
+                                              text-red-700
+                                              font-bold
+                                              text-xs
+                                              px-2.5
+                                              py-1
+                                              rounded-full
+                                              uppercase
+                                              tracking-wider
+                                          "
+                                  >
+                                    🚫 ESGOTADO
+                                  </span>
+                                )}
+                                {/*                                 <span className="bg-green-100 text-green-700 font-bold text-xs px-2.5 py-1 rounded-full uppercase tracking-wider">
                                   {config?.lote1.descontos.pcd || 50}% Desconto
-                                </span>
+                                </span> */}
                               </div>
 
-                              <div className="space-y-2 text-gray-500 text-sm">
-                                <div className="flex items-baseline justify-between">
-                                  <span>PIX (Meia)</span>
-                                  <div className="flex-grow mx-2 border-b border-dashed border-gray-200"></div>
-                                  <strong className="text-green-600 font-bold">
-                                    {formatCurrency(
-                                      pixValue * (1 - descontoLegal),
-                                    )}
-                                  </strong>
+                              {descontoLegalAtivo ? (
+                                <>
+                                  <div className="flex items-baseline justify-between">
+                                    <span>PIX (Meia)</span>
+
+                                    <div className="flex-grow mx-2 border-b border-dashed border-gray-200"></div>
+
+                                    <strong className="text-green-600 font-bold">
+                                      {formatCurrency(
+                                        pixValue * (1 - descontoLegal),
+                                      )}
+                                    </strong>
+                                  </div>
+
+                                  <div className="flex items-baseline justify-between">
+                                    <span>Cartão (Meia)</span>
+
+                                    <div className="flex-grow mx-2 border-b border-dashed border-gray-200"></div>
+
+                                    <strong className="text-green-600 font-bold">
+                                      {formatCurrency(
+                                        cartaoValue * (1 - descontoLegal),
+                                      )}
+                                    </strong>
+                                  </div>
+                                </>
+                              ) : (
+                                <div
+                                  className="
+                                            rounded-lg
+                                            border
+                                            border-red-200
+                                            bg-red-50
+                                            p-3
+                                            text-center
+                                        "
+                                >
+                                  <p className="font-bold text-red-600">
+                                    Benefício esgotado
+                                  </p>
+
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Inscrições continuam normalmente pelo valor
+                                    integral.
+                                  </p>
                                 </div>
-                                <div className="flex items-baseline justify-between">
-                                  <span>Cartão (Meia)</span>
-                                  <div className="flex-grow mx-2 border-b border-dashed border-gray-200"></div>
-                                  <strong className="text-green-600 font-bold">
-                                    {formatCurrency(
-                                      cartaoValue * (1 - descontoLegal),
-                                    )}
-                                  </strong>
-                                </div>
-                              </div>
+                              )}
                             </div>
                           );
                         })}
@@ -467,136 +533,8 @@ export default function Home() {
               🏃‍♀️ Quero me Inscrever Agora! 💕
             </button>
           </div>
-
-          {/*           <div className="text-center bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300">
-            <p className="text-lg font-semibold text-yellow-800">
-              ⏰ Garanta sua inscrição no primeiro lote e economize! 💪
-            </p>
-          </div> */}
         </div>
       </div>
-      {/*       <div className="relative bg-gradient-to-b from-white to-pink-50 py-12 shadow-lg">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-purple-600 mb-10 drop-shadow">
-            💰 Valor da Inscrição
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8"> */}
-      {/* Validação Defensiva: Se o config não estiver carregado, exibe um placeholder ou retorna nulo */}
-      {/*             {!config ? (
-              <div className="w-full text-center py-8 text-gray-500">
-                Carregando lotes vigentes...
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
-                {[
-                  {
-                    numero: 1,
-                    titulo: "LOTE 1",
-                    inicio: config.lote1?.inicio,
-                    fim: config.lote1?.fim,
-                    bgClass: "from-pink-400 to-pink-500",
-                    textClass: "text-pink-100",
-                    brandText: "text-pink-600",
-                    kits: [
-                      {
-                        ativo: config.lote1?.kitCompleto,
-                        nome: "KIT COMPLETO",
-                        pix: config.lote1?.kitCompletoPix,
-                        cartao: config.lote1?.kitCompletoCartao,
-                      },
-                      {
-                        ativo: config.lote1?.meioKit,
-                        nome: "MEIO KIT",
-                        pix: config.lote1?.meioKitPix,
-                        cartao: config.lote1?.meioKitCartao,
-                      },
-                    ],
-                  },
-                  {
-                    numero: 2,
-                    titulo: "LOTE 2",
-                    inicio: config.lote2?.inicio,
-                    fim: config.lote2?.fim,
-                    bgClass: "from-purple-400 to-purple-500",
-                    textClass: "text-purple-100",
-                    brandText: "text-purple-600",
-                    kits: [
-                      {
-                        ativo: config.lote2?.kitCompleto,
-                        nome: "KIT COMPLETO",
-                        pix: config.lote2?.kitCompletoPix,
-                        cartao: config.lote2?.kitCompletoCartao,
-                      },
-                      {
-                        ativo: config.lote2?.meioKit,
-                        nome: "MEIO KIT",
-                        pix: config.lote2?.meioKitPix,
-                        cartao: config.lote2?.meioKitCartao,
-                      },
-                    ],
-                  },
-                ].map((lote) => (
-                  <div
-                    key={`lote-${lote.numero}`}
-                    className={`bg-gradient-to-br ${lote.bgClass} rounded-xl shadow-xl p-8`}
-                  >
-                    <h3 className="text-3xl font-bold text-white text-center mb-2">
-                      {lote.titulo}
-                    </h3>
-
-                    <p className={`text-center ${lote.textClass} mb-6`}>
-                      {lote.inicio || "Breve"} até {lote.fim || "Breve"}
-                    </p>
-
-                    <div className="space-y-4">
-                      {lote.kits
-                        .filter(
-                          (kit) =>
-                            String(kit.ativo).toUpperCase() === "TRUE" ||
-                            kit.ativo === true,
-                        )
-                        .map((kit, index) => (
-                          <div
-                            key={`${lote.numero}-${kit.nome}`}
-                            className="bg-white rounded-lg p-4"
-                          >
-                            <h4
-                              className={`font-bold ${lote.brandText} text-lg mb-3`}
-                            >
-                              {kit.nome}
-                            </h4>
-
-                            <div className="flex justify-between text-gray-700 mb-1">
-                              <span>PIX</span>
-                              <strong className="text-gray-900">
-                                {formatCurrency(kit.pix)}
-                              </strong>
-                            </div>
-
-                            <div className="flex justify-between text-gray-700">
-                              <span>Cartão</span>
-                              <strong className="text-gray-900">
-                                {formatCurrency(kit.cartao)}
-                              </strong>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="text-center bg-yellow-50 rounded-lg p-6 border-2 border-yellow-300">
-            <p className="text-lg font-semibold text-yellow-800">
-              ⏰ Garanta sua inscrição no primeiro lote e economize! 💪
-            </p>
-          </div>
-        </div>
-      </div> */}
-
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
         {/* About Section */}
@@ -643,9 +581,6 @@ export default function Home() {
               <p className="text-lg text-gray-700">
                 {config?.evento?.localComplemento}
               </p>
-              {/*               <p className="text-sm text-gray-600 mt-2">
-                {config?.evento?.cidade}
-              </p> */}
             </div>
           </div>
 
@@ -750,13 +685,6 @@ export default function Home() {
               <p className="text-lg mb-4">
                 💳 <strong>Pix ou Cartão</strong> (via Mercado Pago)
               </p>
-              {/* <p className="text-lg mb-4">ou</p>
-              <p className="text-lg">
-                💰 <strong>Pix Direto:</strong>
-              </p>
-              <p className="text-sm bg-white text-gray-900 p-3 rounded mt-2 font-mono">
-                07944726484
-              </p> */}
             </div>
           </div>
 
@@ -855,32 +783,6 @@ export default function Home() {
             </li>
           </ul>
         </section>
-        {/* <section
-          id="regras"
-          className="bg-yellow-50 rounded-lg shadow p-8 border-l-4 border-yellow-400"
-        >
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            🏆 Regras Importantes
-          </h2>
-          <ul className="space-y-3 text-lg text-gray-700">
-            <li>
-              <strong>📋 Pipoca não vai para os pódios</strong>
-            </li>
-            <li>
-              <strong>
-                🎽 Não levamos kits para retirar no dia da corrida
-              </strong>{" "}
-              - Retirada uma semana antes
-            </li>
-            <li>
-              <strong>⏰ Chegue com antecedência</strong>
-            </li>
-                        <li>
-              <strong>⏰ Leiam o regulamento da corrida no ato da inscrição</strong>
-            </li>
-          </ul>
-        </section> */}
-
         {/* Footer Message */}
         <div className="text-center py-8 border-t-4 border-pink-300">
           <p className="text-2xl font-bold text-pink-600 mb-2">

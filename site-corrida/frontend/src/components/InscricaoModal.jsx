@@ -54,7 +54,6 @@ const comoConheceuOpcoes = [
   "Pina Ordinário",
   "Race Running",
   "Ray Lins",
-  "Robsotero",
   "Outros",
 ];
 
@@ -75,7 +74,8 @@ export default function InscricaoModal({
   } = useInscricao();
 
   // Estado para controlar a abertura da imagem da tabela de medidas de forma isolada
-  const [isMedidasOpen, setIsMedidasOpen] = useState(false);
+  //const [isMedidasOpen, setIsMedidasOpen] = useState(false);
+  const [tabelaMedidas, setTabelaMedidas] = useState(null);
   const [systemConfig, setSystemConfig] = useState(null);
 
   /* Erros locais para validação do frontend antes de bater na API */
@@ -591,17 +591,31 @@ export default function InscricaoModal({
                     </p>
                   )}
                 </div>
-                <div className="mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsMedidasOpen(true)}
-                    className="text-xs text-blue-600 hover:text-blue-800 underline font-medium cursor-pointer"
-                  >
-                    📏 Ver tabela de medidas infantil
-                  </button>
+
+                {/* Bloco de Guia de Medidas Unificado (A sua ideia) + Estilização refinada */}
+                <div className="mt-3 rounded-lg bg-slate-50 border border-slate-200 p-2.5">
+                  <p className="text-xs font-semibold text-gray-600 mb-2 text-center">
+                    📏 Precisa de ajuda com o tamanho?
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setTabelaMedidas("infantil")}
+                      className="flex-1 bg-white border border-gray-200 rounded-md py-1.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all cursor-pointer shadow-xs"
+                    >
+                      🧒 Infantil
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setTabelaMedidas("adulto")}
+                      className="flex-1 bg-white border border-gray-200 rounded-md py-1.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all cursor-pointer shadow-xs"
+                    >
+                      👕 Adulto
+                    </button>
+                  </div>
                 </div>
               </div>
-
               <div className="flex flex-col">
                 <select
                   name="distancia"
@@ -1129,10 +1143,10 @@ export default function InscricaoModal({
 
       {/* MODAL INTERNO DA TABELA DE MEDIDAS (Renderiza sobre o modal atual sem quebrar layouts) */}
       {/* MODAL INTERNO DA TABELA DE MEDIDAS (Renderiza sobre o modal atual sem quebrar layouts) */}
-      {isMedidasOpen && (
+      {tabelaMedidas && (
         <div
           className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={() => setIsMedidasOpen(false)}
+          onClick={() => setTabelaMedidas(null)}
         >
           <div
             className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-gray-100 animate-in zoom-in-95 duration-150"
@@ -1140,11 +1154,12 @@ export default function InscricaoModal({
           >
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50">
               <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                📏 Tabela de Medidas Infantil
+                📏 Tabela de Medidas{" "}
+                {tabelaMedidas === "adulto" ? "Adulto" : "Infantil"}
               </h3>
               <button
                 type="button"
-                onClick={() => setIsMedidasOpen(false)}
+                onClick={() => setTabelaMedidas(null)}
                 className="text-gray-400 hover:text-gray-600 font-bold text-lg"
               >
                 ×
@@ -1154,7 +1169,11 @@ export default function InscricaoModal({
             <div className="p-4 bg-gray-50 flex justify-center items-center max-h-[60vh] overflow-y-auto">
               {/* Ajustado de /Medidas.jpg para /Medidas.jpeg para bater com sua pasta public */}
               <img
-                src="/Medidas.jpeg"
+                src={
+                  tabelaMedidas === "adulto"
+                    ? "/MedidasAdulto.jpeg"
+                    : "/MedidasInfantil.jpeg"
+                }
                 alt="Tabela de Medidas"
                 className="rounded-lg max-w-full h-auto shadow-sm object-contain"
                 onError={(e) => {
@@ -1168,7 +1187,7 @@ export default function InscricaoModal({
             <div className="p-3 border-t border-gray-100 bg-gray-50 flex justify-end">
               <button
                 type="button"
-                onClick={() => setIsMedidasOpen(false)}
+                onClick={() => setTabelaMedidas(null)}
                 className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors w-full"
               >
                 Voltar para o Formulário
