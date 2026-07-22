@@ -1171,7 +1171,7 @@ export default function InscricaoModal({
               <img
                 src={
                   tabelaMedidas === "adulto"
-                    ? "/MedidasAdulto.jpeg"
+                    ? "/MedidasAdultos.jpeg"
                     : "/MedidasInfantil.jpeg"
                 }
                 alt="Tabela de Medidas"
