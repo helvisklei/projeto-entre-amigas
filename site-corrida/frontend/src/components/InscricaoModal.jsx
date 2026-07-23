@@ -47,6 +47,7 @@ const comoConheceuOpcoes = [
   "Instagram",
   "Amigos",
   "Afogados Ordinário",
+  "Nicole",
   "Danny Oliveira",
   "Divulga Corrida",
   "Jacy",
@@ -606,13 +607,15 @@ export default function InscricaoModal({
                       🧒 Infantil
                     </button>
 
-                    <button
+                    {/*comentado temporariamente*/}
+
+                    {/*                     <button
                       type="button"
                       onClick={() => setTabelaMedidas("adulto")}
                       className="flex-1 bg-white border border-gray-200 rounded-md py-1.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all cursor-pointer shadow-xs"
                     >
                       👕 Adulto
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
