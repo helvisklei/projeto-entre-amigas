@@ -457,9 +457,10 @@ export default function Home() {
                                               tracking-wider
                                           "
                                   >
-                                    🚫 ESGOTADO
+                                    💳 VALOR INTEGRAL
                                   </span>
                                 )}
+                                {/*🚫*/}
                                 {/*                                 <span className="bg-green-100 text-green-700 font-bold text-xs px-2.5 py-1 rounded-full uppercase tracking-wider">
                                   {config?.lote1.descontos.pcd || 50}% Desconto
                                 </span> */}
@@ -503,7 +504,8 @@ export default function Home() {
                                         "
                                 >
                                   <p className="font-bold text-red-600">
-                                    Benefício esgotado
+                                    O benefício legal para PCD • TEA • 60+ não
+                                    está disponível neste momento.
                                   </p>
 
                                   <p className="text-xs text-gray-500 mt-1">
