@@ -218,6 +218,30 @@ export default function InscricaoModal({
     setPricing,
   ]);
 
+  const exibeTamanhoCamisa =
+    formData.tipoKit === "KIT COMPLETO" || formData.tipoKit === "SÓ CAMISA";
+
+  React.useEffect(() => {
+    if (exibeTamanhoCamisa) {
+      // Se voltou para um kit com camisa e ainda estiver "X",
+      // limpa para o usuário escolher normalmente.
+      if (formData.tamanhoCamisa === "X") {
+        setFormData((prev) => ({
+          ...prev,
+          tamanhoCamisa: "",
+        }));
+      }
+    } else {
+      // Kits sem camisa
+      if (formData.tamanhoCamisa !== "X") {
+        setFormData((prev) => ({
+          ...prev,
+          tamanhoCamisa: "X",
+        }));
+      }
+    }
+  }, [exibeTamanhoCamisa, formData.tamanhoCamisa]);
+
   const kitsDisponiveis = useMemo(() => {
     if (!systemConfig || !systemConfig.kits) {
       return ["KIT COMPLETO", "MEIO KIT", "SÓ CAMISA", "LANCHE"];
@@ -567,58 +591,61 @@ export default function InscricaoModal({
               </div>
 
               {/* SEÇÃO DA CAMISA E TABELA OTIMIZADA */}
-              <div className="flex flex-col justify-between">
-                <div className="flex flex-col">
-                  <select
-                    name="tamanhoCamisa"
-                    value={formData.tamanhoCamisa}
-                    onChange={handleChange}
-                    className={`border rounded-lg p-3 ${
-                      activeFieldErrors.tamanhoCamisa
-                        ? "border-red-500"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <option value="">Tamanho da camisa</option>
-                    {tamanhosCamisa.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                  {activeFieldErrors.tamanhoCamisa && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {activeFieldErrors.tamanhoCamisa}
-                    </p>
-                  )}
-                </div>
 
-                {/* Bloco de Guia de Medidas Unificado (A sua ideia) + Estilização refinada */}
-                <div className="mt-3 rounded-lg bg-slate-50 border border-slate-200 p-2.5">
-                  <p className="text-xs font-semibold text-gray-600 mb-2 text-center">
-                    📏 Precisa de ajuda com o tamanho?
-                  </p>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setTabelaMedidas("infantil")}
-                      className="flex-1 bg-white border border-gray-200 rounded-md py-1.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all cursor-pointer shadow-xs"
+              {exibeTamanhoCamisa && (
+                <div className="flex flex-col justify-between">
+                  <div className="flex flex-col">
+                    <select
+                      name="tamanhoCamisa"
+                      value={formData.tamanhoCamisa}
+                      onChange={handleChange}
+                      className={`border rounded-lg p-3 ${
+                        activeFieldErrors.tamanhoCamisa
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                     >
-                      🧒 Infantil
-                    </button>
+                      <option value="">Tamanho da camisa</option>
+                      {tamanhosCamisa.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                    {activeFieldErrors.tamanhoCamisa && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {activeFieldErrors.tamanhoCamisa}
+                      </p>
+                    )}
+                  </div>
 
-                    {/*comentado temporariamente*/}
+                  {/* Bloco de Guia de Medidas Unificado (A sua ideia) + Estilização refinada */}
+                  <div className="mt-3 rounded-lg bg-slate-50 border border-slate-200 p-2.5">
+                    <p className="text-xs font-semibold text-gray-600 mb-2 text-center">
+                      📏 Precisa de ajuda com o tamanho?
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setTabelaMedidas("infantil")}
+                        className="flex-1 bg-white border border-gray-200 rounded-md py-1.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all cursor-pointer shadow-xs"
+                      >
+                        🧒 Infantil
+                      </button>
 
-                    {/*                     <button
+                      {/*comentado temporariamente*/}
+
+                      {/*                     <button
                       type="button"
                       onClick={() => setTabelaMedidas("adulto")}
                       className="flex-1 bg-white border border-gray-200 rounded-md py-1.5 text-xs font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 transition-all cursor-pointer shadow-xs"
                     >
                       👕 Adulto
                     </button> */}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               <div className="flex flex-col">
                 <select
                   name="distancia"
