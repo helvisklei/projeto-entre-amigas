@@ -152,6 +152,84 @@ export default function Home() {
 
   const exibirKitExtras = config?.kits?.meioKit || config?.kits?.lanche;
 
+  // NOVO
+  const lotes = [
+    {
+      visivel: config?.lote1?.visivel,
+
+      status:
+        config?.loteAtual === 1
+          ? "ATUAL"
+          : config?.loteAtual === 2
+            ? "BLOQUEADO"
+            : "FUTURO",
+
+      numero: 1,
+      titulo: "LOTE 1",
+
+      inicio: config.lote1?.inicio,
+      fim: config.lote1?.fim,
+
+      bgClass: "from-pink-400 to-pink-500",
+      textClass: "text-pink-100",
+      brandText: "text-pink-600",
+
+      kits: [
+        {
+          ativo: config.kits?.kitCompleto,
+          nome: "KIT COMPLETO",
+          pix: config.lote1?.kitCompletoPix,
+          cartao: config.lote1?.kitCompletoCartao,
+        },
+        {
+          ativo: config.kits?.meioKit,
+          nome: "MEIO KIT",
+          pix: config.lote1?.meioKitPix,
+          cartao: config.lote1?.meioKitCartao,
+        },
+      ],
+    },
+
+    {
+      visivel: config?.lote2?.visivel,
+
+      status:
+        config?.loteAtual === 2
+          ? "ATUAL"
+          : config?.loteAtual === 1
+            ? "BLOQUEADO"
+            : "FUTURO",
+
+      numero: 2,
+      titulo: "LOTE 2",
+
+      inicio: config.lote2?.inicio,
+      fim: config.lote2?.fim,
+
+      bgClass: "from-purple-400 to-purple-500",
+      textClass: "text-purple-100",
+      brandText: "text-purple-600",
+
+      kits: [
+        {
+          ativo: config.kits?.kitCompleto,
+          nome: "KIT COMPLETO",
+          pix: config.lote2?.kitCompletoPix,
+          cartao: config.lote2?.kitCompletoCartao,
+        },
+        {
+          ativo: config.kits?.meioKit,
+          nome: "MEIO KIT",
+          pix: config.lote2?.meioKitPix,
+          cartao: config.lote2?.meioKitCartao,
+        },
+      ],
+    },
+  ].filter((lote) => lote.visivel);
+
+  // NOVO
+  const apenasUmLote = lotes.length === 1;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50">
       {/* Header com Logo */}
@@ -228,67 +306,14 @@ export default function Home() {
               Carregando lotes vigentes...
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {[
-                {
-                  status:
-                    config?.loteAtual === 1
-                      ? "ATUAL"
-                      : config?.loteAtual === 2
-                        ? "BLOQUEADO"
-                        : "FUTURO",
-                  numero: 1,
-                  titulo: "LOTE 1",
-                  inicio: config.lote1?.inicio,
-                  fim: config.lote1?.fim,
-                  bgClass: "from-pink-400 to-pink-500",
-                  textClass: "text-pink-100",
-                  brandText: "text-pink-600",
-                  kits: [
-                    {
-                      ativo: config.kits?.kitCompleto,
-                      nome: "KIT COMPLETO",
-                      pix: config.lote1?.kitCompletoPix,
-                      cartao: config.lote1?.kitCompletoCartao,
-                    },
-                    {
-                      ativo: config.kits?.meioKit,
-                      nome: "MEIO KIT",
-                      pix: config.lote1?.meioKitPix,
-                      cartao: config.lote1?.meioKitCartao,
-                    },
-                  ],
-                },
-                {
-                  status:
-                    config?.loteAtual === 2
-                      ? "ATUAL"
-                      : config?.loteAtual === 1
-                        ? "BLOQUEADO"
-                        : "FUTURO",
-                  numero: 2,
-                  titulo: "LOTE 2",
-                  inicio: config.lote2?.inicio,
-                  fim: config.lote2?.fim,
-                  bgClass: "from-purple-400 to-purple-500",
-                  textClass: "text-purple-100",
-                  brandText: "text-purple-600",
-                  kits: [
-                    {
-                      ativo: config.kits?.kitCompleto,
-                      nome: "KIT COMPLETO",
-                      pix: config.lote2?.kitCompletoPix,
-                      cartao: config.lote2?.kitCompletoCartao,
-                    },
-                    {
-                      ativo: config.kits?.meioKit,
-                      nome: "MEIO KIT",
-                      pix: config.lote2?.meioKitPix,
-                      cartao: config.lote2?.meioKitCartao,
-                    },
-                  ],
-                },
-              ].map((lote) => (
+            <div
+              className={
+                apenasUmLote
+                  ? "grid grid-cols-1 max-w-2xl mx-auto gap-6 mb-8"
+                  : "grid md:grid-cols-2 gap-6 mb-8"
+              }
+            >
+              {lotes.map((lote) => (
                 <div
                   key={`lote-${lote.numero}`}
                   className={`bg-gradient-to-br ${lote.bgClass} rounded-xl shadow-xl p-6 md:p-8 flex flex-col justify-between`}
