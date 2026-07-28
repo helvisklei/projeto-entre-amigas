@@ -98,6 +98,11 @@ export default function Admin() {
         tipo_inscricao: item.TIPO_INSCRICAO || item.tipo_inscricao || "NORMAL",
         distancia: item.DISTANCIA || item.distancia || "0 KM",
         kit_retirado: item.KIT_RETIRADO || item.kit_retirado || "NÃO",
+        numero_inscricao:
+          item.NUMERO_INSCRICAO ||
+          item.numero_inscricao ||
+          item.numeroInscricao ||
+          "",
       }));
 
       setInscritos(dadosMapeados);
@@ -540,7 +545,11 @@ export default function Admin() {
           ? inscrito.cpf.replace(/\D/g, "").includes(cpfLimpoTermo)
           : false;
 
-      return nomeMatch || cpfMatch;
+      const numeroMatch =
+        inscrito.numero_inscricao &&
+        inscrito.numero_inscricao.toString().includes(searchTerm.trim());
+
+      return nomeMatch || cpfMatch || numeroMatch;
     })
     .sort((a, b) => {
       if (sortOrder === "none") return 0;
@@ -762,7 +771,7 @@ export default function Admin() {
                 </span>
                 <input
                   type="text"
-                  placeholder="Nome ou CPF..."
+                  placeholder="Nome, CPF ou Nº da inscrição..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full sm:w-64 bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-8 py-2 text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
