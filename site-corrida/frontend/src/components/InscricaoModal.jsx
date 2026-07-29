@@ -997,7 +997,7 @@ export default function InscricaoModal({
                   </h4>
                   <p>
                     O cancelamento poderá ser solicitado até 30 dias antes da
-                    prova. Nesses cafes, será realizado reembolso correspondente
+                    prova. Nesses casos, será realizado reembolso correspondente
                     a 50% do valor pago pela inscrição.
                   </p>
                   <p className="mt-1">
