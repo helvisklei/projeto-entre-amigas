@@ -55,6 +55,8 @@ const TAMANHOS_CAMISA = [
   "G",
   "GG",
   "XG",
+  "2XG",
+  "3XG",
   "INFANTIL 02",
   "INFANTIL 04",
   "INFANTIL 06",

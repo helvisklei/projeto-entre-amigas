@@ -36,6 +36,8 @@ const tamanhosCamisa = [
   "G",
   "GG",
   "XG",
+  "2XG",
+  "3XG",
 ];
 
 const distancias = ["5 KM"]; //"3 KM"

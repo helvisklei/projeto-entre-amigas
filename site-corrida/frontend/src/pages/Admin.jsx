@@ -359,6 +359,10 @@ export default function Admin() {
       "GG",
 
       "XG",
+
+      "2XG",
+
+      "3XG",
     ];
 
     if (!tamanhosPermitidos.includes(tamanhoCamisa)) {
@@ -1545,6 +1549,10 @@ export default function Admin() {
                     <option value="GG">GG</option>
 
                     <option value="XG">XG</option>
+
+                    <option value="2XG">2XG</option>
+
+                    <option value="3XG">3XG</option>
                   </select>
                 </div>
               </div>
