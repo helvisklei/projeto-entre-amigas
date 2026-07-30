@@ -1,6 +1,7 @@
 import ExecutiveSummary from "./ExecutiveSummary";
 import ExportButtons from "./ExportButtons";
 import LogisticsSection from "../logistics/LogisticsSection";
+import OrigemInscricoesDashboard from "./OrigemInscricoes/OrigemInscricoesDashboard";
 import { useState } from "react";
 
 //import LogisticsSection from "./LogisticsSection";
@@ -15,7 +16,7 @@ export default function AnalyticsSection({ analytics }) {
     <div className="space-y-6">
       {/* RESUMO EXECUTIVO */}
       <ExecutiveSummary analytics={analytics} />
-
+      <OrigemInscricoesDashboard analytics={analytics} />
       <LogisticsSection analytics={analytics} />
 
       {/* CUPONS */}
