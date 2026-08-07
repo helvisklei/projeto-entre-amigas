@@ -1089,10 +1089,59 @@ export default function InscricaoModal({
                     premiação conforme a quantidade de participantes inscritos.
                   </p>
                 </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-1">
+                    9. BENEFÍCIO LEGAL (60+, PCD e TEA)
+                  </h4>
+
+                  <p>
+                    Em conformidade com a legislação vigente, participantes
+                    enquadrados nas categorias Pessoa Idosa (60+), Pessoa com
+                    Deficiência (PCD) e Pessoa com Transtorno do Espectro
+                    Autista (TEA) poderão solicitar o benefício legal
+                    correspondente ao desconto previsto pela legislação.
+                  </p>
+
+                  <p className="mt-2">
+                    O benefício incide{" "}
+                    <strong>
+                      exclusivamente sobre o valor da inscrição do evento
+                    </strong>
+                    , não sendo aplicado aos itens físicos que compõem o kit do
+                    participante.
+                  </p>
+
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-3">
+                    <p className="font-semibold text-amber-800 mb-2">
+                      O desconto não é aplicado sobre:
+                    </p>
+
+                    <ul className="list-disc pl-5 space-y-1 text-amber-900">
+                      <li>Camisa oficial;</li>
+                      <li>Medalha;</li>
+                      <li>Número de peito;</li>
+                      <li>Ecobag;</li>
+                      <li>Viseira;</li>
+                      <li>Demais brindes e materiais do kit.</li>
+                    </ul>
+                  </div>
+
+                  <p className="mt-3">
+                    O valor final da inscrição será composto pela soma do valor
+                    da inscrição (com ou sem o benefício legal) acrescido do
+                    valor integral do kit escolhido pelo participante.
+                  </p>
+
+                  <p className="mt-2 text-xs text-gray-500">
+                    Os valores apresentados durante a inscrição são calculados
+                    automaticamente conforme o lote vigente e os benefícios
+                    aplicáveis.
+                  </p>
+                </div>
 
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">
-                    9. RESPONSABILIDADES DO PARTICIPANTE
+                    10. RESPONSABILIDADES DO PARTICIPANTE
                   </h4>
                   <ul className="list-disc pl-4 space-y-1 mt-1 text-gray-600">
                     <li>
@@ -1115,7 +1164,7 @@ export default function InscricaoModal({
 
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">
-                    10. DISPOSIÇÕES GERAIS
+                    11. DISPOSIÇÕES GERAIS
                   </h4>
                   <p>
                     Ao efetuar sua inscrição, o participante declara estar de

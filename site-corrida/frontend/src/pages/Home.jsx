@@ -1107,6 +1107,69 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Benefício Legal - PCD / TEA / 60+ */}
+        {descontoLegalAtivo && (
+          <section className="mt-8 bg-green-50 border border-green-200 rounded-xl p-6 shadow-sm">
+            <h3 className="text-2xl font-bold text-green-700 mb-5 flex items-center gap-2">
+              💜 Benefício Legal (60+, PCD e TEA)
+            </h3>
+
+            <div className="space-y-4 text-gray-700 leading-relaxed">
+              <p>
+                Conforme a legislação vigente, participantes enquadrados nas
+                categorias:
+              </p>
+
+              <ul className="list-disc ml-6 space-y-1">
+                <li>Pessoa Idosa (60+)</li>
+                <li>Pessoa com Deficiência (PCD)</li>
+                <li>Pessoa com Transtorno do Espectro Autista (TEA)</li>
+              </ul>
+
+              <p>
+                têm direito ao desconto legal de{" "}
+                <strong className="text-green-700">
+                  {/* {config?.lote1?.descontos?.pcd || 50}*/}50% exclusivamente
+                  sobre o valor da inscrição no evento.
+                </strong>
+              </p>
+
+              <div className="rounded-lg border border-amber-300 bg-amber-50 p-4">
+                <p className="font-semibold text-amber-800">
+                  ⚠️ O desconto NÃO incide sobre os itens físicos do kit, tais
+                  como:
+                </p>
+
+                <ul className="list-disc ml-6 mt-2 space-y-1 text-amber-900">
+                  <li>Camisa oficial</li>
+                  <li>Medalha</li>
+                  <li>Número de peito</li>
+                  <li>Ecobag</li>
+                  <li>Viseira</li>
+                  <li>Demais brindes</li>
+                </ul>
+              </div>
+
+              <p>Assim, o valor final é composto por:</p>
+
+              <ul className="list-disc ml-6 space-y-1">
+                <li>
+                  Valor da inscrição (com possibilidade de desconto legal);
+                </li>
+                <li>Valor do kit escolhido (integral).</li>
+              </ul>
+
+              <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+                <p className="text-blue-800 font-medium">
+                  ℹ️ O valor atualizado da inscrição será apresentado
+                  automaticamente durante o preenchimento da inscrição, conforme
+                  o lote vigente.
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Modal de Inscrição */}
         <InscricaoModal
           key={`${showInscricaoModal}-${selectedKit}`}
