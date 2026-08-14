@@ -1234,14 +1234,723 @@ Este componente:
 ==========================================================
 */
 
-function LogisticsKitsTable({ kits = {} }) {
+function LogisticsKitsTable({ kits = {}, kitParticipants = [] }) {
+  /*
+  ==========================================================
+  CONTROLE DO MODAL
+  ==========================================================
+
+  Armazena exclusivamente o tipo de kit selecionado.
+
+  Exemplos:
+  - KIT COMPLETO
+  - MEIO KIT
+
+  Não realiza nova chamada à API.
+  Não altera analytics.
+  Não altera a planilha.
+  ==========================================================
+  */
+
+  const [kitSelecionado, setKitSelecionado] = useState(null);
+  /*
+  ==========================================================
+  FECHAR MODAL
+  ==========================================================
+  */
+
+  function fecharModal() {
+    setKitSelecionado(null);
+  }
+
+  /*
+  ==========================================================
+  ABRIR MODAL
+  ==========================================================
+  */
+
+  function abrirModal(tipoKit, quantidade) {
+    if (Number(quantidade || 0) <= 0) {
+      return;
+    }
+
+    setKitSelecionado(tipoKit);
+  }
+
+  /*
+  ==========================================================
+  NORMALIZAÇÃO
+  ==========================================================
+
+  Evita problemas causados por:
+  - espaços;
+  - letras minúsculas;
+  - letras maiúsculas.
+
+  Não altera a lista original.
+  ==========================================================
+  */
+
+  function normalizarTexto(valor) {
+    return String(valor || "")
+      .trim()
+      .toUpperCase();
+  }
+
+  /*
+  ==========================================================
+  PARTICIPANTES DO KIT SELECIONADO
+  ==========================================================
+
+  Utiliza exclusivamente:
+
+  analytics.logistica.listaKits
+
+  Não realiza nova chamada à API.
+
+  O filtro considera somente o tipo do kit.
+  ==========================================================
+  */
+
+  const participantesSelecionados = kitSelecionado
+    ? kitParticipants.filter((participante) => {
+        return (
+          normalizarTexto(participante.kit) === normalizarTexto(kitSelecionado)
+        );
+      })
+    : [];
+
+  /*
+  ==========================================================
+  EXISTÊNCIA DE KITS
+  ==========================================================
+  */
   const tiposDeKit = Object.entries(kits);
 
   if (tiposDeKit.length === 0) {
     return null;
   }
 
+  /*
+  ==========================================================
+  RENDERIZAÇÃO
+  ==========================================================
+  */
+
   return (
+    <>
+      <div
+        className="
+            mt-8
+            rounded-2xl
+            border
+            border-gray-200
+            bg-white
+            p-5
+            shadow-sm
+          "
+      >
+        <div className="mb-5">
+          <h3
+            className="
+                text-xl
+                font-bold
+                text-emerald-700
+              "
+          >
+            🎒 Kits por Tipo
+          </h3>
+
+          <p
+            className="
+                mt-1
+                text-sm
+                text-gray-500
+              "
+          >
+            Quantidades confirmadas, pendentes e cenário máximo por tipo de kit.
+            Clique em <strong>Ver pessoas</strong> para consultar a relação
+            nominal.
+          </p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table
+            className="
+                w-full
+                min-w-[750px]
+                text-sm
+              "
+          >
+            <thead>
+              <tr
+                className="
+                    border-b
+                    border-gray-200
+                    bg-gray-50
+                  "
+              >
+                <th
+                  className="
+                      px-4
+                      py-3
+                      text-left
+                      font-semibold
+                      text-gray-600
+                    "
+                >
+                  Tipo de Kit
+                </th>
+
+                <th
+                  className="
+                      px-4
+                      py-3
+                      text-center
+                      font-semibold
+                      text-emerald-700
+                    "
+                >
+                  Confirmados
+                </th>
+
+                <th
+                  className="
+                      px-4
+                      py-3
+                      text-center
+                      font-semibold
+                      text-amber-700
+                    "
+                >
+                  Pendentes
+                </th>
+
+                <th
+                  className="
+                      px-4
+                      py-3
+                      text-center
+                      font-semibold
+                      text-blue-700
+                    "
+                >
+                  Cenário Total
+                </th>
+
+                <th
+                  className="
+                      px-4
+                      py-3
+                      text-center
+                      font-semibold
+                      text-emerald-700
+                    "
+                >
+                  Participantes
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {tiposDeKit.map(([tipoKit, resumo]) => {
+                const quantidadePagas = Number(resumo?.pagos || 0);
+
+                const quantidadePendentes = Number(resumo?.pendentes || 0);
+
+                const quantidadeTotal = Number(resumo?.total || 0);
+
+                return (
+                  <tr
+                    key={tipoKit}
+                    className="
+                        border-b
+                        border-gray-100
+                        transition
+                        hover:bg-gray-50
+                      "
+                  >
+                    <td
+                      className="
+                          px-4
+                          py-4
+                          font-semibold
+                          text-gray-700
+                        "
+                    >
+                      {tipoKit}
+                    </td>
+
+                    <td
+                      className="
+                          px-4
+                          py-4
+                          text-center
+                        "
+                    >
+                      <span
+                        className="
+                            inline-flex
+                            min-w-[40px]
+                            justify-center
+                            rounded-full
+                            bg-emerald-100
+                            px-3
+                            py-1
+                            font-bold
+                            text-emerald-700
+                          "
+                      >
+                        {quantidadePagas}
+                      </span>
+                    </td>
+
+                    <td
+                      className="
+                          px-4
+                          py-4
+                          text-center
+                        "
+                    >
+                      <span
+                        className="
+                            inline-flex
+                            min-w-[40px]
+                            justify-center
+                            rounded-full
+                            bg-amber-100
+                            px-3
+                            py-1
+                            font-bold
+                            text-amber-700
+                          "
+                      >
+                        {quantidadePendentes}
+                      </span>
+                    </td>
+
+                    <td
+                      className="
+                          px-4
+                          py-4
+                          text-center
+                        "
+                    >
+                      <span
+                        className="
+                            inline-flex
+                            min-w-[40px]
+                            justify-center
+                            rounded-full
+                            bg-blue-100
+                            px-3
+                            py-1
+                            font-bold
+                            text-blue-700
+                          "
+                      >
+                        {quantidadeTotal}
+                      </span>
+                    </td>
+
+                    <td
+                      className="
+                          px-4
+                          py-4
+                          text-center
+                        "
+                    >
+                      <button
+                        type="button"
+                        disabled={quantidadeTotal === 0}
+                        onClick={() => abrirModal(tipoKit, quantidadeTotal)}
+                        title={
+                          quantidadeTotal > 0
+                            ? `Visualizar participantes — ${tipoKit}`
+                            : `Nenhum participante no ${tipoKit}`
+                        }
+                        className={`
+                            rounded-lg
+                            px-4
+                            py-2
+                            text-xs
+                            font-semibold
+                            transition
+
+                            ${
+                              quantidadeTotal > 0
+                                ? `
+                                  bg-emerald-100
+                                  text-emerald-700
+                                  cursor-pointer
+                                  hover:bg-emerald-200
+                                `
+                                : `
+                                  bg-gray-100
+                                  text-gray-400
+                                  cursor-not-allowed
+                                `
+                            }
+                          `}
+                      >
+                        Ver pessoas
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          className="
+              mt-5
+              rounded-xl
+              border
+              border-emerald-200
+              bg-emerald-50
+              p-4
+            "
+        >
+          <p
+            className="
+                text-sm
+                text-emerald-800
+              "
+          >
+            <strong>Referência para planejamento:</strong> os confirmados
+            representam a necessidade atual. Os pendentes representam uma
+            possível demanda adicional. A relação nominal é exibida diretamente
+            a partir dos dados recebidos pelo Analytics.
+          </p>
+        </div>
+      </div>
+
+      {/*
+        ==========================================================
+        MODAL DOS PARTICIPANTES DOS KITS
+        ==========================================================
+
+        Fonte exclusiva:
+
+        analytics.logistica.listaKits
+
+        Não realiza nova chamada à API.
+        Não altera dados.
+        Não escreve na planilha.
+        ==========================================================
+        */}
+
+      {kitSelecionado && (
+        <div
+          className="
+              fixed
+              inset-0
+              z-50
+              flex
+              items-center
+              justify-center
+              bg-black/50
+              p-4
+            "
+          onClick={fecharModal}
+        >
+          <div
+            className="
+                flex
+                max-h-[85vh]
+                w-full
+                max-w-3xl
+                flex-col
+                overflow-hidden
+                rounded-2xl
+                bg-white
+                shadow-2xl
+              "
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            {/* CABEÇALHO */}
+
+            <div
+              className="
+                  flex
+                  items-start
+                  justify-between
+                  gap-4
+                  border-b
+                  border-gray-200
+                  px-6
+                  py-5
+                "
+            >
+              <div>
+                <div
+                  className="
+                      flex
+                      flex-wrap
+                      items-center
+                      gap-2
+                    "
+                >
+                  <h3
+                    className="
+                        text-xl
+                        font-bold
+                        text-gray-800
+                      "
+                  >
+                    🎒 {kitSelecionado}
+                  </h3>
+
+                  <span
+                    className="
+                        rounded-full
+                        bg-emerald-100
+                        px-3
+                        py-1
+                        text-xs
+                        font-bold
+                        text-emerald-700
+                      "
+                  >
+                    {participantesSelecionados.length}
+                  </span>
+                </div>
+
+                <p
+                  className="
+                      mt-1
+                      text-sm
+                      text-gray-500
+                    "
+                >
+                  Participantes e status de pagamento.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={fecharModal}
+                aria-label="Fechar modal"
+                className="
+                    rounded-lg
+                    px-3
+                    py-2
+                    text-xl
+                    text-gray-500
+                    transition
+                    hover:bg-gray-100
+                    hover:text-gray-800
+                  "
+              >
+                ×
+              </button>
+            </div>
+
+            {/* LISTA */}
+
+            <div
+              className="
+                  flex-1
+                  overflow-y-auto
+                  px-6
+                  py-3
+                "
+            >
+              {participantesSelecionados.length > 0 ? (
+                participantesSelecionados.map((participante) => {
+                  const pagamentoConfirmado =
+                    normalizarTexto(participante.statusPagamento) === "PAGO";
+
+                  const kitRetirado =
+                    normalizarTexto(participante.kitRetirado) === "SIM";
+
+                  return (
+                    <div
+                      key={participante.numero}
+                      className="
+                            flex
+                            flex-col
+                            gap-3
+                            border-b
+                            border-gray-100
+                            py-4
+                            sm:flex-row
+                            sm:items-center
+                            sm:justify-between
+                          "
+                    >
+                      <div className="min-w-0">
+                        <p
+                          className="
+                                break-words
+                                font-semibold
+                                text-gray-800
+                              "
+                        >
+                          {participante.nome}
+                        </p>
+
+                        <p
+                          className="
+                                mt-1
+                                text-sm
+                                text-gray-400
+                              "
+                        >
+                          {participante.numero}
+                        </p>
+
+                        <div
+                          className="
+                                mt-2
+                                flex
+                                flex-wrap
+                                gap-2
+                              "
+                        >
+                          <span
+                            className="
+                                  rounded-md
+                                  bg-slate-100
+                                  px-2
+                                  py-1
+                                  text-xs
+                                  font-medium
+                                  text-slate-600
+                                "
+                          >
+                            Tamanho:{" "}
+                            <strong>
+                              {participante.tamanho || "NÃO INFORMADO"}
+                            </strong>
+                          </span>
+
+                          <span
+                            className={`
+                                  rounded-md
+                                  px-2
+                                  py-1
+                                  text-xs
+                                  font-semibold
+
+                                  ${
+                                    kitRetirado
+                                      ? `
+                                        bg-blue-50
+                                        text-blue-700
+                                      `
+                                      : `
+                                        bg-slate-100
+                                        text-slate-600
+                                      `
+                                  }
+                                `}
+                          >
+                            {kitRetirado
+                              ? "✓ KIT RETIRADO"
+                              : "KIT NÃO RETIRADO"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div
+                        className="
+                              flex
+                              flex-wrap
+                              items-center
+                              gap-2
+                            "
+                      >
+                        <span
+                          className={`
+                                inline-flex
+                                items-center
+                                justify-center
+                                rounded-full
+                                border
+                                px-4
+                                py-1
+                                text-xs
+                                font-bold
+
+                                ${
+                                  pagamentoConfirmado
+                                    ? `
+                                      border-emerald-200
+                                      bg-emerald-50
+                                      text-emerald-700
+                                    `
+                                    : `
+                                      border-amber-200
+                                      bg-amber-50
+                                      text-amber-700
+                                    `
+                                }
+                              `}
+                        >
+                          {pagamentoConfirmado
+                            ? "PAGO"
+                            : participante.statusPagamento || "PENDENTE"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div
+                  className="
+                      py-12
+                      text-center
+                      text-gray-500
+                    "
+                >
+                  Nenhum participante encontrado para este tipo de kit.
+                </div>
+              )}
+            </div>
+
+            {/* RODAPÉ */}
+
+            <div
+              className="
+                  flex
+                  justify-end
+                  border-t
+                  border-gray-200
+                  bg-gray-50
+                  px-6
+                  py-4
+                "
+            >
+              <button
+                type="button"
+                onClick={fecharModal}
+                className="
+                    rounded-xl
+                    bg-gray-200
+                    px-5
+                    py-2
+                    font-semibold
+                    text-gray-700
+                    transition
+                    hover:bg-gray-300
+                  "
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/*   return (
     <div
       className="
         mt-8
@@ -1464,8 +2173,7 @@ function LogisticsKitsTable({ kits = {} }) {
         </p>
       </div>
     </div>
-  );
-}
+  ); */
 
 /*
 ==========================================================
@@ -2856,7 +3564,10 @@ export default function LogisticsSection({ analytics }) {
       ======================================================
       */}
 
-      <LogisticsKitsTable kits={logistica.kits} />
+      <LogisticsKitsTable
+        kits={logistica.kits}
+        kitParticipants={logistica.listaKits}
+      />
 
       <div
         className="
