@@ -57,7 +57,7 @@ export default function TermoRetiradaKit({
   const nomeKit =
     typeof kit === "string"
       ? kit
-      : kit.nome || kit.titulo || "Kit não informado";
+      : kit?.nome || kit?.titulo || "Kit não informado";
 
   const itensKit = Array.isArray(kit?.itens) ? kit.itens : [];
 
@@ -74,19 +74,42 @@ export default function TermoRetiradaKit({
   const localEvento = evento.local || "Não informado";
 
   /*
-  ==========================================================
-  DATA DA RETIRADA
-  ==========================================================
-  */
+==========================================================
+ANO DO EVENTO
+==========================================================
 
-  const dataAtual = new Date();
+Prioridade:
 
-  const dataRetirada = dataAtual.toLocaleDateString("pt-BR");
+1. Ano informado explicitamente pelo evento;
+2. Ano encontrado na data do evento;
+3. Ano corrente como fallback.
 
-  const horaRetirada = dataAtual.toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+Evita deixar o ano fixo no código.
+==========================================================
+*/
+
+  const anoEvento =
+    evento.ano ||
+    String(dataEvento).match(/\b20\d{2}\b/)?.[0] ||
+    new Date().getFullYear();
+
+  const nomeEventoComAno = /\b20\d{2}\b/.test(String(nomeEvento))
+    ? nomeEvento
+    : `${nomeEvento} ${anoEvento}`;
+
+  /*
+==========================================================
+PROTEÇÃO DOS DADOS INSERIDOS NO HTML
+==========================================================
+*/
+
+  const escapeHtml = (valor) =>
+    String(valor ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
 
   /*
   ==========================================================
@@ -94,7 +117,29 @@ export default function TermoRetiradaKit({
   ==========================================================
   */
 
+  const nomeSeguro = escapeHtml(nomeParticipante);
+
+  const cpfSeguro = escapeHtml(cpf);
+
+  const numeroInscricaoSeguro = escapeHtml(numeroInscricao);
+
+  const nomeKitSeguro = escapeHtml(nomeKit);
+
+  const nomeEventoComAnoSeguro = escapeHtml(nomeEventoComAno);
+
+  const dataEventoSegura = escapeHtml(dataEvento);
+
+  const localEventoSeguro = escapeHtml(localEvento);
+
   const imprimirTermo = () => {
+    const dataEmissao = new Date();
+
+    const dataEmissaoFormatada = dataEmissao.toLocaleDateString("pt-BR");
+
+    const horaEmissaoFormatada = dataEmissao.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     const janela = window.open("", "_blank", "width=900,height=1000");
 
     if (!janela) {
@@ -111,7 +156,7 @@ export default function TermoRetiradaKit({
             .map(
               (item) => `
                 <li>
-                  ${item}
+                  ${escapeHtml(item)}
                 </li>
               `,
             )
@@ -132,7 +177,7 @@ export default function TermoRetiradaKit({
         <meta charset="UTF-8" />
 
         <title>
-          Termo de Retirada - ${nomeParticipante}
+          Termo de Retirada - ${nomeSeguro}
         </title>
 
         <style>
@@ -141,100 +186,126 @@ export default function TermoRetiradaKit({
             box-sizing: border-box;
           }
 
+          @page {
+            size: A4 portrait;
+            margin: 10mm;
+          }
+            
+          html,
           body {
             margin: 0;
-            padding: 40px;
+            padding: 0;
             font-family: Arial, Helvetica, sans-serif;
             color: #222;
             background: #fff;
           }
 
+          body {
+            font-size: 11px;
+          }
+
           .documento {
-            max-width: 800px;
+            width: 100%;
+            max-width: none;
             margin: 0 auto;
           }
 
           .cabecalho {
             text-align: center;
             border-bottom: 2px solid #d946ef;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
           }
 
           .titulo {
-            font-size: 24px;
+            font-size: 19px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
           }
 
           .evento {
-            font-size: 16px;
+            font-size: 13px;
             color: #555;
           }
 
           .secao {
-            margin-top: 25px;
+            margin-top: 14px;
+          }
+
+          .registro-retirada {
+            margin-top: 16px;
+            margin-bottom: 70px;
+            page-break-inside: avoid;
+            break-inside: avoid;
           }
 
           .secao-titulo {
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 800;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
             color: #7e22ce;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 6px;
+            padding-bottom: 3px;
           }
 
           .campo {
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 4px;
+            font-size: 11px;
           }
 
           .campo strong {
             display: inline-block;
-            min-width: 160px;
+            min-width: 140px;
           }
 
           .kit {
             background: #faf5ff;
             border: 1px solid #e9d5ff;
-            border-radius: 10px;
-            padding: 18px;
+            border-radius: 8px;
+            padding: 8px 12px;
           }
 
           .kit-nome {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 800;
-            margin-bottom: 12px;
+            margin-bottom: 5px;
             color: #7e22ce;
           }
 
           ul {
-            margin-top: 8px;
-            padding-left: 25px;
+            margin: 4px 0 0;
+            padding-left: 20px;
           }
 
           li {
-            margin-bottom: 7px;
+            margin-bottom: 2px;
           }
 
           .declaracao {
-            margin-top: 30px;
-            line-height: 1.7;
+            margin-top: 10px;
+            line-height: 1.4;
             text-align: justify;
-            font-size: 14px;
+            font-size: 11px;
+          }
+          
+          .declaracao p {
+            margin: 0 0 6px;
           }
 
           .assinaturas {
             display: flex;
             justify-content: space-between;
-            gap: 50px;
-            margin-top: 90px;
+            gap: 30px;
+            margin-top: 0px;
+            page-break-inside: avoid;
+            break-inside: avoid;
           }
 
           .assinatura {
             flex: 1;
             text-align: center;
+            page-break-inside: avoid;
+            break-inside: avoid;
           }
 
           .linha {
@@ -242,29 +313,55 @@ export default function TermoRetiradaKit({
             margin-bottom: 8px;
           }
 
+          .linha-data {
+            display: inline-block;
+            margin-left: 4px;
+            color: #222;
+            white-space: nowrap;
+          }
+
+          .linha-hora {
+            display: inline-block;
+            margin-left: 4px;
+            color: #222;
+            white-space: nowrap;
+          }
+            
           .assinatura small {
             font-size: 12px;
           }
 
           .rodape {
-            margin-top: 50px;
-            padding-top: 12px;
+            margin-top: 12px;
+            padding-top: 6px;
             border-top: 1px solid #ddd;
             text-align: center;
-            font-size: 11px;
+            font-size: 9px;
             color: #777;
           }
 
           @media print {
+            @page {
+              size: A4 portrait;
+              margin: 10mm;
+            }
+
+            html,
+            body {
+              width: 100%;
+              margin: 0;
+              padding: 0;
+            }
 
             body {
-              padding: 20px;
+              font-size: 11px;
             }
 
             .documento {
+              width: 100%;
               max-width: none;
+              margin: 0;
             }
-
           }
 
         </style>
@@ -282,7 +379,7 @@ export default function TermoRetiradaKit({
             </div>
 
             <div class="evento">
-              ${nomeEvento}
+              ${nomeEventoComAnoSeguro}
             </div>
 
           </div>
@@ -296,17 +393,17 @@ export default function TermoRetiradaKit({
 
             <div class="campo">
               <strong>Nome:</strong>
-              ${nomeParticipante}
+              ${nomeSeguro}
             </div>
 
             <div class="campo">
               <strong>CPF:</strong>
-              ${cpf}
+              ${cpfSeguro}
             </div>
 
             <div class="campo">
               <strong>Nº da inscrição:</strong>
-              ${numeroInscricao}
+              ${numeroInscricaoSeguro}
             </div>
 
           </div>
@@ -320,17 +417,17 @@ export default function TermoRetiradaKit({
 
             <div class="campo">
               <strong>Evento:</strong>
-              ${nomeEvento}
+              ${nomeEventoComAnoSeguro}
             </div>
 
             <div class="campo">
               <strong>Data:</strong>
-              ${dataEvento}
+              ${dataEventoSegura}
             </div>
 
             <div class="campo">
               <strong>Local:</strong>
-              ${localEvento}
+              ${localEventoSeguro}
             </div>
 
           </div>
@@ -339,13 +436,13 @@ export default function TermoRetiradaKit({
           <div class="secao">
 
             <div class="secao-titulo">
-              KIT RETIRADO
+              KIT PARA RETIRADA
             </div>
 
             <div class="kit">
 
               <div class="kit-nome">
-                ${nomeKit}
+                ${nomeKitSeguro}
               </div>
 
               <strong>
@@ -360,86 +457,104 @@ export default function TermoRetiradaKit({
 
           </div>
 
-
           <div class="declaracao">
 
             <p>
-              Declaro, para os devidos fins, que recebi o kit
-              correspondente à minha inscrição no evento
-              <strong>${nomeEvento}</strong>,
-              conferindo os itens relacionados neste documento.
+              Declaro, para os devidos fins, que este documento
+              corresponde ao kit destinado à minha inscrição no evento
+              <strong>${nomeEventoComAnoSeguro}</strong> e será apresentado
+              à organização no ato da retirada, para conferência dos dados
+              da inscrição e entrega dos itens correspondentes.
             </p>
 
             <p>
-              Após a conferência, declaro estar ciente de que a
-              retirada registrada neste termo corresponde ao kit
-              entregue pela organização do evento.
+              Declaro estar ciente de que a entrega do kit estará sujeita
+              à conferência dos dados da inscrição e aos procedimentos
+              estabelecidos pela organização do evento.
+            </p>
+
+            <p>
+              Autorizo, ainda, que a retirada do kit possa ser realizada
+              por terceiro devidamente identificado, mediante apresentação
+              deste documento com minha autorização e de documento oficial
+              de identificação do terceiro, ficando a entrega sujeita à
+              conferência e aprovação pela organização do evento.
             </p>
 
           </div>
 
-
           <div class="secao">
+          <div class="secao-titulo">
+            EMISSÃO DO DOCUMENTO
+          </div>
 
-            <div class="secao-titulo">
-              REGISTRO DA RETIRADA
-            </div>
+          <div class="campo">
+            <strong>Data de emissão:</strong>
+            ${dataEmissaoFormatada}
+          </div>
 
-            <div class="campo">
-              <strong>Data:</strong>
-              ${dataRetirada}
-            </div>
+          <div class="campo">
+            <strong>Hora de emissão:</strong>
+            ${horaEmissaoFormatada}
+          </div>
+        </div>
 
-            <div class="campo">
-              <strong>Horário:</strong>
-              ${horaRetirada}
-            </div>
+        <div class="secao registro-retirada">
+          <div class="secao-titulo">
+            REGISTRO DA RETIRADA
+          </div>
+
+          <div class="campo">
+            <strong>Data da retirada:</strong>
+            <span class="linha-data">____/____/________</span>
+          </div>
+
+          <div class="campo">
+            <strong>Hora da retirada:</strong>
+            <span class="linha-hora">____:____</span>
+          </div>
+        </div>
+
+        <div class="assinaturas">
+
+          <div class="assinatura">
+
+            <div class="linha"></div>
+
+            <strong>
+              Participante
+            </strong>
+
+            <br />
+
+            <small>
+              Assinatura
+            </small>
 
           </div>
 
+          <div class="assinatura">
 
-          <div class="assinaturas">
+            <div class="linha"></div>
 
-            <div class="assinatura">
+            <strong>
+              Organização
+            </strong>
 
-              <div class="linha"></div>
+            <br />
 
-              <strong>
-                Participante
-              </strong>
-
-              <br />
-
-              <small>
-                Assinatura
-              </small>
-
-            </div>
-
-
-            <div class="assinatura">
-
-              <div class="linha"></div>
-
-              <strong>
-                Organização
-              </strong>
-
-              <br />
-
-              <small>
-                Responsável pela entrega
-              </small>
-
-            </div>
+            <small>
+              Responsável pela entrega
+            </small>
 
           </div>
 
+        </div>
 
-          <div class="rodape">
+        <div class="rodape">
 
             Documento gerado pelo sistema
-            ${nomeEvento}.
+            ${nomeEventoComAnoSeguro}.
 
           </div>
 

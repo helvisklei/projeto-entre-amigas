@@ -1,9 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Admin from './pages/Admin';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminSettings from './pages/AdminSettings';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import Admin from "./pages/Admin";
+import AdminSettings from "./pages/AdminSettings";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import RetiradaKit from "./pages/RetiradaKit";
+import TesteTermoRetirada from "./pages/TesteTermoRetirada";
 
 function App() {
   return (
@@ -11,6 +14,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/teste-termo-retirada" element={<TesteTermoRetirada />} />
+        <Route path="/retirada-kit" element={<RetiradaKit />} />
         <Route
           path="/admin"
           element={

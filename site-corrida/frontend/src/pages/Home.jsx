@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import InscricaoModal from "../components/InscricaoModal";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { getFrontendConfig } from "../services/configService";
+import { useNavigate } from "react-router-dom";
 
 //import KitExtrasSection from "../components/KitExtrasSection";
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [paymentType, setPaymentType] = useState(null); // 'pix' | 'credito'
   const [selectedKit, setSelectedKit] = useState(null);
   const [config, setConfig] = useState(null);
+  const navigate = useNavigate();
 
   /*
   =========================================================
@@ -155,7 +157,7 @@ export default function Home() {
 
   //const exibirKitExtras = config?.kits?.meioKit || config?.kits?.lanche;
 
-  const kitsEvento = [
+  /*   const kitsEvento = [
     {
       ativo: config?.kits?.kitCompleto,
       titulo: "🏅 Kit Completo",
@@ -213,6 +215,35 @@ export default function Home() {
 
       //beneficios: ["🎧 DJ", "🎁 Sorteios", "💜 Ambiente do evento"],
     },
+  ]; */
+
+  const kitsEvento = [
+    {
+      tipo: "KIT COMPLETO",
+      ativo: config?.kits?.kitCompleto?.ativo === true,
+      titulo: config?.kits?.kitCompleto?.nome || "Kit Completo",
+      destaque: config?.kits?.kitCompleto?.destaque || "",
+      itens: config?.kits?.kitCompleto?.itens || [],
+      beneficios: config?.kits?.kitCompleto?.beneficios || [],
+    },
+
+    {
+      tipo: "MEIO KIT",
+      ativo: config?.kits?.meioKit?.ativo === true,
+      titulo: config?.kits?.meioKit?.nome || "Meio Kit",
+      destaque: config?.kits?.meioKit?.destaque || "",
+      itens: config?.kits?.meioKit?.itens || [],
+      beneficios: config?.kits?.meioKit?.beneficios || [],
+    },
+
+    {
+      tipo: "LANCHE",
+      ativo: config?.kits?.lanche?.ativo === true,
+      titulo: config?.kits?.lanche?.nome || "Kit Lanche",
+      destaque: config?.kits?.lanche?.destaque || "",
+      itens: config?.kits?.lanche?.itens || [],
+      beneficios: config?.kits?.lanche?.beneficios || [],
+    },
   ];
 
   // NOVO
@@ -239,13 +270,15 @@ export default function Home() {
 
       kits: [
         {
-          ativo: config.kits?.kitCompleto,
+          tipo: "KIT COMPLETO",
+          ativo: config?.kits?.kitCompleto?.ativo === true,
           nome: "KIT COMPLETO",
           pix: config.lote1?.kitCompletoPix,
           cartao: config.lote1?.kitCompletoCartao,
         },
         {
-          ativo: config.kits?.meioKit,
+          tipo: "MEIO KIT",
+          ativo: config?.kits?.meioKit?.ativo === true,
           nome: "MEIO KIT",
           pix: config.lote1?.meioKitPix,
           cartao: config.lote1?.meioKitCartao,
@@ -275,13 +308,15 @@ export default function Home() {
 
       kits: [
         {
-          ativo: config.kits?.kitCompleto,
+          tipo: "KIT COMPLETO",
+          ativo: config?.kits?.kitCompleto?.ativo === true,
           nome: "KIT COMPLETO",
           pix: config.lote2?.kitCompletoPix,
           cartao: config.lote2?.kitCompletoCartao,
         },
         {
-          ativo: config.kits?.meioKit,
+          tipo: "MEIO KIT",
+          ativo: config?.kits?.meioKit?.ativo === true,
           nome: "MEIO KIT",
           pix: config.lote2?.meioKitPix,
           cartao: config.lote2?.meioKitCartao,
@@ -294,7 +329,26 @@ export default function Home() {
   const apenasUmLote = lotes.length === 1;
 
   // Retorna os preços do kit considerando apenas o lote atual
-  const obterPrecoKit = (nomeKit) => {
+  const obterPrecoKit = (tipoKit) => {
+    const loteAtual = lotes.find((lote) => lote.status === "ATUAL");
+
+    if (!loteAtual) {
+      return {
+        pix: null,
+        cartao: null,
+      };
+    }
+
+    const kit = loteAtual.kits.find((k) => k.tipo === tipoKit);
+
+    return (
+      kit || {
+        pix: null,
+        cartao: null,
+      }
+    );
+  };
+  /*   const obterPrecoKit = (nomeKit) => {
     const loteAtual = lotes.find((lote) => lote.status === "ATUAL");
 
     if (!loteAtual) {
@@ -314,7 +368,7 @@ export default function Home() {
         cartao: null,
       }
     );
-  };
+  }; */
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50">
@@ -378,6 +432,141 @@ export default function Home() {
           </div>
         </div>
       </div>
+      {/* =========================================================
+          BANNER — RETIRADA DE KIT
+          Exibido somente quando liberado pela configuração
+          ========================================================= */}
+
+      {config?.retiradaKitParticipante === true && (
+        <section className="bg-white py-8">
+          <div className="max-w-6xl mx-auto px-4">
+            <div
+              className="
+                relative
+                overflow-hidden
+                rounded-3xl
+                bg-gradient-to-r
+                from-purple-700
+                via-fuchsia-600
+                to-pink-500
+                p-6
+                md:p-8
+                shadow-lg
+              "
+            >
+              {/* Decoração */}
+              <div
+                className="
+                  absolute
+                  -right-10
+                  -top-10
+                  h-32
+                  w-32
+                  rounded-full
+                  bg-white/10
+                "
+              />
+
+              <div
+                className="
+                  absolute
+                  -bottom-12
+                  -left-8
+                  h-32
+                  w-32
+                  rounded-full
+                  bg-white/10
+                "
+              />
+
+              <div
+                className="
+                  relative
+                  flex
+                  flex-col
+                  gap-6
+                  md:flex-row
+                  md:items-center
+                  md:justify-between
+                "
+              >
+                {/* Texto */}
+                <div className="text-white">
+                  <div
+                    className="
+                      mb-2
+                      flex
+                      items-center
+                      gap-2
+                      text-sm
+                      font-semibold
+                      uppercase
+                      tracking-wide
+                      text-white/90
+                    "
+                  >
+                    <span>🎽</span>
+
+                    <span>Retirada de Kit</span>
+                  </div>
+
+                  <h2
+                    className="
+                      text-2xl
+                      md:text-3xl
+                      font-extrabold
+                    "
+                  >
+                    Seu Termo de Retirada está disponível
+                  </h2>
+
+                  <p
+                    className="
+                      mt-2
+                      max-w-2xl
+                      text-sm
+                      md:text-base
+                      text-white/90
+                    "
+                  >
+                    Acesse com seu número de inscrição e CPF para consultar e
+                    imprimir seu Termo de Retirada de Kit.
+                  </p>
+                </div>
+
+                {/* Botão */}
+                <button
+                  type="button"
+                  onClick={() => navigate("/retirada-kit")}
+                  className="
+                    relative
+                    inline-flex
+                    shrink-0
+                    items-center
+                    justify-center
+                    gap-2
+                    rounded-xl
+                    bg-white
+                    px-6
+                    py-3
+                    font-bold
+                    text-purple-700
+                    shadow-md
+                    transition
+                    hover:scale-[1.02]
+                    hover:bg-gray-50
+                    active:scale-[0.98]
+                  "
+                >
+                  <span>📄</span>
+
+                  <span>Acessar Termo</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
         {/* About Section */}
@@ -557,19 +746,19 @@ export default function Home() {
                   </h3>
 
                   <div className="mb-4">
-                    {kit.titulo === "🏅 Kit Completo" && (
+                    {kit.tipo === "KIT COMPLETO" && (
                       <span className="bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full">
                         ⭐ MAIS ESCOLHIDO
                       </span>
                     )}
 
-                    {kit.titulo === "🏃 Meio Kit" && (
+                    {kit.tipo === "MEIO KIT" && (
                       <span className="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">
                         💜 Melhor custo-benefício
                       </span>
                     )}
 
-                    {kit.titulo === "☕ Kit Pipoca" && (
+                    {kit.tipo === "LANCHE" && (
                       <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">
                         ☕ Participação
                       </span>
@@ -581,13 +770,14 @@ export default function Home() {
                   </p>
 
                   {(() => {
-                    const preco = obterPrecoKit(
+                    /*                     const preco = obterPrecoKit(
                       kit.titulo.includes("Completo")
                         ? "KIT COMPLETO"
                         : kit.titulo.includes("Meio")
                           ? "MEIO KIT"
                           : "KIT PIPOCA",
-                    );
+                    ); */
+                    const preco = obterPrecoKit(kit.tipo);
 
                     return (
                       <>
@@ -680,11 +870,12 @@ export default function Home() {
                       onClick={() =>
                         tryOpenInscricaoModal(
                           null,
-                          kit.titulo.includes("Completo")
+                          kit.tipo,
+                          /*                           kit.titulo.includes("Completo")
                             ? "KIT COMPLETO"
                             : kit.titulo.includes("Meio")
                               ? "MEIO KIT"
-                              : "LANCHE",
+                              : "LANCHE", */
                         )
                       }
                       disabled={!isInscriptionOpen}

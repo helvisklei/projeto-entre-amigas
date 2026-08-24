@@ -245,7 +245,7 @@ export default function InscricaoModal({
     }
   }, [exibeTamanhoCamisa, formData.tamanhoCamisa]);
 
-  const kitsDisponiveis = useMemo(() => {
+  /*   const kitsDisponiveis = useMemo(() => {
     if (!systemConfig || !systemConfig.kits) {
       return ["KIT COMPLETO", "MEIO KIT", "SÓ CAMISA", "LANCHE"];
     }
@@ -255,6 +255,57 @@ export default function InscricaoModal({
     if (systemConfig.kits.meioKit) kits.push("MEIO KIT");
     if (systemConfig.kits.camisa) kits.push("SÓ CAMISA");
     if (systemConfig.kits.lanche) kits.push("LANCHE");
+
+    return kits;
+  }, [systemConfig]); */
+  /*   const kitsDisponiveis = useMemo(() => {
+    if (!systemConfig?.kits) {
+      return [];
+    }
+
+    const kits = [];
+
+    if (systemConfig.kits.kitCompleto) {
+      kits.push("KIT COMPLETO");
+    }
+
+    if (systemConfig.kits.meioKit) {
+      kits.push("MEIO KIT");
+    }
+
+    if (systemConfig.kits.camisa) {
+      kits.push("SÓ CAMISA");
+    }
+
+    if (systemConfig.kits.lanche) {
+      kits.push("LANCHE");
+    }
+
+    return kits;
+  }, [systemConfig]); */
+
+  const kitsDisponiveis = useMemo(() => {
+    if (!systemConfig?.kits) {
+      return [];
+    }
+
+    const kits = [];
+
+    if (systemConfig.kits.kitCompleto?.ativo === true) {
+      kits.push("KIT COMPLETO");
+    }
+
+    if (systemConfig.kits.meioKit?.ativo === true) {
+      kits.push("MEIO KIT");
+    }
+
+    if (systemConfig.kits.camisa?.ativo === true) {
+      kits.push("SÓ CAMISA");
+    }
+
+    if (systemConfig.kits.lanche?.ativo === true) {
+      kits.push("LANCHE");
+    }
 
     return kits;
   }, [systemConfig]);
