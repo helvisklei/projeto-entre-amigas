@@ -432,6 +432,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+
       {/* =========================================================
           BANNER — RETIRADA DE KIT
           Exibido somente quando liberado pela configuração
@@ -532,6 +533,168 @@ export default function Home() {
                     Acesse com seu número de inscrição e CPF para consultar e
                     imprimir seu Termo de Retirada de Kit.
                   </p>
+
+                  {/* =================================================
+                      AVISO DE DATAS (INÍCIO E FIM)
+                      Efeito "Glassmorphism" adaptado ao tema
+                      ================================================= */}
+                  {/* =================================================
+                      PERÍODO PARA RETIRADA DO KIT
+                      ================================================= */}
+
+                  <div className="mt-5 w-full max-w-2xl">
+                    <div
+                      className="
+                        mb-2
+                        text-xs
+                        font-bold
+                        uppercase
+                        tracking-wide
+                        text-white/80
+                      "
+                    >
+                      Período para retirada do kit
+                    </div>
+
+                    <div
+                      className="
+                        grid
+                        grid-cols-1
+                        gap-3
+                        sm:grid-cols-2
+                      "
+                    >
+                      {/* =============================================
+                          INÍCIO
+                          ============================================= */}
+
+                      <div
+                        className="
+                          flex
+                          items-center
+                          gap-3
+                          rounded-xl
+                          border
+                          border-white/20
+                          bg-white/10
+                          px-4
+                          py-3
+                          backdrop-blur-sm
+                        "
+                      >
+                        <span
+                          className="
+                            flex
+                            h-9
+                            w-9
+                            shrink-0
+                            items-center
+                            justify-center
+                            rounded-lg
+                            bg-white/15
+                            text-lg
+                          "
+                          aria-hidden="true"
+                        >
+                          📅
+                        </span>
+
+                        <div className="min-w-0">
+                          <div
+                            className="
+                              text-[10px]
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              text-white/70
+                            "
+                          >
+                            Início da retirada
+                          </div>
+
+                          <div
+                            className="
+                              mt-0.5
+                              text-sm
+                              font-bold
+                              text-white
+                            "
+                          >
+                            {config?.retiradaKit?.inicio || "A definir"}
+
+                            <span className="mx-1 text-white/60">às</span>
+
+                            {config?.retiradaKit?.horaInicio || "--:--"}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* =============================================
+                          FIM
+                          ============================================= */}
+
+                      <div
+                        className="
+                          flex
+                          items-center
+                          gap-3
+                          rounded-xl
+                          border
+                          border-white/20
+                          bg-white/10
+                          px-4
+                          py-3
+                          backdrop-blur-sm
+                        "
+                      >
+                        <span
+                          className="
+                            flex
+                            h-9
+                            w-9
+                            shrink-0
+                            items-center
+                            justify-center
+                            rounded-lg
+                            bg-white/15
+                            text-lg
+                          "
+                          aria-hidden="true"
+                        >
+                          🏁
+                        </span>
+
+                        <div className="min-w-0">
+                          <div
+                            className="
+                              text-[10px]
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              text-white/70
+                            "
+                          >
+                            Fim da retirada
+                          </div>
+
+                          <div
+                            className="
+                              mt-0.5
+                              text-sm
+                              font-bold
+                              text-white
+                            "
+                          >
+                            {config?.retiradaKit?.fim || "A definir"}
+
+                            <span className="mx-1 text-white/60">às</span>
+
+                            {config?.retiradaKit?.horaFim || "--:--"}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Botão */}
