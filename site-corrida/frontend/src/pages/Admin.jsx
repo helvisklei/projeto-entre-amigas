@@ -1,4 +1,9 @@
-import { getAdminInscritos, resendEmail } from "../services/adminService";
+import {
+  cancelarInscricao,
+  getAdminInscritos,
+  resendEmail,
+  trocarInscricao,
+} from "../services/adminService";
 import { useCallback, useEffect, useState } from "react";
 
 import AnalyticsSection from "../components/analytics/AnalyticsSection";
@@ -48,6 +53,8 @@ export default function Admin() {
   ==========================================================
   */
 
+  // estado do modal de edição
+
   const [participanteEmEdicao, setParticipanteEmEdicao] = useState(null);
 
   const [formularioEdicao, setFormularioEdicao] = useState({
@@ -61,6 +68,25 @@ export default function Admin() {
   });
 
   const [salvandoEdicao, setSalvandoEdicao] = useState(false);
+
+  // estado do modal de troca de inscrição
+
+  const [participanteEmTroca, setParticipanteEmTroca] = useState(null);
+
+  const [formularioTroca, setFormularioTroca] = useState({
+    nome: "",
+    email: "",
+    telefone: "",
+    cpf: "",
+    idade: "",
+    sexo: "",
+    cidade: "",
+    distancia: "",
+    tipo_kit: "",
+    forma_pagamento: "",
+  });
+
+  const [trocandoInscricao, setTrocandoInscricao] = useState(false);
 
   const navigate = useNavigate();
   const adminUser = localStorage.getItem("admin_user") || "Admin";
@@ -93,9 +119,15 @@ export default function Admin() {
         tamanho_camisa: item.TAMANHO_CAMISA || item.tamanho_camisa || "",
         status_pagamento:
           item.STATUS_PAGAMENTO || item.status_pagamento || "PENDENTE",
+        status_inscricao:
+          item.STATUS_INSCRICAO || item.status_inscricao || "ATIVA",
         status_documentacao:
           item.STATUS_DOCUMENTACAO || item.status_documentacao || "",
         tipo_inscricao: item.TIPO_INSCRICAO || item.tipo_inscricao || "NORMAL",
+        tipo_kit: item.TIPO_KIT || item.tipo_kit || "",
+        idade: item.IDADE || item.idade || "",
+        sexo: item.SEXO || item.sexo || "",
+        forma_pagamento: item.FORMA_PAGAMENTO || item.forma_pagamento || "PIX",
         distancia: item.DISTANCIA || item.distancia || "0 KM",
         kit_retirado: item.KIT_RETIRADO || item.kit_retirado || "NÃO",
         numero_inscricao:
@@ -505,6 +537,190 @@ export default function Admin() {
       showSuccess("Registro atualizado.");
     } catch (error) {
       showError(error.message || "Erro ao atualizar.");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const abrirModalTroca = (inscrito) => {
+    if (
+      inscrito.status_inscricao === "CANCELADA" ||
+      inscrito.status_pagamento === "PAGO"
+    ) {
+      showError(
+        inscrito.status_pagamento === "PAGO"
+          ? "Não é possível trocar uma inscrição já paga."
+          : "Não é possível trocar uma inscrição cancelada.",
+      );
+
+      return;
+    }
+
+    setParticipanteEmTroca(inscrito);
+
+    setFormularioTroca({
+      nome: String(inscrito.nome || ""),
+      email: String(inscrito.email || ""),
+      telefone: String(inscrito.telefone || ""),
+      cpf: String(inscrito.cpf || ""),
+      idade: String(inscrito.idade || ""),
+      sexo: String(inscrito.sexo || ""),
+      cidade: String(inscrito.cidade || ""),
+      distancia: String(inscrito.distancia || "0 KM"),
+      tipo_kit: String(inscrito.tipo_kit || "KIT COMPLETO"),
+      forma_pagamento: String(inscrito.forma_pagamento || "PIX"),
+    });
+  };
+
+  const fecharModalTroca = () => {
+    if (trocandoInscricao) {
+      return;
+    }
+
+    setParticipanteEmTroca(null);
+
+    setFormularioTroca({
+      nome: "",
+      email: "",
+      telefone: "",
+      cpf: "",
+      idade: "",
+      sexo: "",
+      cidade: "",
+      distancia: "",
+      tipo_kit: "",
+      forma_pagamento: "",
+    });
+  };
+
+  const confirmarTrocaInscricao = async () => {
+    if (!participanteEmTroca || trocandoInscricao) {
+      return;
+    }
+
+    const nome = String(formularioTroca.nome || "").trim();
+    const email = String(formularioTroca.email || "")
+      .trim()
+      .toLowerCase();
+
+    const telefone = String(formularioTroca.telefone || "").replace(/\D/g, "");
+
+    const cpf = String(formularioTroca.cpf || "").replace(/\D/g, "");
+
+    const idade = String(formularioTroca.idade || "").trim();
+
+    const tipoKit = String(formularioTroca.tipo_kit || "").trim();
+
+    if (nome.length < 3) {
+      showError("Informe o nome completo do participante.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError("Informe um endereço de e-mail válido.");
+      return;
+    }
+
+    if (telefone.length < 10 || telefone.length > 11) {
+      showError("Informe um telefone válido com DDD.");
+      return;
+    }
+
+    if (cpf.length !== 11) {
+      showError("Informe um CPF válido com 11 dígitos.");
+      return;
+    }
+
+    if (!tipoKit) {
+      showError("Selecione o novo kit.");
+      return;
+    }
+
+    const confirmado = window.confirm(
+      `Confirma a troca da inscrição ${participanteEmTroca.numero_inscricao}?\n\n` +
+        `A inscrição atual será CANCELADA e uma NOVA inscrição será criada.`,
+    );
+
+    if (!confirmado) {
+      return;
+    }
+
+    try {
+      setTrocandoInscricao(true);
+
+      setProcessingId({
+        id: participanteEmTroca.row,
+        action: "trocar",
+      });
+
+      const resultado = await trocarInscricao(
+        participanteEmTroca.row,
+        participanteEmTroca.numero_inscricao,
+        {
+          nomeCompleto: nome,
+          email,
+          telefone,
+          cpf,
+          idade,
+          sexo: formularioTroca.sexo,
+          cidade: formularioTroca.cidade,
+          distancia: formularioTroca.distancia,
+          tipoKit,
+          formaPagamento: formularioTroca.forma_pagamento,
+        },
+      );
+
+      await Promise.all([fetchInscritos(), loadDashboard(), loadAnalytics()]);
+
+      fecharModalTroca();
+
+      showSuccess(
+        `Troca concluída! Nova inscrição: ${resultado.novaInscricao}.`,
+      );
+    } catch (error) {
+      console.error("Erro ao trocar inscrição:", error);
+
+      showError(
+        error.message || "Não foi possível realizar a troca da inscrição.",
+      );
+    } finally {
+      setTrocandoInscricao(false);
+      setProcessingId(null);
+    }
+  };
+
+  const handleCancelarInscricao = async (inscrito) => {
+    const confirmado = window.confirm(
+      `Deseja realmente cancelar a inscrição de ${inscrito.nome}?`,
+    );
+
+    if (!confirmado) return;
+
+    try {
+      setProcessingId({
+        id: inscrito.row,
+        action: "cancelar",
+      });
+
+      await cancelarInscricao(inscrito.row);
+
+      setInscritos((prev) =>
+        prev.map((item) =>
+          item.row === inscrito.row
+            ? {
+                ...item,
+                status_inscricao: "CANCELADA",
+              }
+            : item,
+        ),
+      );
+
+      showSuccess(`Inscrição de ${inscrito.nome} cancelada com sucesso!`);
+
+      await loadDashboard();
+      await loadAnalytics();
+    } catch (error) {
+      showError(error.message || "Erro ao cancelar inscrição.");
     } finally {
       setProcessingId(null);
     }
@@ -1087,6 +1303,38 @@ export default function Admin() {
                                   </button>
 
                                   <button
+                                    type="button"
+                                    onClick={() => handleResendEmail(inscrito)}
+                                    disabled={processingId?.id === inscrito.row}
+                                    className="
+                                      w-full
+                                      inline-flex
+                                      items-center
+                                      justify-center
+                                      gap-2
+                                      bg-slate-50
+                                      border
+                                      border-slate-200
+                                      px-4
+                                      py-3
+                                      text-sm
+                                      font-semibold
+                                      text-slate-700
+                                      rounded-lg
+                                      transition
+                                      hover:bg-slate-100
+                                      hover:border-slate-300
+                                      disabled:cursor-not-allowed
+                                      disabled:opacity-60
+                                    "
+                                  >
+                                    {processingId?.id === inscrito.row &&
+                                    processingId?.action === "email"
+                                      ? "⏳ Enviando..."
+                                      : "📧 Reenviar E-mail"}
+                                  </button>
+
+                                  {/*                                   <button
                                     disabled={processingId?.id === inscrito.row}
                                     onClick={() => handleResendEmail(inscrito)}
                                     className="w-full bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 font-semibold rounded-lg py-2 px-3 text-xs transition shadow-sm flex items-center justify-center gap-1.5"
@@ -1096,7 +1344,7 @@ export default function Admin() {
                                     processingId?.action === "email"
                                       ? "Enviando..."
                                       : "Reenviar E-mail"}
-                                  </button>
+                                  </button> */}
 
                                   {/*
                                   ========================================================
@@ -1135,6 +1383,98 @@ export default function Admin() {
 
                                     <span>Editar dados</span>
                                   </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => abrirModalTroca(inscrito)}
+                                    disabled={
+                                      Boolean(processingId) ||
+                                      inscrito.status_inscricao ===
+                                        "CANCELADA" ||
+                                      inscrito.status_pagamento === "PAGO"
+                                    }
+                                    className="
+                                      w-full
+                                      inline-flex
+                                      items-center
+                                      justify-center
+                                      gap-2
+                                      rounded-xl
+                                      border
+                                      border-amber-200
+                                      bg-amber-50
+                                      px-4
+                                      py-3
+                                      text-sm
+                                      font-semibold
+                                      text-amber-700
+                                      transition
+                                      hover:bg-amber-100
+                                      disabled:cursor-not-allowed
+                                      disabled:opacity-60
+                                    "
+                                  >
+                                    <span>🔄</span>
+
+                                    <span>Trocar inscrição</span>
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleCancelarInscricao(inscrito)
+                                    }
+                                    disabled={
+                                      processingId?.id === inscrito.row ||
+                                      inscrito.status_inscricao ===
+                                        "CANCELADA" ||
+                                      inscrito.status_pagamento === "PAGO"
+                                    }
+                                    className="
+                                      w-full
+                                      inline-flex
+                                      items-center
+                                      justify-center
+                                      gap-2
+                                      bg-red-50
+                                      border
+                                      border-red-200
+                                      px-4
+                                      py-3
+                                      text-sm
+                                      font-semibold
+                                      text-red-700
+                                      rounded-lg
+                                      transition
+                                      hover:bg-red-100
+                                      hover:border-red-300
+                                      disabled:cursor-not-allowed
+                                      disabled:opacity-60
+                                    "
+                                  >
+                                    {processingId?.id === inscrito.row &&
+                                    processingId?.action === "cancelar"
+                                      ? "⏳ Cancelando..."
+                                      : "❌ Cancelar inscrição"}
+                                  </button>
+
+                                  {/*                                   <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleCancelarInscricao(inscrito)
+                                    }
+                                    disabled={
+                                      processingId?.id === inscrito.row ||
+                                      inscrito.status_inscricao ===
+                                        "CANCELADA" ||
+                                      inscrito.status_pagamento === "PAGO"
+                                    }
+                                  >
+                                    {processingId?.id === inscrito.row &&
+                                    processingId?.action === "cancelar"
+                                      ? "⏳ Cancelando..."
+                                      : "❌ Cancelar inscrição"}
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -1674,6 +2014,557 @@ export default function Admin() {
                   </>
                 ) : (
                   <>💾 Salvar alterações</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {participanteEmTroca && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-50
+            flex
+            items-center
+            justify-center
+            bg-slate-950/60
+            p-4
+            backdrop-blur-sm
+          "
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              fecharModalTroca();
+            }
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-modal-troca"
+            className="
+              w-full
+              max-w-3xl
+              overflow-hidden
+              rounded-2xl
+              border
+              border-slate-200
+              bg-white
+              shadow-2xl
+            "
+          >
+            <div
+              className="
+                flex
+                items-start
+                justify-between
+                gap-4
+                border-b
+                border-slate-200
+                px-6
+                py-5
+              "
+            >
+              <div>
+                <h2
+                  id="titulo-modal-troca"
+                  className="text-xl font-bold text-slate-900"
+                >
+                  🔄 Trocar inscrição
+                </h2>
+
+                <p className="mt-1 text-sm text-slate-500">
+                  A inscrição atual será cancelada e uma nova será criada.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={fecharModalTroca}
+                disabled={trocandoInscricao}
+                aria-label="Fechar modal"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-lg
+                  text-slate-400
+                  transition
+                  hover:bg-slate-100
+                  hover:text-slate-700
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
+                "
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="max-h-[70vh] overflow-y-auto px-6 py-6">
+              <div
+                className="
+                  mb-6
+                  rounded-xl
+                  border
+                  border-amber-200
+                  bg-amber-50
+                  p-4
+                "
+              >
+                <p className="text-sm leading-relaxed text-amber-800">
+                  <strong>Inscrição atual:</strong>{" "}
+                  {participanteEmTroca.numero_inscricao}
+                  <br />
+                  <strong>Participante:</strong> {participanteEmTroca.nome}
+                  <br />
+                  <strong>Kit atual:</strong>{" "}
+                  {participanteEmTroca.tipo_kit || "Não informado"}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Nome completo
+                  </label>
+
+                  <input
+                    type="text"
+                    value={formularioTroca.nome}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        nome: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    CPF
+                  </label>
+
+                  <input
+                    type="text"
+                    value={formularioTroca.cpf}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        cpf: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Idade
+                  </label>
+
+                  <input
+                    type="number"
+                    min="1"
+                    value={formularioTroca.idade}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        idade: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    E-mail
+                  </label>
+
+                  <input
+                    type="email"
+                    value={formularioTroca.email}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        email: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Telefone
+                  </label>
+
+                  <input
+                    type="tel"
+                    value={formularioTroca.telefone}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        telefone: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Cidade
+                  </label>
+
+                  <input
+                    type="text"
+                    value={formularioTroca.cidade}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        cidade: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Distância
+                  </label>
+
+                  <select
+                    value={formularioTroca.distancia}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        distancia: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  >
+                    <option value="0 KM">0 KM</option>
+                    <option value="5 KM">5 KM</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Forma de pagamento
+                  </label>
+
+                  <select
+                    value={formularioTroca.forma_pagamento}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        forma_pagamento: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-slate-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  >
+                    <option value="PIX">PIX</option>
+                    <option value="CARTAO">CARTÃO</option>
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">
+                    Novo kit
+                  </label>
+
+                  <select
+                    value={formularioTroca.tipo_kit}
+                    onChange={(event) =>
+                      setFormularioTroca((estadoAnterior) => ({
+                        ...estadoAnterior,
+                        tipo_kit: event.target.value,
+                      }))
+                    }
+                    disabled={trocandoInscricao}
+                    className="
+                      w-full
+                      rounded-xl
+                      border
+                      border-indigo-300
+                      bg-white
+                      px-4
+                      py-3
+                      text-sm
+                      font-semibold
+                      text-slate-900
+                      outline-none
+                      transition
+                      focus:border-indigo-500
+                      focus:ring-4
+                      focus:ring-indigo-500/10
+                      disabled:cursor-not-allowed
+                      disabled:bg-slate-100
+                    "
+                  >
+                    <option value="KIT COMPLETO">KIT COMPLETO</option>
+
+                    <option value="MEIO KIT">MEIO KIT</option>
+                  </select>
+                </div>
+
+                {formularioTroca.tipo_kit === "MEIO KIT" && (
+                  <div className="md:col-span-2">
+                    <div
+                      className="
+                        rounded-xl
+                        border
+                        border-slate-200
+                        bg-slate-50
+                        p-4
+                      "
+                    >
+                      <p className="text-sm text-slate-700">
+                        <strong>Camisa:</strong> X
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-500">
+                        O MEIO KIT não possui camisa. O sistema registrará
+                        automaticamente o tamanho como X.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div
+              className="
+                flex
+                flex-col-reverse
+                gap-3
+                border-t
+                border-slate-200
+                bg-slate-50
+                px-6
+                py-4
+                sm:flex-row
+                sm:justify-end
+              "
+            >
+              <button
+                type="button"
+                onClick={fecharModalTroca}
+                disabled={trocandoInscricao}
+                className="
+                  rounded-xl
+                  border
+                  border-slate-300
+                  bg-white
+                  px-5
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-slate-700
+                  transition
+                  hover:bg-slate-100
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
+                "
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmarTrocaInscricao}
+                disabled={trocandoInscricao}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  bg-amber-600
+                  px-5
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-white
+                  transition
+                  hover:bg-amber-700
+                  focus:outline-none
+                  focus:ring-4
+                  focus:ring-amber-500/20
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+                "
+              >
+                {trocandoInscricao ? (
+                  <>
+                    <span
+                      className="
+                        h-4
+                        w-4
+                        animate-spin
+                        rounded-full
+                        border-2
+                        border-white/40
+                        border-t-white
+                      "
+                    />
+                    Processando troca...
+                  </>
+                ) : (
+                  <>🔄 Confirmar troca</>
                 )}
               </button>
             </div>

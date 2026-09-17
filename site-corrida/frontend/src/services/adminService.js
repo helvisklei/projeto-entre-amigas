@@ -43,3 +43,49 @@ export async function resendEmail(row) {
 
   return data;
 }
+
+export async function cancelarInscricao(row) {
+  const response = await fetch(`${API_URL}?action=cancelar-inscricao`, {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8",
+    },
+
+    body: JSON.stringify({
+      row,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message || "Erro ao cancelar inscrição.");
+  }
+
+  return data;
+}
+
+export async function trocarInscricao(row, numeroInscricaoOriginal, payload) {
+  const response = await fetch(`${API_URL}?action=trocar-inscricao`, {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8",
+    },
+
+    body: JSON.stringify({
+      row,
+      numeroInscricaoOriginal,
+      payload,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error(data.message || "Erro ao trocar inscrição.");
+  }
+
+  return data;
+}
