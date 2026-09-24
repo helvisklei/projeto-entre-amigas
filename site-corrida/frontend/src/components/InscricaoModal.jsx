@@ -310,6 +310,16 @@ export default function InscricaoModal({
     return kits;
   }, [systemConfig]);
 
+  const tamanhosCamisaDisponiveis = useMemo(() => {
+    const configurados = systemConfig?.tamanhosCamisa;
+
+    if (Array.isArray(configurados) && configurados.length > 0) {
+      return configurados;
+    }
+
+    return tamanhosCamisa;
+  }, [systemConfig]);
+
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
     let finalValue = value;
@@ -660,7 +670,7 @@ export default function InscricaoModal({
                       }`}
                     >
                       <option value="">Tamanho da camisa</option>
-                      {tamanhosCamisa.map((item) => (
+                      {tamanhosCamisaDisponiveis.map((item) => (
                         <option key={item} value={item}>
                           {item}
                         </option>

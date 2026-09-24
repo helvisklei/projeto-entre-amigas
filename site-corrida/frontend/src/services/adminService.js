@@ -89,3 +89,76 @@ export async function trocarInscricao(row, numeroInscricaoOriginal, payload) {
 
   return data;
 }
+
+export function exportSeguroAtletaPdf() {
+  return new Promise((resolve, reject) => {
+    const callbackName = `exportSeguroAtletaPdf_${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2)}`;
+
+    const script = document.createElement("script");
+
+    const timeout = setTimeout(() => {
+      cleanup();
+
+      reject(new Error("Tempo limite ao gerar o PDF do Seguro Atleta."));
+    }, 60000);
+
+    const cleanup = () => {
+      clearTimeout(timeout);
+
+      delete window[callbackName];
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+
+    window[callbackName] = (data) => {
+      cleanup();
+
+      if (!data?.success) {
+        reject(
+          new Error(data?.message || "Erro ao gerar PDF do Seguro Atleta."),
+        );
+
+        return;
+      }
+
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+
+      reject(new Error("Não foi possível acessar o serviço do Seguro Atleta."));
+    };
+
+    script.src =
+      `${API_URL}?action=export-seguro-atleta-pdf` +
+      `&callback=${encodeURIComponent(callbackName)}`;
+
+    document.body.appendChild(script);
+  });
+}
+/* export async function exportSeguroAtletaPdf() {
+  try {
+    const response = await fetch(`${API_URL}?action=export-seguro-atleta-pdf`);
+
+    if (!response.ok) {
+      throw new Error("Erro ao gerar PDF do Seguro Atleta.");
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Erro ao gerar PDF do Seguro Atleta.");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Erro ao exportar PDF do Seguro Atleta:", error);
+
+    throw error;
+  }
+} */

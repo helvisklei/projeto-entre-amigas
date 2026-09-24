@@ -39,7 +39,11 @@ COMPONENTE PRINCIPAL
 ==========================================================
 */
 
-export default function SeguroAtletaDashboard({ analytics }) {
+export default function SeguroAtletaDashboard({
+  analytics,
+  onExportSeguroAtletaPdf,
+  exportingSeguroAtleta,
+}) {
   /*
   ========================================================
   ESTADO DO MODAL
@@ -130,6 +134,33 @@ export default function SeguroAtletaDashboard({ analytics }) {
         <span>🛡️</span>
         Seguro Atleta
       </h2>
+
+      <div className="mb-6 flex justify-end">
+        <button
+          type="button"
+          onClick={onExportSeguroAtletaPdf}
+          disabled={exportingSeguroAtleta}
+          className="
+            inline-flex
+            items-center
+            gap-2
+            rounded-lg
+            bg-red-600
+            px-5
+            py-3
+            text-sm
+            font-semibold
+            text-white
+            shadow-sm
+            transition
+            hover:bg-red-700
+            disabled:cursor-not-allowed
+            disabled:opacity-60
+          "
+        >
+          {exportingSeguroAtleta ? "⏳ Gerando PDF..." : "📄 PDF Seguro Atleta"}
+        </button>
+      </div>
 
       {/* ==================================================
           CARDS
