@@ -104,7 +104,7 @@ export default function InscricaoModal({
     distancia: "",
     comoConheceu: "",
     idade: "",
-    tipoKit: selectedKit || "KIT COMPLETO",
+    tipoKit: selectedKit || "",
     formaPagamento: paymentType === "credito" ? "CARTÃO" : "PIX",
     cupom: "",
     isPcd: false,
@@ -166,8 +166,138 @@ export default function InscricaoModal({
   }, []);
 
   /* REALTIME PRICING */
+
+  /* Consulta o preço oficial no backend */
   React.useEffect(() => {
+    // Invalida imediatamente as consultas anteriores.
+    const requestId = ++pricingRequestRef.current;
+
+    // O preço anterior não deve ser exibido para outra seleção.
+    setPricing(null);
+    setPricingError("");
+
     if (!formData.tipoKit || !formData.formaPagamento) {
+      setMensagemAcolhimento("");
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const pricingResponse = await calculatePricing({
+          tipoKit: formData.tipoKit,
+          formaPagamento: formData.formaPagamento,
+          idade: formData.idade,
+          isPcd: formData.isPcd,
+          isTea: formData.isTea,
+          cupom: formData.cupom,
+        });
+
+        // Ignora respostas de seleções anteriores.
+        if (requestId !== pricingRequestRef.current) {
+          return;
+        }
+
+        setPricing(pricingResponse);
+        setPricingError("");
+
+        setMensagemAcolhimento(
+          pricingResponse?.tipoDesconto === "ACOLHIMENTO"
+            ? "💜 Estamos com você nesta jornada. Sua força inspira todos ao seu redor. Conte conosco e aproveite este benefício especial preparado com carinho."
+            : "",
+        );
+      } catch (error) {
+        if (requestId !== pricingRequestRef.current) {
+          return;
+        }
+
+        // Não registra como falha uma regra de negócio esperada.
+        if (error.code !== "PRICING_REJECTED") {
+          console.error("Erro na consulta de preço:", error);
+        }
+
+        setPricing(null);
+        setPricingError(error?.message || "Não foi possível calcular o preço.");
+        setMensagemAcolhimento("");
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [
+    formData.tipoKit,
+    formData.formaPagamento,
+    formData.idade,
+    formData.isPcd,
+    formData.isTea,
+    formData.cupom,
+    setPricing,
+  ]);
+
+  /* Consulta o preço oficial no backend */
+  /*   React.useEffect(() => {
+    // Invalida imediatamente qualquer consulta anterior.
+    const requestId = ++pricingRequestRef.current;
+
+    // O preço anterior não representa a nova seleção.
+    setPricing(null);
+    setPricingError("");
+
+    if (!formData.tipoKit || !formData.formaPagamento) {
+      setMensagemAcolhimento("");
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const pricingResponse = await calculatePricing({
+          tipoKit: formData.tipoKit,
+          formaPagamento: formData.formaPagamento,
+          idade: formData.idade,
+          isPcd: formData.isPcd,
+          isTea: formData.isTea,
+          cupom: formData.cupom,
+        });
+
+        // Ignora respostas de consultas anteriores.
+        if (requestId !== pricingRequestRef.current) {
+          return;
+        }
+
+        setPricing(pricingResponse);
+
+        setMensagemAcolhimento(
+          pricingResponse?.tipoDesconto === "ACOLHIMENTO"
+            ? "💜 Estamos com você nesta jornada. Sua força inspira todos ao seu redor. Conte conosco e aproveite este benefício especial preparado com carinho."
+            : "",
+        );
+      } catch (error) {
+        if (requestId !== pricingRequestRef.current) {
+          return;
+        }
+
+        console.error("Erro pricing realtime:", error);
+        setPricing(null);
+        setPricingError(error?.message || "Não foi possível calcular o preço.");
+        setMensagemAcolhimento("");
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [
+    formData.tipoKit,
+    formData.formaPagamento,
+    formData.idade,
+    formData.isPcd,
+    formData.isTea,
+    formData.cupom,
+    setPricing,
+  ]); */
+  /*   React.useEffect(() => {
+    if (!formData.tipoKit || !formData.formaPagamento) {
+      setPricing(null);
       return;
     }
 
@@ -219,7 +349,7 @@ export default function InscricaoModal({
     formData.isTea,
     formData.cupom,
     setPricing,
-  ]);
+  ]); */
 
   const exibeTamanhoCamisa =
     formData.tipoKit === "KIT COMPLETO" || formData.tipoKit === "SÓ CAMISA";
@@ -310,6 +440,35 @@ export default function InscricaoModal({
     return kits;
   }, [systemConfig]);
 
+  // Sincroniza o kit com a configuração ativa, sem presumir o Kit Completo.
+  React.useEffect(() => {
+    if (!isOpen || !systemConfig) {
+      return;
+    }
+
+    setFormData((prev) => {
+      // Preserva o kit escolhido no cartão, desde que continue ativo.
+      const kitSelecionadoValido =
+        selectedKit && kitsDisponiveis.includes(selectedKit) ? selectedKit : "";
+
+      // Se só existe um kit ativo, ele pode ser selecionado automaticamente.
+      // Se existem vários, exige que a participante escolha.
+      const proximoKit =
+        kitSelecionadoValido ||
+        (kitsDisponiveis.length === 1 ? kitsDisponiveis[0] : "");
+
+      if (prev.tipoKit === proximoKit) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        tipoKit: proximoKit,
+        tamanhoCamisa: "",
+      };
+    });
+  }, [isOpen, selectedKit, systemConfig, kitsDisponiveis]);
+
   const tamanhosCamisaDisponiveis = useMemo(() => {
     const configurados = systemConfig?.tamanhosCamisa;
 
@@ -347,6 +506,32 @@ export default function InscricaoModal({
     event.preventDefault();
 
     if (loading) {
+      return;
+    }
+
+    if (
+      !systemConfig ||
+      !formData.tipoKit ||
+      !kitsDisponiveis.includes(formData.tipoKit)
+    ) {
+      setLocalFieldErrors({
+        tipoKit: !systemConfig
+          ? "Aguarde o carregamento das opções de kit."
+          : "Selecione um kit disponível para continuar.",
+      });
+      return;
+    }
+
+    if (
+      !formData.formaPagamento ||
+      !pricing ||
+      pricing.valor == null ||
+      !Number.isFinite(Number(pricing.valor)) ||
+      Number(pricing.valor) <= 0
+    ) {
+      setLocalGeneralError(
+        "O valor da inscrição ainda não foi confirmado. Aguarde o cálculo do preço e tente novamente.",
+      );
       return;
     }
 
@@ -740,6 +925,7 @@ export default function InscricaoModal({
                   name="tipoKit"
                   value={formData.tipoKit}
                   onChange={handleChange}
+                  required
                   className={`border rounded-lg p-3 ${
                     activeFieldErrors.tipoKit
                       ? "border-red-500"
@@ -787,8 +973,18 @@ export default function InscricaoModal({
                 <input
                   type="text"
                   value={
-                    pricing?.valor ? `R$ ${pricing.valor}` : "Calculando..."
+                    pricing?.valor != null
+                      ? Number(pricing.valor).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      : pricingError
+                        ? "Verifique os benefícios selecionados"
+                        : "Calculando..."
                   }
+                  /*                   value={
+                    pricing?.valor ? `R$ ${pricing.valor}` : "Calculando..."
+                  } */
                   disabled
                   className="border rounded-lg p-3 bg-gray-100 font-bold"
                 />

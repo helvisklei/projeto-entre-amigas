@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Admin from "./pages/Admin";
 import AdminSettings from "./pages/AdminSettings";
+import ConfigAdmin from "./pages/ConfigAdmin";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -29,6 +30,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AdminSettings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/config"
+          element={
+            <ProtectedRoute>
+              <ConfigAdmin />
             </ProtectedRoute>
           }
         />

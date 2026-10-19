@@ -22,6 +22,44 @@ export async function getAnalytics() {
   }
 }
 
+/**
+ * Carrega as configurações administrativas.
+ *
+ * Nesta etapa:
+ * - somente leitura;
+ * - utiliza a rota admin-config;
+ * - não altera nenhuma configuração.
+ */
+export async function getAdminConfig() {
+  try {
+    const response = await fetch(
+      `${API_URL}?action=admin-config`
+    );
+
+    if (!response.ok) {
+      throw new Error("Erro ao carregar configurações.");
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== "object") {
+      throw new Error(
+        "Resposta inválida ao carregar configurações."
+      );
+    }
+
+    return data;
+
+  } catch (error) {
+    console.error(
+      "Erro ao carregar configurações:",
+      error
+    );
+
+    throw error;
+  }
+}
+
 // const API_URL = process.env.REACT_APP_API_URL;
 
 // /**

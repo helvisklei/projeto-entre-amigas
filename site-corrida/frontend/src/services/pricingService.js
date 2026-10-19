@@ -1,4 +1,72 @@
 const API_URL = process.env.REACT_APP_API_URL;
+const PRICING_TIMEOUT_MS = 10000;
+
+export async function calculatePricing(payload) {
+  if (!API_URL) {
+    throw new Error("A URL do serviço de preços não está configurada.");
+  }
+
+  const controller = new AbortController();
+  let timeoutExpired = false;
+
+  const timeoutId = setTimeout(() => {
+    timeoutExpired = true;
+    controller.abort();
+  }, PRICING_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`${API_URL}?action=pricing`, {
+      method: "POST",
+      cache: "no-cache",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro HTTP ${response.status} ao consultar o preço.`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      const error = new Error(
+        data.publicMessage ||
+          data.message ||
+          "Não foi possível calcular o valor da inscrição.",
+      );
+
+      // Identifica uma rejeição retornada pelo próprio serviço.
+      error.code = "PRICING_REJECTED";
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    if (timeoutExpired) {
+      throw new Error(
+        "A consulta do preço demorou mais que o esperado. Tente novamente.",
+      );
+    }
+
+    if (error.name === "AbortError") {
+      // Preserva cancelamentos que não foram causados pelo timeout.
+      throw error;
+    }
+
+    if (error.code !== "PRICING_REJECTED") {
+      console.error("Erro na consulta de preços:", error);
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+/* const API_URL = process.env.REACT_APP_API_URL;
 
 export async function calculatePricing(payload) {
   // 1. AbortController para evitar requisições infinitas (Enterprise standard)
@@ -43,8 +111,10 @@ export async function calculatePricing(payload) {
       console.error("Erro na chamada de pricing:", error.message);
     }
     throw error; // Re-throw para o componente UI tratar o estado de erro
+  } finally {
+    clearTimeout(timeoutId);
   }
-}
+} */
 
 /* const API_URL = process.env.REACT_APP_API_URL;
 

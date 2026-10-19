@@ -48,7 +48,7 @@ export default function RetiradaKit() {
   =========================================================
   */
 
-  const [numeroInscricao, setNumeroInscricao] = useState("");
+  //const [numeroInscricao, setNumeroInscricao] = useState("");
   const [cpf, setCpf] = useState("");
 
   /*
@@ -125,7 +125,7 @@ export default function RetiradaKit() {
     setLoading(true);
 
     try {
-      const dados = await getDadosTermo(numeroInscricao, cpf);
+      const dados = await getDadosTermo(cpf);
       setParticipante(dados);
     } catch (error) {
       console.error("Erro ao consultar Termo:", error);
@@ -144,8 +144,34 @@ export default function RetiradaKit() {
   =========================================================
   */
 
+  /*   function handleCpfChange(event) {
+      const valor = event.target.value.replace(/\D/g, "").slice(0, 11);
+      setCpf(valor);
+    } */
+
+  function formatarCpf(valor) {
+    const digitos = String(valor || "")
+      .replace(/\D/g, "")
+      .slice(0, 11);
+
+    if (digitos.length <= 3) {
+      return digitos;
+    }
+
+    if (digitos.length <= 6) {
+      return `${digitos.slice(0, 3)}.${digitos.slice(3)}`;
+    }
+
+    if (digitos.length <= 9) {
+      return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6)}`;
+    }
+
+    return `${digitos.slice(0, 3)}.${digitos.slice(3, 6)}.${digitos.slice(6, 9)}-${digitos.slice(9, 11)}`;
+  }
+
   function handleCpfChange(event) {
     const valor = event.target.value.replace(/\D/g, "").slice(0, 11);
+
     setCpf(valor);
   }
 
@@ -155,10 +181,10 @@ export default function RetiradaKit() {
   =========================================================
   */
 
-  function handleNumeroInscricaoChange(event) {
+  /*   function handleNumeroInscricaoChange(event) {
     const valor = event.target.value.toUpperCase().trim();
     setNumeroInscricao(valor);
-  }
+  } */
 
   /*
   =========================================================
@@ -290,8 +316,7 @@ export default function RetiradaKit() {
               </h2>
 
               <p className="mt-2 text-sm text-gray-600">
-                Informe seu número de inscrição e CPF para consultar o Termo de
-                Retirada.
+                Informe seu CPF para consultar o Termo de Retirada.
               </p>
             </div>
 
@@ -321,7 +346,7 @@ export default function RetiradaKit() {
 
             <form onSubmit={handleConsultarTermo} className="space-y-5">
               {/* Número da inscrição */}
-              <div>
+              {/*               <div>
                 <label
                   htmlFor="numeroInscricao"
                   className="
@@ -358,7 +383,7 @@ export default function RetiradaKit() {
                     disabled:bg-gray-100
                   "
                 />
-              </div>
+              </div> */}
 
               {/* CPF */}
               <div>
@@ -379,12 +404,12 @@ export default function RetiradaKit() {
                   id="cpf"
                   type="text"
                   inputMode="numeric"
-                  value={cpf}
+                  value={formatarCpf(cpf)}
                   onChange={handleCpfChange}
                   placeholder="Digite seu CPF (11 dígitos)"
                   autoComplete="off"
                   disabled={loading}
-                  maxLength={11}
+                  maxLength={14}
                   className="
                     w-full
                     rounded-lg
@@ -406,11 +431,7 @@ export default function RetiradaKit() {
               <button
                 type="submit"
                 disabled={
-                  loading ||
-                  configLoading ||
-                  !config ||
-                  !numeroInscricao.trim() ||
-                  cpf.length !== 11 // Garante que o CPF tem exatamente 11 números antes de consultar
+                  loading || configLoading || !config || cpf.length !== 11 // Garante que o CPF tem exatamente 11 números antes de consultar
                 }
                 className="
                   w-full

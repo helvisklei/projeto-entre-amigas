@@ -987,6 +987,12 @@ export default function Admin() {
             ⚙️ Gerenciar Admins
           </button>
           <button
+            onClick={() => navigate("/admin/config")}
+            className="text-slate-600 hover:text-slate-900 text-xs font-semibold px-4 py-1.5 rounded-lg transition"
+          >
+            🛠️ Configurações
+          </button>
+          <button
             onClick={() => navigate("/")}
             className="text-slate-600 hover:text-slate-900 text-xs font-semibold px-4 py-1.5 rounded-lg transition ml-auto"
           >

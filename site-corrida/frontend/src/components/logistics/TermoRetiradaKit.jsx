@@ -296,7 +296,7 @@ PROTEÇÃO DOS DADOS INSERIDOS NO HTML
             display: flex;
             justify-content: space-between;
             gap: 30px;
-            margin-top: 0px;
+            margin-top: 28px;
             page-break-inside: avoid;
             break-inside: avoid;
           }
@@ -306,6 +306,16 @@ PROTEÇÃO DOS DADOS INSERIDOS NO HTML
             text-align: center;
             page-break-inside: avoid;
             break-inside: avoid;
+          }
+
+          .retirada-terceiro {
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+
+          .assinatura-terceiro {
+            max-width: 360px;
+            margin: 24px auto 0;
           }
 
           .linha {
@@ -512,6 +522,42 @@ PROTEÇÃO DOS DADOS INSERIDOS NO HTML
           <div class="campo">
             <strong>Hora da retirada:</strong>
             <span class="linha-hora">____:____</span>
+          </div>
+        </div>
+        
+        <div class="secao retirada-terceiro">
+          <div class="secao-titulo">
+            RETIRADA POR TERCEIRO
+          </div>
+
+          <div class="campo">
+            <strong>Nome completo:</strong>
+            ______________________________________________
+          </div>
+
+          <div class="campo">
+            <strong>CPF:</strong>
+            ______________________________________________
+          </div>
+
+          <div class="campo">
+            <strong>Documento conferido:</strong>
+            ( ) Sim
+          </div>
+
+          <div class="declaracao">
+            <p>
+              Declaro que recebi o kit correspondente à inscrição
+              identificada neste termo, responsabilizando-me pelo
+              recebimento e pela conferência dos itens entregues.
+            </p>
+          </div>
+
+          <div class="assinatura assinatura-terceiro">
+            <div class="linha"></div>
+            <strong>Terceiro responsável pela retirada</strong>
+            <br />
+            <small>Nome legível e assinatura</small>
           </div>
         </div>
 
