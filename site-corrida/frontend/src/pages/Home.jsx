@@ -114,6 +114,56 @@ export default function Home() {
       </div>
     );
   }
+
+  /*Só quando a Home for redenriada utilizando
+   hoario local do navegador
+  */
+
+  const agora = new Date();
+
+  const converterDataHora = (data, hora) => {
+    if (!data || !hora) return null;
+
+    const [dia, mes, ano] = data.split("/").map(Number);
+    const [horas, minutos] = hora.split(":").map(Number);
+
+    if (!dia || !mes || !ano || horas == null || minutos == null) {
+      return null;
+    }
+
+    const dataHora = new Date(ano, mes - 1, dia, horas, minutos);
+
+    if (
+      dataHora.getFullYear() !== ano ||
+      dataHora.getMonth() !== mes - 1 ||
+      dataHora.getDate() !== dia
+    ) {
+      return null;
+    }
+
+    return dataHora;
+  };
+
+  const inicioRetirada = converterDataHora(
+    config.retiradaKit?.inicio,
+    config.retiradaKit?.horaInicio,
+  );
+
+  const fimRetirada = converterDataHora(
+    config.retiradaKit?.fim,
+    config.retiradaKit?.horaFim,
+  );
+
+  const retiradaKitLiberada =
+    inicioRetirada !== null &&
+    fimRetirada !== null &&
+    fimRetirada >= inicioRetirada &&
+    agora >= inicioRetirada &&
+    agora <= fimRetirada;
+
+  const acessoTermoLiberado =
+    config?.retiradaKit?.impressaoAntecipada === true || retiradaKitLiberada;
+
   //const descontoLegal = Number(config?.descontos?.pcd || 50) / 100;
 
   const descontoLegal = Number(config?.lote1?.descontos?.pcd || 0) / 100;
@@ -154,68 +204,6 @@ export default function Home() {
   };
 
   const dataEvento = getDataEvento();
-
-  //const exibirKitExtras = config?.kits?.meioKit || config?.kits?.lanche;
-
-  /*   const kitsEvento = [
-    {
-      ativo: config?.kits?.kitCompleto,
-      titulo: "🏅 Kit Completo",
-      destaque: "Experiência completa do evento",
-
-      itens: [
-        "👕 Camisa Oficial",
-        "🛍️ Ecobag",
-        "🧢 Viseira",
-        "🔢 Número de Peito",
-        "🏅 Medalha pós-prova",
-      ],
-      //beneficios: [],
-
-      beneficios: [
-        "☕ Café da manhã",
-        "🧊 Banheira de gelo",
-        "💆  Massagem",
-        "🎧 DJ animando o evento",
-        "🎁 Sorteios dos patrocinadores",
-      ],
-    },
-
-    {
-      ativo: config?.kits?.meioKit,
-      titulo: "🏃 Meio Kit",
-      destaque: "Participe da corrida sem camisa oficial",
-
-      itens: [
-        "🛍️ Ecobag",
-        "🧢 Viseira",
-        "🔢 Número de Peito",
-        "🏅 Medalha pós-prova",
-      ],
-
-      //beneficios: [],
-
-      beneficios: [
-        "☕ Café da manhã",
-        "🧊 Banheira de gelo",
-        "💆  Massagem",
-        "🎧 DJ animando o evento",
-        "🎁 Sorteios dos patrocinadores",
-      ],
-    },
-
-    {
-      ativo: config?.kits?.lanche,
-      titulo: "☕ Kit Pipoca",
-      destaque: "⚠️ Não inclui medalha, camisa e não participa do pódio",
-
-      itens: ["☕ Café da manhã", "🔢 Número de Peito"],
-
-      beneficios: ["🧊 Banheira de gelo", "💆  Massagem"],
-
-      //beneficios: ["🎧 DJ", "🎁 Sorteios", "💜 Ambiente do evento"],
-    },
-  ]; */
 
   const kitsEvento = [
     {
@@ -348,27 +336,6 @@ export default function Home() {
       }
     );
   };
-  /*   const obterPrecoKit = (nomeKit) => {
-    const loteAtual = lotes.find((lote) => lote.status === "ATUAL");
-
-    if (!loteAtual) {
-      return {
-        pix: null,
-        cartao: null,
-      };
-    }
-
-    const kit = loteAtual.kits.find(
-      (k) => k.nome.toUpperCase() === nomeKit.toUpperCase(),
-    );
-
-    return (
-      kit || {
-        pix: null,
-        cartao: null,
-      }
-    );
-  }; */
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50">
@@ -483,12 +450,11 @@ export default function Home() {
               <div
                 className="
                   relative
-                  flex
-                  flex-col
+                  grid
+                  grid-cols-1
                   gap-6
-                  md:flex-row
+                  md:grid-cols-[minmax(0,1fr)_auto]
                   md:items-center
-                  md:justify-between
                 "
               >
                 {/* Texto */}
@@ -530,8 +496,8 @@ export default function Home() {
                       text-white/90
                     "
                   >
-                    Acesse com seu número de inscrição e CPF para consultar e
-                    imprimir seu Termo de Retirada de Kit.
+                    Acesse com seu número de CPF para consultar e imprimir seu
+                    Termo de Retirada de Kit. Lembre-se de assinar o documento.
                   </p>
 
                   {/* =================================================
@@ -696,35 +662,105 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-
                 {/* Botão */}
                 <button
                   type="button"
                   onClick={() => navigate("/retirada-kit")}
-                  className="
-                    relative
-                    inline-flex
-                    shrink-0
-                    items-center
-                    justify-center
-                    gap-2
-                    rounded-xl
-                    bg-white
-                    px-6
-                    py-3
-                    font-bold
-                    text-purple-700
-                    shadow-md
-                    transition
-                    hover:scale-[1.02]
-                    hover:bg-gray-50
-                    active:scale-[0.98]
-                  "
+                  disabled={!acessoTermoLiberado}
+                  className={`
+                    relative inline-flex shrink-0 items-center justify-center gap-2
+                    rounded-xl px-6 py-3 font-bold shadow-md transition
+                    ${
+                      acessoTermoLiberado
+                        ? "bg-white text-purple-700 hover:scale-[1.02] hover:bg-gray-50"
+                        : "cursor-not-allowed bg-gray-200 text-gray-500 opacity-80"
+                    }
+                  `}
+                  title={
+                    acessoTermoLiberado
+                      ? "Acessar Termo"
+                      : "O acesso estará disponível durante o período de retirada"
+                  }
                 >
                   <span>📄</span>
 
                   <span>Acessar Termo</span>
                 </button>
+
+                {/* AVISO DE DOCUMENTOS PARA RETIRADA */}
+                {config?.retiradaKit?.avisoDocumentos?.trim() &&
+                  (() => {
+                    const partes = config.retiradaKit.avisoDocumentos
+                      .split("|")
+                      .map((parte) => parte.trim());
+
+                    const [
+                      titulo,
+                      introducao,
+                      tituloProprio,
+                      textoProprio,
+                      tituloTerceiro,
+                      textoTerceiro,
+                      tituloValidacao,
+                      textoFinal,
+                    ] = partes;
+
+                    const secoes = [
+                      {
+                        titulo: tituloProprio,
+                        texto: textoProprio,
+                        icone: "👤",
+                      },
+                      {
+                        titulo: tituloTerceiro,
+                        texto: textoTerceiro,
+                        icone: "👥",
+                      },
+                      {
+                        titulo: tituloValidacao,
+                        texto: textoFinal,
+                        icone: "🛡️",
+                      },
+                    ];
+
+                    return (
+                      <div
+                        /*                         className="mt-5 w-full max-w-2xl rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-950 shadow-sm"
+                        role="note"
+                        aria-label="Orientações para retirada do kit" */
+                        className="w-full min-w-0 rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-950 shadow-sm md:col-span-2"
+                      >
+                        <h3 className="flex items-center gap-2 font-bold text-amber-800">
+                          <span aria-hidden="true">⚠️</span>
+                          {titulo}
+                        </h3>
+
+                        {introducao && (
+                          <p className="mt-3 text-sm leading-relaxed text-amber-900">
+                            {introducao}
+                          </p>
+                        )}
+
+                        {secoes.map((secao, indice) => (
+                          <div
+                            key={`${indice}-${secao.titulo}`}
+                            className="mt-4 border-t border-amber-300 pt-4"
+                          >
+                            <h4 className="flex items-start gap-2 text-sm font-semibold text-gray-900">
+                              <span aria-hidden="true">{secao.icone}</span>
+                              <span>{secao.titulo}</span>
+                            </h4>
+
+                            {secao.texto && (
+                              <p className="mt-2 pl-6 text-sm leading-relaxed text-gray-800">
+                                {secao.texto}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
               </div>
             </div>
           </div>
