@@ -400,6 +400,72 @@ export default function Home() {
         </div>
       </div>
 
+      {/* AVISO IMPORTANTE DO EVENTO */}
+      {config?.avisoEvento?.ativo === true && (
+        <section className="bg-white px-4 py-5 md:py-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="rounded-2xl border border-purple-200 bg-[#F5F0FF] p-5 shadow-sm md:p-6">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-100">
+                  <span className="text-xl" aria-hidden="true">
+                    📢
+                  </span>
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg font-bold uppercase tracking-wide text-purple-800">
+                    AVISO IMPORTANTE
+                    {config.avisoEvento.titulo
+                      ? ` — ${config.avisoEvento.titulo}`
+                      : ""}
+                  </h2>
+
+                  {config.avisoEvento.texto && (
+                    <p className="mt-4 text-sm leading-relaxed text-purple-950 md:text-base">
+                      {config.avisoEvento.texto}
+                    </p>
+                  )}
+
+                  {config.avisoEvento.descricao && (
+                    <p className="mt-3 text-sm leading-relaxed text-purple-950 md:text-base">
+                      {config.avisoEvento.descricao}
+                    </p>
+                  )}
+
+                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div className="rounded-xl bg-purple-200/70 p-3">
+                      <div className="flex items-center gap-2 text-sm font-medium text-purple-800">
+                        <span aria-hidden="true">☀️</span>
+                        <span>Concentração</span>
+                      </div>
+                      <p className="mt-1 text-xl font-bold text-purple-900">
+                        {config.avisoEvento.concentracao || "A definir"}
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl bg-purple-200/70 p-3">
+                      <div className="flex items-center gap-2 text-sm font-medium text-purple-800">
+                        <span aria-hidden="true">🏃‍♀️</span>
+                        <span>Largada</span>
+                      </div>
+                      <p className="mt-1 text-xl font-bold text-purple-900">
+                        {config.avisoEvento.largada || "A definir"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {config.avisoEvento.rodape && (
+                    <p className="mt-4 text-sm font-medium text-purple-800">
+                      {config.avisoEvento.rodape}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* =========================================================
           BANNER — RETIRADA DE KIT
           Exibido somente quando liberado pela configuração
