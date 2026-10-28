@@ -105,7 +105,7 @@ export default function Home() {
     { icon: "🛡️", title: "Seguro Atleta", desc: "Cobertura durante o evento" },
   ];
 
-  console.log("CONFIG:", config);
+  //console.log("CONFIG:", config);
 
   if (!config) {
     return (
