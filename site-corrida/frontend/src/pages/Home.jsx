@@ -6,6 +6,7 @@ import EventsSection from "../components/EventsSection";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import InscricaoModal from "../components/InscricaoModal";
+import LoadingScreen from "../components/LoadingScreen";
 import TestimonialsSection from "../components/TestimonialsSection";
 import { getFrontendConfig } from "../services/configService";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,8 @@ export default function Home() {
   // 🔒 Controle de inscrições
   //const isInscriptionOpen = true; // Mude para true quando quiser reabrir
 
+  const [configError, setConfigError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
   const [showInscricaoModal, setShowInscricaoModal] = useState(false);
   const [paymentType, setPaymentType] = useState(null); // 'pix' | 'credito'
   const [selectedKit, setSelectedKit] = useState(null);
@@ -30,6 +33,38 @@ export default function Home() {
   const isInscriptionOpen = config ? !config.eventoEncerrado : false; // Padrão para fechado enquanto carrega config
 
   useEffect(() => {
+    let ativo = true;
+
+    async function loadConfig() {
+      try {
+        setConfigError(false);
+
+        const cfg = await getFrontendConfig();
+
+        if (ativo) {
+          if (!cfg) {
+            throw new Error("A configuração não foi retornada.");
+          }
+
+          setConfig(cfg);
+        }
+      } catch (error) {
+        console.error("Erro carregando config:", error);
+
+        if (ativo) {
+          setConfigError(true);
+        }
+      }
+    }
+
+    loadConfig();
+
+    return () => {
+      ativo = false;
+    };
+  }, [retryKey]);
+
+  /*   useEffect(() => {
     async function loadConfig() {
       try {
         const cfg = await getFrontendConfig();
@@ -41,7 +76,7 @@ export default function Home() {
     }
 
     loadConfig();
-  }, []);
+  }, []); */
 
   // Helper para abrir o modal com checagem de bloqueio
   const tryOpenInscricaoModal = (type = null, kit = null) => {
@@ -109,11 +144,20 @@ export default function Home() {
 
   if (!config) {
     return (
+      <LoadingScreen
+        error={configError}
+        onRetry={() => setRetryKey((valor) => valor + 1)}
+      />
+    );
+  }
+
+  /*   if (!config) {
+    return (
       <div className="min-h-screen flex items-center justify-center">
         Carregando...
       </div>
     );
-  }
+  } */
 
   /*Só quando a Home for redenriada utilizando
    hoario local do navegador

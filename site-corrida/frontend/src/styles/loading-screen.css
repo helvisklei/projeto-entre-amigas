@@ -1,0 +1,179 @@
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #6514a8;
+  font-family: inherit;
+}
+
+.loading-screen__picture,
+.loading-screen__artwork {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.loading-screen__artwork {
+  object-fit: cover;
+  object-position: center;
+  animation: loading-scene 18s ease-in-out infinite alternate;
+}
+
+.loading-screen__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(28px, env(safe-area-inset-top)) 20px
+    max(28px, env(safe-area-inset-bottom));
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgb(50 10 90 / 32%) 0%,
+    transparent 35%,
+    transparent 55%,
+    rgb(50 10 90 / 35%) 100%
+  );
+}
+
+.loading-screen__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 2px 12px rgb(50 10 90 / 55%);
+}
+
+.loading-screen__brand-name {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.loading-screen__tagline {
+  font-size: clamp(0.8rem, 2vw, 1rem);
+  font-weight: 600;
+}
+
+.loading-screen__message {
+  width: min(100%, 460px);
+  padding: 22px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 22px;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 12px 40px rgb(48 10 75 / 20%);
+  color: #581c87;
+  text-align: center;
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.loading-screen__message h1 {
+  margin: 0;
+  font-size: clamp(1.15rem, 3vw, 1.65rem);
+  line-height: 1.25;
+  font-weight: 900;
+}
+
+.loading-screen__message p {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.loading-screen__progress {
+  height: 6px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ead7f8;
+}
+
+.loading-screen__progress span {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ec4899, #9333ea, #06b6d4);
+  animation: loading-progress 1.8s ease-in-out infinite;
+}
+
+.loading-screen__button {
+  margin-top: 18px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #c026d3, #7c3aed);
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loading-screen__button:focus-visible {
+  outline: 3px solid #581c87;
+  outline-offset: 4px;
+}
+
+@keyframes loading-scene {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.035);
+  }
+}
+
+@keyframes loading-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+@media (max-width: 640px) {
+  .loading-screen__artwork {
+    object-position: center;
+    animation: none;
+  }
+
+  .loading-screen__overlay {
+    padding-inline: 16px;
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .loading-screen__brand-name {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+
+  .loading-screen__message {
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__artwork,
+  .loading-screen__progress span {
+    animation: none;
+  }
+
+  .loading-screen__progress span {
+    width: 65%;
+  }
+}

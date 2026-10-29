@@ -893,6 +893,226 @@ export default function Admin() {
           });
     });
 
+  // ==========================================================
+  // IMPRESSÃO — LISTA DE INSCRITOS
+  // Utiliza os resultados já filtrados e ordenados.
+  // Não altera registros nem chama o backend.
+  // ==========================================================
+  const handlePrintInscritos = () => {
+    if (inscritosFiltradosEOrdenados.length === 0) {
+      showError("Não há inscrições para imprimir com os filtros selecionados.");
+      return;
+    }
+
+    const escapeHtml = (value) =>
+      String(value ?? "—").replace(
+        /[&<>"']/g,
+        (char) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[char],
+      );
+
+    const janela = window.open("", "_blank", "width=1100,height=800");
+
+    if (!janela) {
+      showError(
+        "O navegador bloqueou a janela de impressão. Permita pop-ups para este site e tente novamente.",
+      );
+      return;
+    }
+
+    const dataEmissao = new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(new Date());
+
+    const statusDescricao =
+      {
+        TODOS: "Todas as situações",
+        ATIVA: "Inscrições ativas",
+        CANCELADA: "Inscrições canceladas",
+        PENDENTE: "Pagamento pendente",
+        PAGO: "Pagamento confirmado",
+      }[statusFiltro] || "Todas as situações";
+
+    const tipoDescricao =
+      tipoInscricaoFiltro === "TODOS" ? "Todos os tipos" : tipoInscricaoFiltro;
+
+    const termoPesquisa = searchTerm.trim();
+
+    const linhas = inscritosFiltradosEOrdenados
+      .map(
+        (inscrito) => `
+      <tr>
+        <td>${escapeHtml(inscrito.nome)}</td>
+        <td>${escapeHtml(inscrito.numero_inscricao)}</td>
+        <td>${escapeHtml(inscrito.cpf)}</td>
+        <td>${escapeHtml(inscrito.email)}</td>
+        <td>${escapeHtml(inscrito.status_pagamento || "PENDENTE")}</td>
+        <td>${escapeHtml(inscrito.status_documentacao || "N/A")}</td>
+      </tr>
+    `,
+      )
+      .join("");
+
+    janela.document.open();
+
+    janela.document.write(`<!doctype html>
+      <html lang="pt-BR">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Lista de Inscritos - Entre Amigas Run 2026.2</title>
+
+          <style>
+            @page {
+              size: A4 landscape;
+              margin: 12mm;
+            }
+
+            * {
+              box-sizing: border-box;
+            }
+
+            body {
+              margin: 0;
+              color: #172033;
+              font: 10px/1.4 Arial, Helvetica, sans-serif;
+            }
+
+            h1 {
+              margin: 0 0 5px;
+              font-size: 18px;
+            }
+
+            .subtitulo {
+              margin: 0 0 12px;
+              color: #475569;
+              font-size: 11px;
+            }
+
+            .resumo {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 6px 18px;
+              margin-bottom: 12px;
+              padding: 9px 10px;
+              border: 1px solid #cbd5e1;
+              background: #f8fafc;
+            }
+
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              table-layout: fixed;
+            }
+
+            thead {
+              display: table-header-group;
+            }
+
+            th, td {
+              padding: 7px 6px;
+              border: 1px solid #cbd5e1;
+              text-align: left;
+              vertical-align: top;
+              overflow-wrap: anywhere;
+            }
+
+            th {
+              background: #e2e8f0;
+              color: #334155;
+              font-size: 9px;
+              text-transform: uppercase;
+            }
+
+            tr {
+              break-inside: avoid;
+              page-break-inside: avoid;
+            }
+
+            tbody tr:nth-child(even) {
+              background: #f8fafc;
+            }
+
+            .rodape {
+              margin-top: 10px;
+              color: #64748b;
+              font-size: 9px;
+            }
+
+            @media screen {
+              body {
+                max-width: 1400px;
+                margin: 24px auto;
+                padding: 0 20px;
+              }
+            }
+
+            @media print {
+              body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+            }
+          </style>
+        </head>
+
+        <body>
+          <h1>Lista de Inscritos — Entre Amigas Run 2026.2</h1>
+
+          <p class="subtitulo">
+            Relação administrativa de participantes.
+          </p>
+
+          <div class="resumo">
+            <span><strong>Situação:</strong> ${escapeHtml(statusDescricao)}</span>
+            <span><strong>Tipo:</strong> ${escapeHtml(tipoDescricao)}</span>
+            ${
+              termoPesquisa
+                ? `<span><strong>Pesquisa:</strong> ${escapeHtml(termoPesquisa)}</span>`
+                : ""
+            }
+            <span><strong>Total:</strong> ${inscritosFiltradosEOrdenados.length}</span>
+            <span><strong>Emitido em:</strong> ${escapeHtml(dataEmissao)}</span>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="width:24%">Atleta</th>
+                <th style="width:13%">Nº inscrição</th>
+                <th style="width:14%">CPF</th>
+                <th style="width:25%">E-mail</th>
+                <th style="width:12%">Pagamento</th>
+                <th style="width:12%">Documento</th>
+              </tr>
+            </thead>
+
+            <tbody>${linhas}</tbody>
+          </table>
+
+          <p class="rodape">
+            Documento gerado pelo painel administrativo.
+          </p>
+
+          <script>
+            window.addEventListener("load", function () {
+              window.focus();
+              window.print();
+            });
+          </script>
+        </body>
+      </html>`);
+
+    janela.document.close();
+  };
+
   /*   const inscritosFiltradosEOrdenados = [...inscritos]
     .filter((inscrito) => {
       if (!searchTerm) return true;
@@ -1018,6 +1238,241 @@ export default function Admin() {
         sensitivity: "base",
       }),
     );
+
+  // Imprime os resultados filtrados do Controle de Camisas.
+  const handlePrintCamisas = () => {
+    if (!camisasFiltradas.length) {
+      showError(
+        "Não há participantes para imprimir com os filtros selecionados.",
+      );
+      return;
+    }
+
+    const escapeHtml = (value) =>
+      String(value ?? "—").replace(
+        /[&<>"']/g,
+        (char) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[char],
+      );
+
+    const janela = window.open("", "_blank", "width=1100,height=800");
+
+    if (!janela) {
+      showError(
+        "O navegador bloqueou a impressão. Permita pop-ups para este site e tente novamente.",
+      );
+      return;
+    }
+
+    const dataEmissao = new Intl.DateTimeFormat("pt-BR", {
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(new Date());
+
+    const tamanhoDescricao =
+      tamanhoCamisaFiltro === "TODOS"
+        ? "Todos os tamanhos"
+        : `Tamanho ${tamanhoCamisaFiltro}`;
+
+    const statusDescricao =
+      {
+        TODOS: "Todas as situações",
+        ATIVA: "Inscrições ativas",
+        CANCELADA: "Inscrições canceladas",
+        PENDENTE: "Pagamento pendente",
+        PAGO: "Pagamento confirmado",
+      }[statusCamisaFiltro] || "Todas as situações";
+
+    const termoPesquisa = buscaCamisa.trim();
+
+    const linhas = camisasFiltradas
+      .map(
+        (inscrito) => `
+        <tr>
+          <td>${escapeHtml(inscrito.nome || "Nome não informado")}</td>
+          <td>${escapeHtml(inscrito.numero_inscricao)}</td>
+          <td>${escapeHtml(inscrito.cpf)}</td>
+          <td>${escapeHtml(inscrito.email)}</td>
+          <td class="centro">${escapeHtml(
+            normalizarTamanhoCamisa(inscrito.tamanho_camisa),
+          )}</td>
+          <td>${escapeHtml(
+            String(inscrito.status_pagamento || "PENDENTE")
+              .trim()
+              .toUpperCase(),
+          )}</td>
+          <td>${escapeHtml(
+            String(inscrito.status_documentacao || "N/A")
+              .trim()
+              .toUpperCase(),
+          )}</td>
+        </tr>
+      `,
+      )
+      .join("");
+
+    janela.document.open();
+    janela.document.write(`<!doctype html>
+        <html lang="pt-BR">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Controle de Camisas - Entre Amigas Run 2026.2</title>
+
+            <style>
+              @page {
+                size: A4 landscape;
+                margin: 12mm;
+              }
+
+              * {
+                box-sizing: border-box;
+              }
+
+              body {
+                margin: 0;
+                color: #172033;
+                font: 10px/1.4 Arial, Helvetica, sans-serif;
+              }
+
+              h1 {
+                margin: 0 0 5px;
+                font-size: 18px;
+              }
+
+              .subtitulo {
+                margin: 0 0 12px;
+                color: #475569;
+                font-size: 11px;
+              }
+
+              .resumo {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px 18px;
+                margin-bottom: 12px;
+                padding: 9px 10px;
+                border: 1px solid #cbd5e1;
+                background: #f8fafc;
+              }
+
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+              }
+
+              thead {
+                display: table-header-group;
+              }
+
+              th, td {
+                padding: 7px 6px;
+                border: 1px solid #cbd5e1;
+                text-align: left;
+                vertical-align: top;
+                overflow-wrap: anywhere;
+              }
+
+              th {
+                background: #e2e8f0;
+                color: #334155;
+                font-size: 9px;
+                text-transform: uppercase;
+              }
+
+              tr {
+                break-inside: avoid;
+                page-break-inside: avoid;
+              }
+
+              tbody tr:nth-child(even) {
+                background: #f8fafc;
+              }
+
+              .centro {
+                text-align: center;
+              }
+
+              .rodape {
+                margin-top: 10px;
+                color: #64748b;
+                font-size: 9px;
+              }
+
+              @media screen {
+                body {
+                  max-width: 1400px;
+                  margin: 24px auto;
+                  padding: 0 20px;
+                }
+              }
+
+              @media print {
+                body {
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+              }
+            </style>
+          </head>
+
+          <body>
+            <h1>Controle de Camisas — Entre Amigas Run 2026.2</h1>
+
+            <p class="subtitulo">
+              Relação de participantes para conferência e organização das camisas.
+            </p>
+
+            <div class="resumo">
+              <span><strong>Tamanho:</strong> ${escapeHtml(tamanhoDescricao)}</span>
+              <span><strong>Situação:</strong> ${escapeHtml(statusDescricao)}</span>
+              ${
+                termoPesquisa
+                  ? `<span><strong>Pesquisa:</strong> ${escapeHtml(termoPesquisa)}</span>`
+                  : ""
+              }
+              <span><strong>Total:</strong> ${camisasFiltradas.length}</span>
+              <span><strong>Emitido em:</strong> ${escapeHtml(dataEmissao)}</span>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:19%">Atleta</th>
+                  <th style="width:12%">Nº inscrição</th>
+                  <th style="width:12%">CPF</th>
+                  <th style="width:22%">E-mail</th>
+                  <th style="width:8%">Tamanho</th>
+                  <th style="width:13%">Pagamento</th>
+                  <th style="width:14%">Documento</th>
+                </tr>
+              </thead>
+
+              <tbody>${linhas}</tbody>
+            </table>
+
+            <p class="rodape">
+              Documento gerado pelo painel administrativo.
+            </p>
+
+            <script>
+              window.addEventListener("load", function () {
+                window.focus();
+                window.print();
+              });
+            </script>
+          </body>
+        </html>`);
+
+    janela.document.close();
+  };
 
   const renderPaymentBadge = (status) => {
     const isPaid = status === "PAGO";
@@ -1282,6 +1737,28 @@ export default function Admin() {
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 sm:w-64"
                 />
               </div>
+
+              <div className="flex flex-col justify-end">
+                <button
+                  type="button"
+                  onClick={handlePrintCamisas}
+                  disabled={loading || camisasFiltradas.length === 0}
+                  className="
+                    inline-flex items-center justify-center gap-2
+                    rounded-lg border border-indigo-200
+                    bg-indigo-50 px-4 py-2
+                    text-xs font-bold text-indigo-700
+                    transition hover:bg-indigo-100
+                    focus:outline-none focus:ring-2
+                    focus:ring-indigo-500/30
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
+                  "
+                  aria-label="Imprimir ou salvar em PDF a lista filtrada de camisas"
+                >
+                  🖨️ Imprimir / PDF
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1461,6 +1938,28 @@ export default function Admin() {
                   <option value="desc">🔤 Alfabética (Z-A)</option>
                 </select>
               </div>
+            </div>
+
+            <div className="flex flex-col justify-end">
+              <button
+                type="button"
+                onClick={handlePrintInscritos}
+                disabled={loading || inscritosFiltradosEOrdenados.length === 0}
+                className="
+                  inline-flex items-center justify-center gap-2
+                  rounded-lg border border-indigo-200
+                  bg-indigo-50 px-4 py-2
+                  text-xs font-bold text-indigo-700
+                  transition hover:bg-indigo-100
+                  focus:outline-none focus:ring-2
+                  focus:ring-indigo-500/30
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
+                "
+                aria-label="Imprimir ou salvar em PDF a lista filtrada de inscritos"
+              >
+                🖨️ Imprimir / PDF
+              </button>
             </div>
           </div>
           {/* FILTROS DE SITUAÇÃO */}
