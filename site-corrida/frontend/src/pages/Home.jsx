@@ -652,11 +652,17 @@ export default function Home() {
                               text-white
                             "
                           >
-                            {config?.retiradaKit?.inicio || "A definir"}
+                            <div>
+                              {config?.retiradaKit?.inicio || "A definir"}
+                            </div>
 
-                            <span className="mx-1 text-white/60">às</span>
-
-                            {config?.retiradaKit?.horaInicio || "--:--"}
+                            <div className="mt-0.5 text-xs font-semibold text-white/90">
+                              Das {config?.retiradaKit?.horaInicio || "--:--"}{" "}
+                              às {config?.retiradaKit?.horaFim || "--:--"}
+                            </div>
+                            {/* {config?.retiradaKit?.inicio || "A definir"} */}
+                            {/* <span className="mx-1 text-white/60">às</span> */}
+                            {/* {config?.retiradaKit?.horaInicio || "--:--"} */}
                           </div>
                         </div>
                       </div>
@@ -717,11 +723,15 @@ export default function Home() {
                               text-white
                             "
                           >
-                            {config?.retiradaKit?.fim || "A definir"}
+                            <div>{config?.retiradaKit?.fim || "A definir"}</div>
 
+                            <div className="mt-0.5 text-xs font-semibold text-white/90">
+                              Das {config?.retiradaKit?.horaInicio || "--:--"}{" "}
+                              às {config?.retiradaKit?.horaFim || "--:--"}
+                            </div>
+                            {/*  {config?.retiradaKit?.fim || "A definir"}
                             <span className="mx-1 text-white/60">às</span>
-
-                            {config?.retiradaKit?.horaFim || "--:--"}
+                            {config?.retiradaKit?.horaFim || "--:--"} */}
                           </div>
                         </div>
                       </div>
