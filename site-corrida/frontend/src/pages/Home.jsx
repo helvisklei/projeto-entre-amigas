@@ -1702,26 +1702,33 @@ export default function Home() {
 
         {/* Regras */}
 
-        <section className="bg-amber-50/60 border border-amber-200/70 rounded-xl p-5 mb-6">
-          <h2 className="text-lg font-extrabold text-gray-900 mb-3 flex items-center gap-2">
+        {/* =========================================================
+            REGRAS IMPORTANTES E ORIENTAÇÕES PARA RETIRADA DE KIT
+            ========================================================= */}
+
+        <section
+          id="regras"
+          className="bg-amber-50/60 border border-amber-200/70 rounded-xl p-5 mb-6 scroll-mt-24"
+        >
+          <h2 className="text-lg font-extrabold text-gray-900 mb-4 flex items-center gap-2">
             🏆 REGRAS IMPORTANTES PARA O ATLETA
           </h2>
 
-          <ul className="space-y-2.5 text-sm text-gray-700">
+          <ul className="space-y-3 text-sm text-gray-700">
             <li className="flex items-start gap-2">
               <span className="text-amber-600 mt-0.5">🍿</span>
               <span>
                 <strong>Atletas sem inscrição ("Pipoca"):</strong> Não possuem
-                direito a cronometragem, medalha ou acesso aos pódios.
+                direito à cronometragem, medalha ou acesso aos pódios.
               </span>
             </li>
 
             <li className="flex items-start gap-2">
               <span className="text-amber-600 mt-0.5">🎽</span>
               <span>
-                <strong>Retirada de Kits antecipada:</strong> Não haverá entrega
-                de kits no dia da corrida. A retirada ocorrerá na semana
-                anterior ao evento.
+                <strong>Retirada antecipada de kits:</strong> Não haverá entrega
+                de kits no dia da corrida. A retirada ocorrerá no período
+                divulgado oficialmente pela organização.
               </span>
             </li>
 
@@ -1732,17 +1739,93 @@ export default function Home() {
                 com antecedência no dia da prova.
               </span>
             </li>
-
-            <li className="flex items-start gap-2">
-              <span className="text-amber-600 mt-0.5">📖</span>
-              <span>
-                <strong>Leitura Obrigatória:</strong> Leia atentamente o
-                regulamento completo disponibilizado no ato da inscrição logo
-                abaixo antes de finalizar.
-              </span>
-            </li>
           </ul>
+
+          {/* Orientações específicas para retirada de kit */}
+          <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
+            <h3 className="text-base font-extrabold text-blue-900 mb-2 flex items-center gap-2">
+              📋 DOCUMENTOS NECESSÁRIOS PARA RETIRADA DO KIT
+            </h3>
+
+            <p className="text-sm text-blue-900 mb-4 leading-relaxed">
+              Para garantir uma retirada organizada e segura, confira os
+              documentos necessários conforme cada situação:
+            </p>
+
+            <div className="space-y-4 text-sm text-gray-700">
+              {/* Retirada pelo titular */}
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1">
+                  1. Retirada pelo próprio participante
+                </h4>
+
+                <p className="leading-relaxed">
+                  O titular da inscrição deverá apresentar documento oficial de
+                  identificação com foto e o Termo de Retirada de Kit
+                  devidamente assinado.
+                </p>
+              </div>
+
+              {/* Retirada por terceiros */}
+              <div className="border-t border-blue-200 pt-3">
+                <h4 className="font-bold text-gray-900 mb-1">
+                  2. Retirada por outra pessoa (terceiros)
+                </h4>
+
+                <p className="leading-relaxed">
+                  Caso o titular não possa comparecer, outra pessoa poderá
+                  retirar o kit mediante apresentação do Termo de Retirada de
+                  Kit, contendo autorização expressa do titular da inscrição e
+                  devidamente assinado de forma eletrônica ou manuscrita.
+                </p>
+
+                <p className="mt-2 leading-relaxed">
+                  A pessoa autorizada também deverá apresentar documento oficial
+                  de identificação com foto.
+                </p>
+              </div>
+
+              {/* Validação eletrônica */}
+              <div className="border-t border-blue-200 pt-3">
+                <h4 className="font-bold text-gray-900 mb-1">
+                  3. Validação da assinatura eletrônica
+                </h4>
+
+                <p className="leading-relaxed">
+                  Quando o termo for assinado eletronicamente, a organização
+                  poderá verificar sua autenticidade por meio do portal oficial
+                  do Instituto Nacional de Tecnologia da Informação (ITI).
+                </p>
+
+                <a
+                  href="https://validar.iti.gov.br"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-2 font-semibold text-blue-700 underline break-all"
+                >
+                  https://validar.iti.gov.br
+                </a>
+
+                <p className="mt-2 leading-relaxed">
+                  Para essa conferência, deverá ser apresentado o arquivo PDF
+                  original assinado eletronicamente.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Orientação sobre leitura do regulamento */}
+          <div className="mt-4 rounded-lg border border-amber-300 bg-amber-100/70 p-3">
+            <p className="text-sm text-amber-900 leading-relaxed">
+              <strong>📖 Leitura obrigatória:</strong> Leia atentamente o
+              regulamento oficial disponibilizado durante o processo de
+              inscrição antes de finalizar seu cadastro. Ao realizar a
+              inscrição, o participante deverá declarar ciência e concordância
+              com suas disposições.
+            </p>
+          </div>
         </section>
+
         {/* Footer Message */}
         <div className="text-center py-8 border-t-4 border-pink-300">
           <p className="text-2xl font-bold text-pink-600 mb-2">

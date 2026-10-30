@@ -1270,15 +1270,93 @@ export default function InscricaoModal({
                   <h4 className="font-bold text-gray-900 mb-1">
                     5. ENTREGA DOS KITS
                   </h4>
+
                   <p>
-                    Local, datas e horários serão divulgados pela organização.
-                    Para retirada será obrigatória a apresentação de documento
-                    oficial com foto.
+                    O local, as datas e os horários para retirada dos kits serão
+                    divulgados pelos canais oficiais da organização. A retirada
+                    deverá respeitar o período e os horários estabelecidos.
                   </p>
+
+                  {/* Orientações para retirada pelo titular ou por terceiros */}
+                  <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
+                    <h5 className="mb-2 text-sm font-bold text-blue-900">
+                      📋 DOCUMENTOS NECESSÁRIOS PARA RETIRADA DO KIT
+                    </h5>
+
+                    <p className="mb-2 text-xs text-blue-900">
+                      Para garantir uma retirada organizada e segura, observe as
+                      orientações conforme cada situação:
+                    </p>
+
+                    <div className="space-y-3 text-xs text-gray-700">
+                      <div>
+                        <p className="mb-1 font-bold text-gray-900">
+                          1. Retirada pelo próprio participante
+                        </p>
+
+                        <p>
+                          O titular da inscrição deverá apresentar documento
+                          oficial de identificação com foto e o Termo de
+                          Retirada de Kit devidamente assinado.
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="mb-1 font-bold text-gray-900">
+                          2. Retirada por outra pessoa (terceiros)
+                        </p>
+
+                        <p>
+                          Caso o titular não possa comparecer, outra pessoa
+                          poderá retirar o kit mediante apresentação do Termo de
+                          Retirada de Kit, que deverá conter a autorização
+                          expressa do titular da inscrição e estar devidamente
+                          assinado de forma eletrônica ou manuscrita.
+                        </p>
+
+                        <p className="mt-1">
+                          A pessoa autorizada também deverá apresentar documento
+                          oficial de identificação com foto.
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="mb-1 font-bold text-gray-900">
+                          3. Validação da assinatura eletrônica
+                        </p>
+
+                        <p>
+                          Quando o termo for assinado eletronicamente, a
+                          organização poderá verificar sua autenticidade por
+                          meio do portal oficial do Instituto Nacional de
+                          Tecnologia da Informação (ITI):
+                        </p>
+
+                        <p className="mt-1">
+                          <a
+                            href="https://validar.iti.gov.br"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-blue-700 underline"
+                          >
+                            https://validar.iti.gov.br
+                          </a>
+                        </p>
+
+                        <p className="mt-1">
+                          Para essa conferência, deverá ser apresentado o
+                          arquivo PDF original assinado eletronicamente.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* MANTER INTEGRALMENTE O BLOCO EXISTENTE DE ITENS DO KIT */}
                   <div className="bg-white border border-gray-200 rounded-lg p-2.5 mt-2">
                     <span className="font-semibold text-xs text-gray-900 block mb-1">
                       O seu kit poderá conter:
                     </span>
+
                     <ul className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-gray-600 pl-2 list-inside">
                       <li>✓ Camisa oficial do evento</li>
                       <li>✓ Número de peito</li>
@@ -1289,6 +1367,7 @@ export default function InscricaoModal({
                       <li>✓ Estrutura de apoio e hidratação</li>
                     </ul>
                   </div>
+
                   <p className="mt-2 text-xs text-amber-700 font-medium">
                     ⚠️ Participantes que não retirarem seus kits nas datas
                     divulgadas perderão o direito aos itens, sem reembolso da
