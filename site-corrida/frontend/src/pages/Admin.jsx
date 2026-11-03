@@ -458,6 +458,8 @@ export default function Admin() {
       "2XG",
 
       "3XG",
+      
+      "X",
     ];
 
     if (!tamanhosPermitidos.includes(tamanhoCamisa)) {
@@ -2677,6 +2679,8 @@ export default function Admin() {
                     "
                   >
                     <option value="">Selecione o tamanho</option>
+
+                    <option value="X">X — Sem camisa</option>
 
                     <option value="INFANTIL 02">Infantil 02</option>
 
