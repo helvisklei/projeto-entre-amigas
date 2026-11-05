@@ -47,12 +47,33 @@ export default function Login() {
         throw new Error(data.message || "Erro login.");
       }
 
+      if (data.perfil === "EQUIPE") {
+        sessionStorage.setItem("equipe_user", credentials.usuario);
+        sessionStorage.setItem("equipe_password", credentials.senha);
+        localStorage.setItem("perfil_usuario", "EQUIPE");
+
+        navigate("/equipe");
+        return;
+      }
+
+      localStorage.setItem("auth_token", data.token);
+      localStorage.setItem("admin_user", data.user);
+      localStorage.setItem("perfil_usuario", "ADMIN");
+
+      navigate("/admin");
+
+      /*  const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || "Erro login.");
+      }
+
       localStorage.setItem("auth_token", data.token);
 
       localStorage.setItem("admin_user", data.user);
       //localStorage.setItem("auth_token", "admin-authenticated");
 
-      navigate("/admin");
+      navigate("/admin"); */
     } catch (err) {
       console.error("Erro login:", err);
 

@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Admin from "./pages/Admin";
 import AdminSettings from "./pages/AdminSettings";
 import ConfigAdmin from "./pages/ConfigAdmin";
+import Equipe from "./pages/Equipe";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/teste-termo-retirada" element={<TesteTermoRetirada />} />
         <Route path="/retirada-kit" element={<RetiradaKit />} />
+        <Route path="/equipe" element={<Equipe />} />
         <Route
           path="/admin"
           element={
