@@ -17,7 +17,7 @@ function obterCredenciaisEquipe() {
 /**
  * Executa uma solicitação autenticada ao Apps Script.
  */
-async function requisicaoEquipe(action, mensagemErro) {
+async function requisicaoEquipe(action, mensagemErro, dadosAdicionais = {}) {
   if (!API_URL) {
     throw new Error("URL da API não configurada.");
   }
@@ -29,7 +29,7 @@ async function requisicaoEquipe(action, mensagemErro) {
     headers: {
       "Content-Type": "text/plain;charset=utf-8",
     },
-    body: JSON.stringify(credenciais),
+    body: JSON.stringify({ ...credenciais, ...dadosAdicionais }),
   });
 
   const data = await response.json();
@@ -39,6 +39,32 @@ async function requisicaoEquipe(action, mensagemErro) {
   }
 
   return data;
+}
+
+/**
+ * =========================================================
+ * CONFIRMAR ENTREGA DE KIT PELA EQUIPE
+ * =========================================================
+ *
+ * Envia a identificação do participante e as credenciais
+ * da sessão operacional.
+ *
+ * A API possui uma rota específica que permite somente
+ * atualizar KIT_RETIRADO.
+ * =========================================================
+ */
+export async function entregarKitEquipe(row) {
+  if (!row || !Number.isInteger(Number(row))) {
+    throw new Error("Identificação do participante inválida.");
+  }
+
+  return requisicaoEquipe(
+    "equipe-entregar-kit",
+    "Erro ao confirmar a entrega do kit.",
+    {
+      row: Number(row),
+    },
+  );
 }
 
 /**
@@ -58,6 +84,17 @@ export async function getEquipeInscritos() {
   return requisicaoEquipe(
     "equipe-inscritos",
     "Erro ao carregar a lista de inscritos.",
+  );
+}
+export async function desfazerEntregaKitEquipe(row) {
+  if (!Number.isInteger(Number(row)) || Number(row) < 2) {
+    throw new Error("Identificação do participante inválida.");
+  }
+
+  return requisicaoEquipe(
+    "equipe-desfazer-kit",
+    "Erro ao desfazer a retirada do kit.",
+    { row: Number(row) },
   );
 }
 

@@ -1,4 +1,6 @@
 import {
+  desfazerEntregaKitEquipe,
+  entregarKitEquipe,
   getEquipeDashboard,
   getEquipeInscritos,
 } from "../services/equipeService";
@@ -6,7 +8,7 @@ import { useEffect, useState } from "react";
 
 import DashboardCard from "../components/dashboard/DashboardCard";
 import DashboardGrid from "../components/dashboard/DashboardGrid";
-import KitRetiradaDashboard from "../components/dashboard/KitRetiradaDashboard";
+import LoadingScreen from "../components/LoadingScreen";
 import { useNavigate } from "react-router-dom";
 
 const ITENS_POR_PAGINA = 8;
@@ -19,6 +21,23 @@ const FILTROS_SITUACAO = [
   { valor: "PENDENTES_CANCELADAS", label: "Pendentes canceladas" },
   { valor: "PAGAS", label: "Pagas" },
 ];
+
+// Categorias consideradas participantes da corrida.
+const TIPOS_INSCRICAO_PARTICIPANTES = new Set([
+  "NORMAL",
+  "PCD",
+  "TEA",
+  "IDOSO",
+]);
+
+/**
+ * Normaliza o tipo de inscrição para comparação.
+ */
+function normalizarTipoInscricao(valor) {
+  return String(valor || "NORMAL")
+    .trim()
+    .toUpperCase();
+}
 
 /**
  * Normaliza textos para comparação.
@@ -87,6 +106,46 @@ function classificarKit(inscrito) {
   const tamanho = normalizar(inscrito.tamanho_camisa);
 
   return tamanho && tamanho !== "X" ? "KIT COMPLETO" : "MEIO KIT";
+}
+
+/**
+ * Classificação utilizada nos indicadores, seguindo o ADMIN.
+ * Utiliza o campo TIPO_KIT da inscrição.
+ */
+function classificarKitResumo(inscrito) {
+  const tipoKit = normalizar(inscrito.tipo_kit);
+
+  if (tipoKit === "KIT COMPLETO") return "KIT COMPLETO";
+  if (tipoKit === "MEIO KIT") return "MEIO KIT";
+
+  return null;
+}
+
+/**
+ * Identifica o tipo de kit para os indicadores operacionais.
+ *
+ * Inscrições institucionais não participam da logística de kits.
+ */
+function obterTipoKitOperacional(inscrito) {
+  const tiposInstitucionais = ["EQUIPE", "PARCERIA", "DIVULGACAO", "CORTESIA"];
+
+  const tipoInscricao = normalizar(inscrito.tipo_inscricao);
+
+  if (tiposInstitucionais.includes(tipoInscricao)) {
+    return null;
+  }
+
+  const tipoKit = normalizar(inscrito.tipo_kit);
+
+  if (tipoKit.includes("MEIO")) {
+    return "MEIO KIT";
+  }
+
+  if (tipoKit.includes("COMPLETO")) {
+    return "KIT COMPLETO";
+  }
+
+  return classificarKit(inscrito);
 }
 
 /**
@@ -247,6 +306,11 @@ export default function Equipe() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Controle da entrega individual de kits.
+  const [processingId, setProcessingId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [actionError, setActionError] = useState("");
+
   // Filtros da lista de inscritos.
   const [situacaoInscritos, setSituacaoInscritos] = useState("TODOS");
   const [tipoInscricao, setTipoInscricao] = useState("TODOS");
@@ -303,6 +367,129 @@ export default function Equipe() {
     navigate("/login");
   }
 
+  /**
+   * =========================================================
+   * CONFIRMAR ENTREGA DO KIT
+   * =========================================================
+   *
+   * Responsabilidades:
+   * - impedir operações simultâneas no mesmo participante;
+   * - solicitar a confirmação da entrega;
+   * - chamar a API operacional;
+   * - atualizar a lista de inscritos;
+   * - atualizar os indicadores do dashboard.
+   *
+   * Não altera informações cadastrais ou financeiras.
+   * =========================================================
+   */
+  async function handleEntregarKit(inscrito) {
+    if (!inscrito?.row || processingId !== null) {
+      return;
+    }
+
+    if (normalizar(inscrito.kit_retirado) === "SIM") {
+      return;
+    }
+
+    const confirmado = window.confirm(
+      `Confirma a entrega do kit para ${inscrito.nome}?`,
+    );
+
+    if (!confirmado) {
+      return;
+    }
+
+    try {
+      setProcessingId(inscrito.row);
+      setActionError("");
+      setSuccessMessage("");
+
+      const resultado = await entregarKitEquipe(inscrito.row);
+
+      if (!resultado?.success) {
+        throw new Error(
+          resultado?.message || "Não foi possível confirmar a entrega.",
+        );
+      }
+
+      const [dashboardData, inscritosData] = await Promise.all([
+        getEquipeDashboard(),
+        getEquipeInscritos(),
+      ]);
+
+      setDashboard(dashboardData.dashboard || {});
+      setAnalytics(dashboardData.analytics || {});
+      setInscritos(inscritosData.inscritos || []);
+
+      setSuccessMessage(
+        resultado.message || "Entrega do kit confirmada com sucesso.",
+      );
+    } catch (err) {
+      console.error("Erro ao entregar kit:", err);
+
+      setActionError(err.message || "Erro ao confirmar a entrega do kit.");
+      setActionError("");
+    } finally {
+      setProcessingId(null);
+    }
+  }
+
+  async function handleDesfazerEntregaKit(inscrito) {
+    if (!inscrito?.row || processingId !== null) return;
+
+    if (normalizar(inscrito.kit_retirado) !== "SIM") return;
+
+    const confirmado = window.confirm(
+      `Deseja realmente desfazer a marcação de retirada do kit de ${inscrito.nome}?`,
+    );
+
+    if (!confirmado) return;
+
+    try {
+      setProcessingId(inscrito.row);
+      setActionError("");
+      setSuccessMessage("");
+
+      const resultado = await desfazerEntregaKitEquipe(inscrito.row);
+
+      if (!resultado?.success) {
+        throw new Error(
+          resultado?.message || "Não foi possível desfazer a marcação.",
+        );
+      }
+
+      setInscritos((listaAtual) =>
+        listaAtual.map((item) =>
+          item.row === inscrito.row ? { ...item, kit_retirado: "" } : item,
+        ),
+      );
+
+      setSuccessMessage(resultado.message || "Marcação desfeita com sucesso.");
+
+      // Atualiza os dados operacionais.
+      try {
+        const [dashboardData, inscritosData] = await Promise.all([
+          getEquipeDashboard(),
+          getEquipeInscritos(),
+        ]);
+
+        setDashboard(dashboardData.dashboard || {});
+        setAnalytics(dashboardData.analytics || {});
+        setInscritos(inscritosData.inscritos || []);
+      } catch (refreshError) {
+        console.error("Erro ao atualizar painel:", refreshError);
+        setActionError(
+          "A marcação foi desfeita, mas não foi possível atualizar todos os indicadores. Atualize a página.",
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao desfazer retirada:", error);
+      setActionError(error.message || "Erro ao desfazer a retirada do kit.");
+    } finally {
+      setProcessingId(null);
+    }
+  }
+
   // Opções dinâmicas dos filtros.
   const tiposDisponiveis = [
     ...new Set(
@@ -320,7 +507,7 @@ export default function Equipe() {
 
   // Indicadores de kits.
   // Considera inscrições NORMAL ativas, incluindo pendentes.
-  const inscritosNormaisAtivos = inscritos.filter(
+  /*   const inscritosNormaisAtivos = inscritos.filter(
     (item) =>
       normalizar(item.tipo_inscricao) === "NORMAL" && inscricaoEstaAtiva(item),
   );
@@ -331,13 +518,143 @@ export default function Equipe() {
 
   const totalMeioKit = inscritosNormaisAtivos.filter(
     (item) => classificarKit(item) === "MEIO KIT",
+  ).length; */
+
+  // ======================================================
+  // INDICADORES DE KITS — MESMO CRITÉRIO DO ADMIN
+  // Considera somente inscrições pagas e não canceladas.
+  // Inclui NORMAL, PCD, TEA e IDOSO.
+  // Exclui categorias institucionais.
+  // ======================================================
+
+  const TIPOS_INSTITUCIONAIS = new Set([
+    "EQUIPE",
+    "PARCERIA",
+    "DIVULGACAO",
+    "CORTESIA",
+  ]);
+
+  const inscritosComKitConfirmados = inscritos.filter((item) => {
+    const statusInscricao = normalizar(item.status_inscricao);
+    const tipoInscricao = normalizarTipoInscricao(item.tipo_inscricao);
+
+    return (
+      statusInscricao !== "CANCELADA" &&
+      pagamentoEstaPago(item) &&
+      !TIPOS_INSTITUCIONAIS.has(tipoInscricao) &&
+      classificarKitResumo(item) !== null
+    );
+  });
+
+  const totalKitCompleto = inscritosComKitConfirmados.filter(
+    (item) => classificarKitResumo(item) === "KIT COMPLETO",
   ).length;
+
+  const totalMeioKit = inscritosComKitConfirmados.filter(
+    (item) => classificarKitResumo(item) === "MEIO KIT",
+  ).length;
+
+  // ======================================================
+  // RESUMO OPERACIONAL DE KITS
+  // Considera inscrições não canceladas e não institucionais.
+  // Não utiliza informações financeiras.
+  // ======================================================
+
+  /*   const resumoKitsEquipe = inscritos.reduce((resumo, item) => {
+    if (inscricaoEstaCancelada(item)) {
+      return resumo;
+    }
+
+    const tipoKit = obterTipoKitOperacional(item);
+
+    if (!tipoKit) {
+      return resumo;
+    }
+
+    if (!resumo[tipoKit]) {
+      resumo[tipoKit] = {
+        total: 0,
+        retirados: 0,
+        aRetirar: 0,
+      };
+    }
+
+    resumo[tipoKit].total++;
+
+    if (normalizar(item.kit_retirado) === "SIM") {
+      resumo[tipoKit].retirados++;
+    } else {
+      resumo[tipoKit].aRetirar++;
+    }
+
+    return resumo;
+  }, {}); */
+
+  // ======================================================
+  // RESUMO OPERACIONAL DE KITS
+  // Considera somente inscrições com pagamento confirmado.
+  // Inscrições pendentes não entram no planejamento de kits.
+  // ======================================================
+
+  const resumoKitsEquipe = inscritos.reduce((resumo, item) => {
+    if (inscricaoEstaCancelada(item) || !pagamentoEstaPago(item)) {
+      return resumo;
+    }
+
+    const tipoKit = obterTipoKitOperacional(item);
+
+    if (!tipoKit) {
+      return resumo;
+    }
+
+    if (!resumo[tipoKit]) {
+      resumo[tipoKit] = {
+        total: 0,
+        retirados: 0,
+        aRetirar: 0,
+      };
+    }
+
+    resumo[tipoKit].total++;
+
+    if (normalizar(item.kit_retirado) === "SIM") {
+      resumo[tipoKit].retirados++;
+    } else {
+      resumo[tipoKit].aRetirar++;
+    }
+
+    return resumo;
+  }, {});
+
+  const totalKitsEquipe = Object.values(resumoKitsEquipe).reduce(
+    (total, item) => total + item.total,
+    0,
+  );
+
+  const totalKitsRetiradosEquipe = Object.values(resumoKitsEquipe).reduce(
+    (total, item) => total + item.retirados,
+    0,
+  );
+
+  const totalKitsARetirarEquipe = Object.values(resumoKitsEquipe).reduce(
+    (total, item) => total + item.aRetirar,
+    0,
+  );
 
   // LISTA DE INSCRITOS
   const inscritosFiltrados = inscritos.filter((item) => {
+    /*     const correspondeTipo =
+      tipoInscricao === "TODOS" ||
+      normalizar(item.tipo_inscricao) === tipoInscricao; */
+    const tipoInscricaoNormalizado = normalizarTipoInscricao(
+      item.tipo_inscricao,
+    );
+
     const correspondeTipo =
       tipoInscricao === "TODOS" ||
-      normalizar(item.tipo_inscricao) === tipoInscricao;
+      (tipoInscricao === "PARTICIPANTES" &&
+        TIPOS_INSCRICAO_PARTICIPANTES.has(tipoInscricaoNormalizado)) ||
+      tipoInscricaoNormalizado === normalizarTipoInscricao(tipoInscricao);
 
     const correspondeKit =
       tipoKit === "TODOS" || classificarKit(item) === tipoKit;
@@ -402,12 +719,15 @@ export default function Equipe() {
     }
   }, [paginaCamisas, totalPaginasCamisas]);
 
-  if (loading) {
+  /*   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         Carregando painel operacional...
       </div>
     );
+  } */
+  if (loading) {
+    return <LoadingScreen />;
   }
 
   if (error) {
@@ -452,7 +772,109 @@ export default function Equipe() {
         <DashboardGrid dashboard={dashboard} />
 
         {/* Controle de retirada */}
-        <KitRetiradaDashboard analytics={analytics} />
+        {/* <KitRetiradaDashboard analytics={analytics} /> */}
+
+        {/* RESUMO OPERACIONAL DE KITS */}
+        <section className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5">
+            <div>
+              <h2 className="text-xl font-bold text-green-700">
+                🎽 Resumo de Kits
+              </h2>
+
+              <p className="text-sm text-gray-500">
+                Acompanhamento operacional das entregas.
+              </p>
+            </div>
+
+            <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+              Total: {totalKitsEquipe} kits
+            </span>
+          </div>
+
+          {/* KITS POR TIPO */}
+          <div className="border border-slate-200 rounded-xl p-4 mb-5">
+            <h3 className="font-semibold text-slate-700 mb-3">Kits por Tipo</h3>
+
+            <p className="text-xs text-gray-500 mb-4">
+              Quantidades totais, retiradas e ainda disponíveis para entrega.
+            </p>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-slate-50 border-b">
+                    <th className="text-left p-3">Tipo de Kit</th>
+                    <th className="text-center p-3">Total</th>
+                    <th className="text-center p-3">Retirados</th>
+                    <th className="text-center p-3">A retirar</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {Object.entries(resumoKitsEquipe).length > 0 ? (
+                    Object.entries(resumoKitsEquipe).map(([tipo, dados]) => (
+                      <tr key={tipo} className="border-b last:border-0">
+                        <td className="p-3 font-medium">{tipo}</td>
+
+                        <td className="p-3 text-center">
+                          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">
+                            {dados.total}
+                          </span>
+                        </td>
+
+                        <td className="p-3 text-center">
+                          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
+                            {dados.retirados}
+                          </span>
+                        </td>
+
+                        <td className="p-3 text-center">
+                          <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full font-semibold">
+                            {dados.aRetirar}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="p-5 text-center text-gray-500">
+                        Nenhum kit encontrado.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* CARDS OPERACIONAIS */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+              <p className="text-sm font-medium text-blue-700">Total de Kits</p>
+
+              <p className="mt-1 text-3xl font-bold text-blue-800">
+                {totalKitsEquipe}
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-green-100 bg-green-50 p-4">
+              <p className="text-sm font-medium text-green-700">Retirados</p>
+
+              <p className="mt-1 text-3xl font-bold text-green-800">
+                {totalKitsRetiradosEquipe}
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-orange-100 bg-orange-50 p-4">
+              <p className="text-sm font-medium text-orange-700">A retirar</p>
+
+              <p className="mt-1 text-3xl font-bold text-orange-800">
+                {totalKitsARetirarEquipe}
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Controle quantitativo de camisas */}
         <section className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -495,7 +917,7 @@ export default function Equipe() {
         </section>
 
         {/* Quantidade de kits */}
-        <section className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        {/*         <section className="bg-white rounded-2xl shadow-lg p-6 mb-6">
           <h2 className="text-xl font-bold text-green-700 mb-4">
             Quantidade de Kits
           </h2>
@@ -505,7 +927,7 @@ export default function Equipe() {
 
             <DashboardCard title="MEIO KIT" value={totalMeioKit} />
           </div>
-        </section>
+        </section> */}
 
         {/* Categorias operacionais */}
         <section className="bg-white rounded-2xl shadow-lg p-6 mb-6">
@@ -726,6 +1148,23 @@ export default function Equipe() {
             </span>
           </div>
 
+          {successMessage && (
+            <div
+              role="status"
+              className="mb-4 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700"
+            >
+              {successMessage}
+            </div>
+          )}
+          {actionError && (
+            <div
+              role="alert"
+              className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+            >
+              {actionError}
+            </div>
+          )}
+
           {/* Indicadores de kits */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
             <div className="bg-green-50 border border-green-100 rounded-xl p-4">
@@ -772,6 +1211,9 @@ export default function Equipe() {
                 className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white"
               >
                 <option value="TODOS">Todos os tipos</option>
+                <option value="PARTICIPANTES">
+                  Participantes (NORMAL, PCD, TEA e IDOSO)
+                </option>
 
                 {tiposDisponiveis.map((tipo) => (
                   <option key={tipo} value={tipo}>
@@ -835,6 +1277,7 @@ export default function Equipe() {
                   <th className="text-center p-3">Camisa</th>
                   <th className="text-center p-3">Pagamento</th>
                   <th className="text-left p-3">Forma</th>
+                  <th className="text-center p-3">Ação</th>
                 </tr>
               </thead>
 
@@ -874,12 +1317,73 @@ export default function Equipe() {
                         </td>
 
                         <td className="p-3">{item.forma_pagamento || "-"}</td>
+
+                        <td className="p-3 text-center">
+                          {normalizar(item.kit_retirado) === "SIM" ? (
+                            <div className="flex flex-col items-center gap-2">
+                              <span className="text-xs font-semibold text-green-700">
+                                ✓ Kit Retirado
+                              </span>
+
+                              <button
+                                type="button"
+                                disabled={processingId !== null}
+                                onClick={() => handleDesfazerEntregaKit(item)}
+                                className="px-3 py-2 rounded-lg text-xs font-semibold
+                                  bg-red-50 text-red-700 border border-red-200
+                                  hover:bg-red-100 disabled:opacity-50
+                                  disabled:cursor-not-allowed transition"
+                              >
+                                {processingId === item.row
+                                  ? "Processando..."
+                                  : "↩ Desfazer"}
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled={processingId !== null}
+                              onClick={() => handleEntregarKit(item)}
+                              className="px-3 py-2 rounded-lg text-xs font-semibold
+                                bg-purple-600 hover:bg-purple-700 text-white
+                                disabled:opacity-50 disabled:cursor-not-allowed transition"
+                            >
+                              {processingId === item.row
+                                ? "Processando..."
+                                : "🎽 Entregar Kit"}
+                            </button>
+                          )}
+                        </td>
+
+                        {/*                         <td className="p-3 text-center">
+                          <button
+                            type="button"
+                            disabled={
+                              normalizar(item.kit_retirado) === "SIM" ||
+                              processingId !== null
+                            }
+                            onClick={() => handleEntregarKit(item)}
+                            className={`px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition ${
+                              normalizar(item.kit_retirado) === "SIM"
+                                ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                                : processingId === item.row
+                                  ? "bg-purple-300 text-white cursor-wait"
+                                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                            }`}
+                          >
+                            {processingId === item.row
+                              ? "Processando..."
+                              : normalizar(item.kit_retirado) === "SIM"
+                                ? "✓ Kit já Retirado"
+                                : "🎽 Entregar Kit"}
+                          </button>
+                        </td> */}
                       </tr>
                     );
                   })
                 ) : (
                   <tr>
-                    <td colSpan="8" className="p-6 text-center text-gray-500">
+                    <td colSpan="9" className="p-6 text-center text-gray-500">
                       Nenhum inscrito encontrado para os filtros selecionados.
                     </td>
                   </tr>

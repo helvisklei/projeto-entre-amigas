@@ -21,6 +21,54 @@ export default function AnalyticsSection({ analytics }) {
       <OrigemInscricoesDashboard analytics={analytics} />
       <LogisticsSection analytics={analytics} />
 
+      {/* RESUMO DE KITS */}
+      <section className="bg-white rounded-2xl shadow-lg p-5 md:p-6 mt-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5">
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold text-green-700">
+              🎽 Resumo de Kits
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Acompanhamento de pagamentos e retiradas.
+            </p>
+          </div>
+
+          <span className="inline-flex w-fit items-center rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
+            Total: {analytics.kitsPendentes ?? 0} kits
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="bg-green-50 rounded-xl p-4 border border-green-100">
+            <p className="text-sm font-medium text-green-700">Pagos</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-green-800 mt-1">
+              {analytics.kitsPagos ?? 0}
+            </h3>
+          </div>
+
+          <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-100">
+            <p className="text-sm font-medium text-yellow-700">Pendentes</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-yellow-800 mt-1">
+              {analytics.kitsPendentesPagamento ?? 0}
+            </h3>
+          </div>
+
+          <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+            <p className="text-sm font-medium text-blue-700">Retirados</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-blue-800 mt-1">
+              {analytics.kitsRetirados ?? 0}
+            </h3>
+          </div>
+
+          <div className="bg-orange-50 rounded-xl p-4 border border-orange-100">
+            <p className="text-sm font-medium text-orange-700">A retirar</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-orange-800 mt-1">
+              {analytics.kitsPendentes ?? 0}
+            </h3>
+          </div>
+        </div>
+      </section>
+
       {/* CUPONS */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <h2 className="text-2xl font-bold text-emerald-700 mb-4">
@@ -296,7 +344,7 @@ export default function AnalyticsSection({ analytics }) {
 
       {/* KITS */}
 
-      <div
+      {/*  COMENTEI 06-11-2026      <div
         className="
           bg-white
           rounded-2xl
@@ -346,41 +394,11 @@ export default function AnalyticsSection({ analytics }) {
             </div>
           ))}
         </div>
-      </div>
-
-      <div
-        className="
-          grid
-          grid-cols-2
-          md:grid-cols-4
-          gap-4
-          mt-6
-        "
-      >
-        <div className="bg-green-50 rounded-xl p-4">
-          <p>Pagos</p>
-          <h3>{analytics.kitsPagos}</h3>
-        </div>
-
-        <div className="bg-yellow-50 rounded-xl p-4">
-          <p>Pendentes</p>
-          <h3>{analytics.kitsPendentesPagamento}</h3>
-        </div>
-
-        <div className="bg-blue-50 rounded-xl p-4">
-          <p>Retirados</p>
-          <h3>{analytics.kitsRetirados}</h3>
-        </div>
-
-        <div className="bg-orange-50 rounded-xl p-4">
-          <p>A Retirar</p>
-          <h3>{analytics.kitsPendentes}</h3>
-        </div>
-      </div>
+      </div> */}
 
       {/* DISTÂNCIAS */}
 
-      <div
+      {/*       <div
         className="
           bg-white
           rounded-2xl
@@ -429,7 +447,7 @@ export default function AnalyticsSection({ analytics }) {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
